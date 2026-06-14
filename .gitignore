@@ -1,0 +1,4 @@
+# SynologyDrive temp files
+.syncthing*
+.DS_Store
+Thumbs.db
