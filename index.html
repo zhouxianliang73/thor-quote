@@ -68,10 +68,10 @@ h1 span{display:block;font-size:10px;font-weight:400;letter-spacing:3px;color:va
 .category-body{padding:0}
 
 /* ── 加号行 ── */
-.ghost-row td{padding:6px 0!important;height:36px;line-height:36px;cursor:pointer;border:2px dashed var(--n-300);transition:background .12s}
+.ghost-row td{padding:0!important;height:20px;line-height:20px;cursor:pointer;border-bottom:1px dashed var(--n-300);transition:background .12s;font-size:11px;color:var(--n-400)}
 .ghost-row:hover td{background:var(--accent-lt);border-color:var(--accent)}
-.ghost-row .plus{font-size:18px;font-weight:800;color:var(--accent);text-align:center}
-.ghost-row:hover .plus{color:#fff}
+.ghost-row .plus{font-size:14px;font-weight:700;color:var(--accent);text-align:center;display:inline-block;width:18px;height:18px;line-height:18px;border-radius:3px;border:1px solid var(--accent)}
+.ghost-row:hover .plus{color:#fff;background:var(--accent)}
 
 /* ── 列宽由colgroup控制,CSS类仅用于JS模板定位 ── */
 .col-idx,.col-img,.col-series,.col-type,.col-qty,.col-unit,.col-price,.col-subtotal,.col-del,.col-face,.col-height{}
