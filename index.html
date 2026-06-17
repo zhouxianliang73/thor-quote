@@ -25,6 +25,11 @@
   --accent:     oklch(45% 0.12 70);
   --accent-lt:  oklch(75% 0.06 70);
   --accent-dim: oklch(60% 0.06 70);
+  /* Neutral scale */
+  --n-100: oklch(95% 0 0);
+  --n-200: oklch(88% 0 0);
+  --n-400: oklch(70% 0 0);
+  --n-900: oklch(30% 0 0);
   /* Semantic */
   --red:  oklch(50% 0.18 25);
   --red-bg: oklch(93% 0.03 25);
@@ -63,9 +68,9 @@ h1 span{display:block;font-size:10px;font-weight:400;letter-spacing:3px;color:va
 .category-body{padding:0}
 
 /* ── 加号行 ── */
-.ghost-row td{padding:0!important;height:22px;line-height:22px;cursor:pointer;border:1px dashed var(--n-200);transition:background .12s}
-.ghost-row:hover td{background:transparent;border-color:var(--accent)}
-.ghost-row .plus{font-size:14px;font-weight:700;color:var(--accent);text-align:center}
+.ghost-row td{padding:6px 0!important;height:36px;line-height:36px;cursor:pointer;border:2px dashed var(--n-300);transition:background .12s}
+.ghost-row:hover td{background:var(--accent-lt);border-color:var(--accent)}
+.ghost-row .plus{font-size:18px;font-weight:800;color:var(--accent);text-align:center}
 .ghost-row:hover .plus{color:#fff}
 
 /* ── 列宽由colgroup控制,CSS类仅用于JS模板定位 ── */
