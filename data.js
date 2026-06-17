@@ -112,5 +112,80 @@ const THOR_DATA =
     {id:'h53',name:'玻璃夹板灯600',price:90,unit:'个',icon:'light'},
     {id:'h54',name:'嵌入式灯条1500',price:246,unit:'个',icon:'light'},
     {id:'h55',name:'嵌入式灯条1800',price:295,unit:'个',icon:'light'}
-  ]
+  ],
+
+  
+  rules: {
+    countertop: {
+      
+      standard: { width: 600, thickness: 15, frontHeight: '12/19/39', splashHeight: 46, backHeight: 50 },
+      
+      widthMultiplier: [
+        { max: 600,  multiplier: 1.0 },
+        { max: 650,  multiplier: 1.3 },
+        { max: 900,  multiplier: 1.5 },
+        { max: 1050, multiplier: 2.0 }
+      ],
+      
+      minLength: 1000,
+      
+      edgeUpcharge: { '前斜边': 500, '前弧边': 500, unit: '元/米' }
+    },
+
+    
+    processing: {
+      stoveHole: 300,       
+      sinkHole: 900,        
+      sinkHoleNote: '公司配套水槽可免收',
+      woodCrate: 300,       
+      unit: '元/个'
+    },
+
+    
+    cabinet: {
+      
+      included: '柜体及连接件、门铰、门板、可调脚、柜体铝合金免拉手',
+      
+      wallCabinet: { halfPrice: 0.65, halfHeightRatio: 0.5 },
+      
+      tallCabinet: { halfMultiplier: 2, fullMultiplier: 3 },
+      
+      topPanel: {
+        noPattern: { threshold: 100, singleLayer: 400, unit: '元/米' },
+        minArea: 0.1
+      },
+      
+      baseShoe: {
+        '布纹板': 270,
+        '喷粉': 400,
+        unit: '元/米'
+      },
+      
+      doorUpcharges: {
+        '极光M.L48': 200,
+        '极光M.L49': 120,
+        '斜边门': 400,
+        '弧边门': 400,
+        '不锈钢压型/铝框造型': 1000,
+        '格栅门': 2000,
+        unit: '元/㎡'
+      },
+      
+      thicknessUpcharges: {
+        '18mm': { default: true },
+        '22mm': { upcharge: 1000, withHandle: 1500, unit: '元/㎡' }
+      },
+      
+      materialMultiplier: {
+        '哑光小雨滴板': 1.0,
+        '布纹板': 1.0,
+        '喷粉柜体': 1.1,
+        '云纹板体': 1.05
+      },
+      
+      doubleBackPanel: { upcharge: 1150, unit: '元/㎡' },
+      
+      wallHandle: { default: '斜边门型或门板下扣10mm', bottomHandleUpcharge: 150, unit: '元/m' }
+    }
+  }
 }
