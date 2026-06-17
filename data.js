@@ -1,5 +1,4 @@
 // THOR 报价数据库 - 由 02-Database/thor-pricing.json5 生成
-// 更新价格时: edit json5 → run generate script → git push
 const THOR_DATA = 
 
 
