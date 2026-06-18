@@ -5,639 +5,456 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THOR 索而智能家居 · 橱柜报价系统</title>
 <style>
-/* ===== Design System ===== */
-/* TONE: Refined Professional - warm, precise, premium */
-/* BASE: Warm tinted neutrals (oklch), no pure black/white */
-
-:root {
-  /* Warm-tinted neutrals - brand hue toward amber/walnut */
-  --n-50:  oklch(98% 0.004 60);
-  --n-100: oklch(95% 0.006 60);
-  --n-150: oklch(92% 0.008 60);
-  --n-200: oklch(88% 0.01 60);
-  --n-300: oklch(78% 0.015 60);
-  --n-400: oklch(65% 0.02 60);
-  --n-500: oklch(55% 0.025 60);
-  --n-700: oklch(35% 0.02 60);
-  --n-800: oklch(25% 0.015 60);
-  --n-900: oklch(16% 0.01 60);
-  /* Brand accent - warm bronze */
-  --accent:     oklch(45% 0.12 70);
-  --accent-lt:  oklch(75% 0.06 70);
-  --accent-dim: oklch(60% 0.06 70);
-  /* Neutral scale */
-  --n-100: oklch(95% 0 0);
-  --n-200: oklch(88% 0 0);
-  --n-400: oklch(70% 0 0);
-  --n-900: oklch(30% 0 0);
-  /* Semantic */
-  --red:  oklch(50% 0.18 25);
-  --red-bg: oklch(93% 0.03 25);
-}
-
-*, *::before, *::after{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif;background:var(--n-100);color:var(--n-900);padding:28px;line-height:1.5}
+:root{--n50:oklch(98% .004 60);--n100:oklch(95% .006 60);--n150:oklch(92% .008 60);--n200:oklch(88% .01 60);--n300:oklch(78% .015 60);--n400:oklch(65% .02 60);--n500:oklch(55% .025 60);--n700:oklch(35% .02 60);--n800:oklch(25% .015 60);--n900:oklch(16% .01 60);--ac:oklch(45% .12 70);--ac-lt:oklch(75% .06 70);--red:oklch(50% .18 25);--red-bg:oklch(93% .03 25)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei','Segoe UI',system-ui,sans-serif;background:var(--n100);color:var(--n900);padding:28px;line-height:1.5}
 .editor{max-width:1140px;margin:0 auto;background:#fff;padding:32px 40px;border-radius:4px;box-shadow:0 1px 8px rgba(0,0,0,.06),0 0 0 1px rgba(0,0,0,.02)}
-
-/* ── Header ── */
-h1{text-align:center;font-size:22px;font-weight:650;letter-spacing:5px;color:var(--n-900);padding-bottom:0;margin-bottom:0;border-bottom:none}
-.order-bar{text-align:center;padding:6px 14px;background:var(--n-50);border-bottom:1px solid var(--n-200);display:flex;align-items:center;justify-content:center;gap:10px;max-width:400px;margin-left:auto;margin-right:auto;margin-bottom:16px;border-radius:0 0 3px 3px}
-.order-label{font-size:12px;color:var(--n-500);white-space:nowrap}
-.order-bar input{border:none;background:transparent;font-size:13px;padding:4px 0;min-width:150px;color:var(--n-800)}
-.order-bar input:focus{outline:none}
-h1 span{display:block;font-size:10px;font-weight:400;letter-spacing:3px;color:var(--n-400);margin-top:2px}
-.subtitle{text-align:center;font-size:10px;color:var(--n-400);letter-spacing:3px;margin-bottom:22px;margin-top:2px}
-
-/* ── 客户信息 ── */
-.info-section{margin-bottom:14px}
+h1{text-align:center;font-size:22px;font-weight:650;letter-spacing:5px;color:var(--n900)}
+.order-bar{text-align:center;padding:6px 14px;background:var(--n50);border-bottom:1px solid var(--n200);display:flex;align-items:center;justify-content:center;gap:10px;max-width:400px;margin:0 auto 16px;border-radius:0 0 3px 3px}
+.order-label{font-size:12px;color:var(--n500);white-space:nowrap}
+.order-bar input{border:none;background:transparent;font-size:13px;padding:4px 0;min-width:150px;color:var(--n800);outline:none}
+.subtitle{text-align:center;font-size:10px;color:var(--n400);letter-spacing:3px;margin-bottom:22px;margin-top:2px}
+.info-section{margin-bottom:14px;margin-bottom:14px}
 .info-section:last-of-type{margin-bottom:20px}
-.info-head{font-size:11px;font-weight:600;color:var(--n-500);letter-spacing:0.5px;margin-bottom:6px;padding-left:1px}
-.info-grid{display:grid;gap:8px 24px;padding:10px 14px;background:var(--n-50);border-radius:4px;border:1px solid var(--n-150)}
-.info-grid label{font-size:11px;color:var(--n-400);display:block;margin-bottom:2px}
-.info-grid input{width:100%;padding:6px 10px;border:1px solid var(--n-200);border-radius:3px;font-size:13.5px;background:#fff;transition:border-color .15s,box-shadow .15s}
-.info-grid input:focus{outline:none;border-color:var(--accent-dim);box-shadow:0 0 0 2px var(--accent-lt)}
-.grid-2{grid-template-columns:1fr 1fr}
-.grid-3{grid-template-columns:1fr 1fr 1fr}
-
-/* ── 品类区块 ── */
-.category{margin-bottom:12px;border:1px solid var(--n-200);border-radius:4px;overflow:hidden}
-.category-header{background:var(--n-100);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;transition:background .12s;border-bottom:1px solid var(--n-150)}
-.category-header:hover{background:var(--n-150)}
-.cat-total{background:var(--accent);color:#fff;padding:3px 12px;border-radius:3px;font-size:13px;font-weight:600}
-.cat-name{font-size:15px}
-.category-body{padding:0}
-
-/* ── 加号行 ── */
-.ghost-row td{padding:0!important;height:20px;line-height:20px;cursor:pointer;border-bottom:1px dashed var(--n-300);transition:background .12s;font-size:11px;color:var(--n-400)}
-.ghost-row:hover td{background:var(--accent-lt);border-color:var(--accent)}
-.ghost-row .plus{font-size:14px;font-weight:700;color:var(--accent);text-align:center;display:inline-block;width:18px;height:18px;line-height:18px;border-radius:3px;border:1px solid var(--accent)}
-.ghost-row:hover .plus{color:#fff;background:var(--accent)}
-
-/* ── 列宽由colgroup控制,CSS类仅用于JS模板定位 ── */
-.col-idx,.col-img,.col-series,.col-type,.col-qty,.col-unit,.col-price,.col-subtotal,.col-del,.col-face,.col-height{}
-
-.table-wrap{overflow-x:hidden}
-table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;table-layout:fixed;width:100%}
-th{background:var(--n-100);padding:7px 6px;text-align:center;font-weight:600;border:1px solid var(--n-200);color:var(--n-500);font-size:12px;white-space:nowrap;letter-spacing:.02em}
-td{padding:5px 0;height:52px;border:1px solid var(--n-150);text-align:center;vertical-align:middle}
-td input,td select{width:100%;padding:5px 6px;border:1px solid var(--n-200);border-radius:3px;font-size:13px;background:#fff;transition:border-color .12s,box-shadow .12s}
-td input:focus,td select:focus{outline:none;border-color:var(--accent-dim);box-shadow:0 0 0 2px var(--accent-lt)}
-td select,td select.sel-narrow{-webkit-appearance:none!important;appearance:none!important;padding-right:18px;background-color:#fff!important;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 fill=%27none%27 stroke=%27%23888%27 stroke-width=%271.5%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px top 5px;background-size:10px}
-td input.num{text-align:right;width:100%;min-width:44px;min-height:34px}
-td select.sel-narrow{font-size:12px;padding:4px 2px;min-width:0;width:100%}
-.row-del{background:none;border:none;color:var(--n-400);cursor:pointer;font-size:16px;padding:1px 4px;border-radius:3px;line-height:1;transition:color .12s,background .12s}
+.info-head{font-size:11px;font-weight:600;color:var(--n500);margin-bottom:6px;padding-left:1px}
+.info-grid{display:grid;gap:8px 24px;padding:10px 14px;background:var(--n50);border-radius:4px;border:1px solid var(--n150)}
+.info-grid label{font-size:11px;color:var(--n400);display:block;margin-bottom:2px}
+.info-grid input,.info-grid select{width:100%;padding:6px 10px;border:1px solid var(--n200);border-radius:3px;font-size:13.5px;background:#fff}
+.info-grid input:focus,.info-grid select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-lt);outline:none}
+.info-grid select{-webkit-appearance:none!important;appearance:none!important;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 fill=%27none%27 stroke=%27%23888%27 stroke-width=%271.5%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px top 50%;background-size:10px}
+.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr 1fr}
+.cat{margin-bottom:12px;border:1px solid var(--n200);border-radius:4px;overflow:hidden}
+.cat-hd{background:var(--n100);padding:8px 16px;font-size:13px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none;border-bottom:1px solid var(--n150)}
+.cat-hd:hover{background:var(--n150)}
+.cat-t{background:var(--ac);color:#fff;padding:3px 12px;border-radius:3px;font-size:13px;font-weight:600}
+.cat-n{font-size:15px}
+.cat-bd{padding:0}
+.ghost td{padding:0!important;height:20px;line-height:20px;cursor:pointer;border-bottom:1px dashed var(--n300);font-size:11px;color:var(--n400)}
+.ghost:hover td{background:var(--ac-lt);border-color:var(--ac)}
+.ghost .plus{font-size:14px;font-weight:700;color:var(--ac);display:inline-block;width:18px;height:18px;line-height:18px;border-radius:3px;border:1px solid var(--ac);text-align:center}
+.ghost:hover .plus{color:#fff;background:var(--ac)}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tw table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;table-layout:fixed;width:100%;white-space:nowrap}
+.tw th{background:var(--n100);padding:7px 4px;text-align:center;font-weight:600;border:1px solid var(--n200);color:var(--n500);font-size:11.5px}
+.tw td{padding:5px 0;height:52px;border:1px solid var(--n150);text-align:center;vertical-align:middle}
+.tw td input,.tw td select{width:100%;padding:5px 4px;border:1px solid var(--n200);border-radius:3px;font-size:13px;background:#fff;min-width:0;outline:none}
+.tw td input:focus,.tw td select:focus{border-color:var(--ac);box-shadow:0 0 0 2px var(--ac-lt)}
+.tw td select{-webkit-appearance:none!important;appearance:none!important;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2710%27 height=%276%27%3E%3Cpath d=%27M1 1l4 4 4-4%27 fill=%27none%27 stroke=%27%23888%27 stroke-width=%271.5%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 4px top 5px;background-size:10px}
+.tw td input.num{text-align:right;min-width:40px}
+.row-del{background:none;border:none;color:var(--n400);cursor:pointer;font-size:16px;padding:1px 4px;border-radius:3px}
 .row-del:hover{color:var(--red);background:var(--red-bg)}
+.non{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red)}
+.hp{color:#bbb!important}
+.tw td .ic{width:44px;height:44px;display:flex;align-items:center;justify-content:center;margin:0 auto;background:var(--n50);border-radius:3px;border:1px solid var(--n150)}
+.tw td .ic svg{width:34px;height:34px}
 
+/* ── 列宽（同名同宽） ── */
+.col-i{width:28px}.col-p{width:46px}.col-s{width:90px}.col-c{width:75px}
+.col-d{width:220px}.col-m{width:120px}.col-r{width:55px}.col-par{width:175px}
+.col-q{width:52px}.col-u{width:48px}.col-pr{width:72px}.col-t{width:82px}.col-x{width:28px}
 
-/* ── 非标 ── */
-input.nonstd{background:var(--red-bg)!important;border-color:var(--red)!important;color:var(--red)}
-input.nonstd::placeholder{color:oklch(65% 0.06 25)!important}
+/* ── 对齐规则：材料右对齐，非标/技术参数左对齐 ── */
+.tw td.al-m{text-align:right}
+.tw td.al-r,.tw td.al-par{text-align:left}
 
-/* ── 图片列 ── */
-td .img-cell{width:50px;height:50px;display:flex;align-items:center;justify-content:center;margin:0 auto;background:var(--n-50);border-radius:3px;border:1px solid var(--n-150);transition:background .15s}
-td .img-cell svg{width:38px;height:38px}
-td .img-cell img{max-width:48px;max-height:48px;object-fit:contain;border-radius:2px}
-
-/* ── 合计 ── */
-.summary{background:var(--n-50);border:1px solid var(--n-200);border-radius:4px;padding:16px 22px;margin:16px 0}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
-.summary-row .label{font-size:13px;color:var(--n-500)}
-.summary-row .val{font-size:15px;font-weight:600;color:var(--n-800)}
-.summary-row-final{padding-top:10px;margin-top:6px;border-top:2px solid var(--n-300)}
-.summary-row-final .label{font-size:15px;font-weight:650;color:var(--n-900)}
-#grandTotal{font-size:22px;font-weight:700;color:var(--n-900)}
-.cn-money{font-size:15px;color:var(--n-700);margin-top:4px;font-weight:500}
-
-/* ── 客户版 ── */
-.client-view{display:none;padding:28px 40px;max-width:750px;margin:0 auto}
-.client-view.show{display:block}
-.editor.client-mode .editor-body{display:none}
-.editor.client-mode .client-view{display:block}
-.client-title{text-align:center;font-size:20px;font-weight:650;letter-spacing:4px;margin-bottom:22px}
-.client-table{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13.5px}
-.client-table th{background:var(--n-100);padding:8px 12px;border:1px solid var(--n-200);text-align:center;font-size:12px;color:var(--n-500)}
-.client-table td{padding:8px 12px;border:1px solid var(--n-150);text-align:center}
-.client-total{text-align:right;font-size:18px;font-weight:650;padding:12px 0;border-top:2px solid var(--n-800);margin-top:8px}
-.client-total .big{font-size:26px;color:var(--red);font-weight:700}
-.client-terms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:16px;padding:10px 14px;background:var(--n-50);border-radius:3px}
-.client-sign{display:flex;justify-content:space-between;margin-top:20px}
-.client-sign .cs-box{width:220px}
-.client-sign .cs-line{border-bottom:1px solid var(--n-700);height:28px;margin-bottom:3px}
-.client-sign .cs-label{font-size:11px;color:var(--n-400)}
-
-.footer-info{border-top:1px solid var(--n-200);margin-top:16px;padding-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:11px;color:var(--n-400)}
-.footer-info strong{color:var(--n-700)}
-.sign-row{display:flex;justify-content:space-between;margin-top:14px;padding-top:10px;border-top:1px solid var(--n-200)}
-.sign-box{width:220px}
-.sign-box .line{border-bottom:1px solid var(--n-700);height:26px;margin-bottom:3px}
-.sign-box label{font-size:11px;color:var(--n-400)}
-.terms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:10px;padding:8px 14px;background:var(--n-50);border-radius:3px}
+.sum{background:var(--n50);border:1px solid var(--n200);border-radius:4px;padding:16px 22px;margin:16px 0}
+.sr{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.sr .lb{font-size:13px;color:var(--n500)}
+.sr .vl{font-size:15px;font-weight:600;color:var(--n800)}
+.sr-f{padding-top:10px;margin-top:6px;border-top:2px solid var(--n300)}
+.sr-f .lb{font-size:15px;font-weight:650;color:var(--n900)}
+#gt{font-size:22px;font-weight:700;color:var(--n900)}
+.cn{font-size:15px;color:var(--n700);margin-top:4px;font-weight:500}
+.sign{display:flex;justify-content:space-between;margin-top:14px;padding-top:10px;border-top:1px solid var(--n200)}
+.sb{width:220px}.sb .ln{border-bottom:1px solid var(--n700);height:26px;margin-bottom:3px}
+.sb label{font-size:11px;color:var(--n400)}
+.terms{font-size:11px;color:var(--n400);line-height:1.8;margin-top:10px;padding:8px 14px;background:var(--n50);border-radius:3px}
 .terms p{margin-bottom:2px}
-
-/* ── 默认淡显 ── */
-.hint-placeholder{color:#bbb!important}
-
-/* ── 按钮 ── */
-.actions{display:flex;gap:10px;justify-content:center;margin:18px 0 0;flex-wrap:wrap}
-.btn{padding:8px 24px;border:none;border-radius:3px;font-size:13px;cursor:pointer;font-weight:600;transition:background .12s,transform .1s}
+.act{display:flex;gap:10px;justify-content:center;margin:18px 0 0;flex-wrap:wrap}
+.btn{padding:8px 24px;border:none;border-radius:3px;font-size:13px;cursor:pointer;font-weight:600}
 .btn:active{transform:scale(.97)}
-.btn-primary{background:var(--n-800);color:#fff}
-.btn-primary:hover{background:var(--n-900)}
-.btn-secondary{background:var(--n-100);color:var(--n-500)}
-.btn-secondary:hover{background:var(--n-200)}
-.btn-client{background:var(--accent);color:#fff}
-.btn-client:hover{background:oklch(40% 0.12 70)}
-
-/* ── 打印 ── */
+.btn-p{background:var(--n800);color:#fff}.btn-p:hover{background:var(--n900)}
+.btn-s{background:var(--n100);color:var(--n500)}.btn-s:hover{background:var(--n200)}
+.btn-c{background:var(--ac);color:#fff}.btn-c:hover{background:oklch(40% .12 70)}
+.cv{display:none;padding:28px 40px;max-width:750px;margin:0 auto}
+.cv.s{display:block}
+.editor.cm .eb{display:none}
+.editor.cm .cv{display:block}
+.ct{text-align:center;font-size:20px;font-weight:650;letter-spacing:4px;margin-bottom:22px}
+.clt{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13.5px}
+.clt th{background:var(--n100);padding:8px 12px;border:1px solid var(--n200);text-align:center;font-size:12px;color:var(--n500)}
+.clt td{padding:8px 12px;border:1px solid var(--n150);text-align:center}
+.cto{text-align:right;font-size:18px;font-weight:650;padding:12px 0;border-top:2px solid var(--n800);margin-top:8px}
+.cto .b{font-size:26px;color:var(--red);font-weight:700}
+.cterms{font-size:11px;color:var(--n400);line-height:1.8;margin-top:16px;padding:10px 14px;background:var(--n50);border-radius:3px}
+.cs{display:flex;justify-content:space-between;margin-top:20px}
+.cs .b{width:220px}.cs .l{border-bottom:1px solid var(--n700);height:28px;margin-bottom:3px}
+.cs .lb{font-size:11px;color:var(--n400)}
+@media(max-width:768px){
+  body{padding:10px}.editor{padding:12px 8px}
+  h1{font-size:18px}.order-bar{max-width:100%;padding:4px 10px}
+  .order-bar input{min-width:100px}
+  .info-grid{padding:8px 10px;gap:6px 12px}
+  .info-grid input,.info-grid select{font-size:12px;padding:5px 8px}
+  .cat-hd{padding:6px 10px;font-size:12px}.cat-n{font-size:13px}.cat-t{font-size:11px;padding:2px 8px}
+  .tw table,.tw thead,.tw tbody,.tw th,.tw td,.tw tr{display:block}
+  .tw thead{display:none!important}
+  .tw .ghost td{height:28px;line-height:28px}
+  .tw tr:not(.ghost){border:1px solid var(--n200);border-radius:4px;margin-bottom:6px;padding:6px 8px;height:auto;background:#fff;position:relative}
+  .tw td{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border:none;height:auto;min-height:36px;gap:6px}
+  .tw td::before{content:attr(dl);font-weight:600;color:var(--n500);font-size:11px;white-space:nowrap;flex-shrink:0;min-width:52px}
+  .tw td input,.tw td select{width:auto;max-width:55%;flex:1;font-size:12px;padding:4px 6px}
+  .tw td input.num{min-width:40px;max-width:70px}
+  .tw td .ic{width:32px;height:32px}.tw td .ic svg{width:24px;height:24px}
+  .tw td:has(.row-del){position:absolute;top:4px;right:4px;padding:0;min-height:0;border:none}
+  .tw td:has(.row-del)::before{display:none}
+  .tw td:has(.ic){justify-content:flex-start;padding:2px 0;min-height:28px}
+  .tw td:has(.ic)::before{content:'';display:none}
+  .sum{padding:10px 12px}.sr .lb{font-size:12px}.sr .vl{font-size:13px}#gt{font-size:18px}
+  .act{gap:6px;margin:12px 0 0}.btn{padding:6px 14px;font-size:12px}
+}
 @media print{
-  body{background:#fff;padding:0;margin:6mm}
-  .editor{box-shadow:none;padding:0}
-  .editor.client-mode .editor-body{display:none}
-  .editor.client-mode .client-view{display:block}
-  .client-view{display:block!important;padding:0}
-  .actions,.add-row,.row-del{display:none!important}
-  td input,td select{border:none!important;background:transparent!important;padding:2px 0!important;color:var(--n-900)!important;box-shadow:none!important}
-  td input.num{width:auto}
-  td .nonstd{background:transparent!important;color:var(--n-900)!important}
-  td .hint-input{color:var(--n-300)!important}
-  .category{border:1px solid var(--n-200);break-inside:avoid}
+  body{background:#fff;padding:0;margin:6mm}.editor{box-shadow:none;padding:0}
+  .cv{display:block!important;padding:0}
+  .editor.cm .eb{display:none}.editor.cm .cv{display:block}
+  .act,.row-del{display:none!important}
+  td input,td select{border:none!important;background:transparent!important;padding:2px 0!important;color:var(--n900)!important}
+  .cat{border:1px solid var(--n200);break-inside:avoid}
   @page{size:A4;margin:8mm 8mm}
 }
 </style>
 </head>
 <body>
 <div class="editor" id="app">
-
 <div class="subtitle">- 橱柜报价单 -</div>
 <h1>THOR 索而智能家居</h1>
-<div class="order-bar">
-  <span class="order-label">订单编号</span>
-  <input id="orderNo" placeholder="THOR-">
-</div>
-
-<!-- 客户信息 -->
+<div class="order-bar"><span class="order-label">订单编号</span><input id="ono" placeholder="THOR-"></div>
 <div class="info-section">
   <div class="info-head">报价信息</div>
-  <div class="info-grid grid-3">
-    <div><label>报价日期</label><input type="date" id="quoteDate"></div>
-    <div><label>报价人员</label><input id="salesman" placeholder="姓名"></div>
-    <div><label>下单店面</label><input id="shop" placeholder="店面名称"></div>
+  <div class="info-grid g3">
+    <div><label>报价日期</label><input type="date" id="qd"></div>
+    <div><label>报价人员</label><input id="sm" placeholder="姓名"></div>
+    <div><label>下单店面</label><input id="sh" placeholder="店面名称"></div>
   </div>
 </div>
 <div class="info-section">
   <div class="info-head">客户信息</div>
-  <div class="info-grid grid-3">
-    <div><label>客户姓名</label><input id="customer" placeholder="客户姓名"></div>
-    <div><label>联系电话</label><input id="phone" placeholder="联系电话"></div>
-    <div><label>客户电话</label><input id="customerPhone" placeholder="客户电话"></div>
-  </div>
-  <div class="info-grid" style="padding-top:0;margin-top:-1px;border-top:none">
-    <div><label>客户地址</label><input id="address" placeholder="地址"></div>
+  <div class="info-grid g3">
+    <div><label>客户姓名</label><input id="cust" placeholder="客户姓名"></div>
+    <div><label>联系电话</label><input id="ph" placeholder="联系电话"></div>
+    <div><label>客户地址</label><input id="addr" placeholder="地址"></div>
   </div>
 </div>
+<div class="eb" id="eb">
 
-
-<div class="editor-body" id="editorBody">
-
-<!-- 1 柜体 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-cabinet')">
-    <span class="cat-name">柜体</span>
-    <span class="cat-total">¥<span id="cabinetTotal">0</span></span>
+<!-- 1 柜体（材料+非标系数） -->
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bc')">
+    <span class="cat-n">柜体</span>
+    <span class="cat-t">¥<span id="ct0">0</span></span>
   </div>
-  <div class="category-body" id="body-cabinet">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:96px"><col style="width:auto"><col style="width:58px"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bc"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-m"><col class="col-r"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>系列</th><th>柜型</th>
-      <th>尺寸 宽×高×深(mm)</th><th>非标系数</th><th>数量(米)</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="cabinetRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>材料</th><th>非标系数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="cr"></tbody></table></div></div>
 </div>
 
 <!-- 2 台面 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-countertop')">
-    <span class="cat-name">台面</span>
-    <span class="cat-total">¥<span id="countertopTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bt')">
+    <span class="cat-n">台面</span>
+    <span class="cat-t">¥<span id="ct1">0</span></span>
   </div>
-  <div class="category-body" id="body-countertop">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:96px"><col style="width:auto"><col style="width:58px"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bt"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-m"><col class="col-r"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>系列</th><th>挡水形式</th><th>尺寸 宽×高×深(mm)</th><th>非标系数</th><th>数量(米)</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="countertopRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>材料</th><th>非标系数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="tr"></tbody></table></div></div>
 </div>
 
 <!-- 3 见光板 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-panel')">
-    <span class="cat-name">见光板</span>
-    <span class="cat-total">¥<span id="panelTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bp')">
+    <span class="cat-n">见光板</span>
+    <span class="cat-t">¥<span id="ct2">0</span></span>
   </div>
-  <div class="category-body" id="body-panel">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:96px"><col style="width:auto"><col style="width:58px"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bp"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-m"><col class="col-r"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>系列</th><th>立面</th><th>尺寸 宽×高×厚(mm)</th><th>非标系数</th><th>数量(㎡)</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="panelRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>材料</th><th>非标系数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="pr"></tbody></table></div></div>
 </div>
 
 <!-- 4 地脚线/顶封板 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-trim')">
-    <span class="cat-name">地脚线/顶封板</span>
-    <span class="cat-total">¥<span id="trimTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bt2')">
+    <span class="cat-n">地脚线/顶封板</span>
+    <span class="cat-t">¥<span id="ct3">0</span></span>
   </div>
-  <div class="category-body" id="body-trim">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:100px"><col style="width:auto"><col style="width:58px"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bt2"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-m"><col class="col-r"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>名称</th><th>材质</th><th>尺寸 宽×高×厚(mm)</th><th>非标系数</th><th>数量(米)</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="trimRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>材料</th><th>非标系数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="trr"></tbody></table></div></div>
 </div>
 
-<!-- 5 功能配件 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-hardware')">
-    <span class="cat-name">功能配件</span>
-    <span class="cat-total">¥<span id="hardwareTotal">0</span></span>
+<!-- 5 功能配件（技术参数） -->
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bh')">
+    <span class="cat-n">功能配件</span>
+    <span class="cat-t">¥<span id="ct4">0</span></span>
   </div>
-  <div class="category-body" id="body-hardware">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:100px"><col style="width:auto"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bh"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-par"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>配件名称</th><th>材质</th><th>尺寸 宽×高×深(mm)</th><th>数量</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="hardwareRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>技术参数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="hr"></tbody></table></div></div>
 </div>
 
 <!-- 6 水槽/龙头 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-sink')">
-    <span class="cat-name">水槽/龙头</span>
-    <span class="cat-total">¥<span id="sinkTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bs')">
+    <span class="cat-n">水槽/龙头</span>
+    <span class="cat-t">¥<span id="ct5">0</span></span>
   </div>
-  <div class="category-body" id="body-sink">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:100px"><col style="width:auto"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bs"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-par"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>名称</th><th>材质</th><th>尺寸 宽×高×深(mm)</th><th>数量</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="sinkRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>技术参数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="sr"></tbody></table></div></div>
 </div>
 
 <!-- 7 电器 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-electric')">
-    <span class="cat-name">电器</span>
-    <span class="cat-total">¥<span id="electricTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('be')">
+    <span class="cat-n">电器</span>
+    <span class="cat-t">¥<span id="ct6">0</span></span>
   </div>
-  <div class="category-body" id="body-electric">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:auto"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="be"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-par"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>名称</th><th>尺寸 宽×高×深(mm)</th><th>数量</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="electricRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>技术参数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="er"></tbody></table></div></div>
 </div>
 
 <!-- 8 增加项目 -->
-<div class="category">
-  <div class="category-header" onclick="toggleCat('body-extra')">
-    <span class="cat-name">增加项目</span>
-    <span class="cat-total">¥<span id="extraTotal">0</span></span>
+<div class="cat">
+  <div class="cat-hd" onclick="tog('bx')">
+    <span class="cat-n">增加项目</span>
+    <span class="cat-t">¥<span id="ct7">0</span></span>
   </div>
-  <div class="category-body" id="body-extra">
-    <div class="table-wrap"><table>
-<colgroup><col style="width:26px"><col style="width:72px"><col style="width:161px"><col style="width:auto"><col style="width:65px"><col style="width:77px"><col style="width:84px"><col style="width:26px"></colgroup>
+  <div class="cat-bd" id="bx"><div class="tw"><table>
+<colgroup><col class="col-i"><col class="col-p"><col class="col-s"><col class="col-c"><col class="col-d"><col class="col-par"><col class="col-q"><col class="col-u"><col class="col-pr"><col class="col-t"><col class="col-x"></colgroup>
 <thead><tr>
-      <th>#</th><th>图</th><th>项目名称</th><th>尺寸 宽×高×深(mm)</th><th>数量</th><th>单价</th><th>小计</th><th></th>
-    </tr></thead><tbody id="extraRows"></tbody></table></div>
-  </div>
+<th>#</th><th>图</th><th>名称</th><th>THOR编码</th><th>尺寸(宽×高×深)</th><th>技术参数</th><th>数量</th><th>单位</th><th>单价</th><th>金额</th><th></th>
+</tr></thead><tbody id="xr"></tbody></table></div></div>
 </div>
 
-<!-- 合计 -->
-<div class="summary">
-  <div class="summary-row"><span class="label">柜体</span><span class="val">¥<span id="s1">0</span></span></div>
-  <div class="summary-row"><span class="label">台面</span><span class="val">¥<span id="s2">0</span></span></div>
-  <div class="summary-row"><span class="label">见光板</span><span class="val">¥<span id="s3">0</span></span></div>
-  <div class="summary-row"><span class="label">地脚线/顶封板</span><span class="val">¥<span id="s4">0</span></span></div>
-  <div class="summary-row"><span class="label">功能配件</span><span class="val">¥<span id="s5">0</span></span></div>
-  <div class="summary-row"><span class="label">水槽/龙头</span><span class="val">¥<span id="s6">0</span></span></div>
-  <div class="summary-row"><span class="label">电器</span><span class="val">¥<span id="s7">0</span></span></div>
-  <div class="summary-row"><span class="label">增加项目</span><span class="val">¥<span id="s8">0</span></span></div>
-  <div class="summary-row summary-row-final">
-    <span class="label">合计金额</span>
-    <span class="val" id="grandTotal">¥0</span>
-  </div>
-  <div class="cn-money" id="cnAmount">人民币:零元整</div>
+<div class="sum">
+  <div class="sr"><span class="lb">柜体</span><span class="vl">¥<span id="s0">0</span></span></div>
+  <div class="sr"><span class="lb">台面</span><span class="vl">¥<span id="s1">0</span></span></div>
+  <div class="sr"><span class="lb">见光板</span><span class="vl">¥<span id="s2">0</span></span></div>
+  <div class="sr"><span class="lb">地脚线/顶封板</span><span class="vl">¥<span id="s3">0</span></span></div>
+  <div class="sr"><span class="lb">功能配件</span><span class="vl">¥<span id="s4">0</span></span></div>
+  <div class="sr"><span class="lb">水槽/龙头</span><span class="vl">¥<span id="s5">0</span></span></div>
+  <div class="sr"><span class="lb">电器</span><span class="vl">¥<span id="s6">0</span></span></div>
+  <div class="sr"><span class="lb">增加项目</span><span class="vl">¥<span id="s7">0</span></span></div>
+  <div class="sr sr-f"><span class="lb">合计金额</span><span class="vl" id="gt">¥0</span></div>
+  <div class="cn" id="cn">人民币:零元整</div>
 </div>
-
-<div class="sign-row">
-  <div class="sign-box"><div class="line"></div><label>客户签字回传</label></div>
-  <div class="sign-box"><div class="line"></div><label>财务确认签字</label></div>
+<div class="sign">
+  <div class="sb"><div class="ln"></div><label>客户签字回传</label></div>
+  <div class="sb"><div class="ln"></div><label>财务确认签字</label></div>
 </div>
 <div class="terms">
   <p>注:1)如设计图有变更,以新设计图的报价为准。2)下单生产前,请支付全部货款;交货期从货款到账次日起计。</p>
   <p>3)本报价表为初步报价,具体价格依据细化方案后为准,且此次价格有效期为30天。</p>
   <p>总公司:索而智能家居有限公司 | 地址:东莞市洪梅镇海新路2号 | 电话:</p>
 </div>
-</div><!-- /editor-body -->
-
-<!-- 客户版 -->
-<div class="client-view" id="clientView">
-  <div class="client-title">THOR 索而智能家居 - 报价单</div>
-
-  <table class="client-table"><thead><tr><th style="width:40px">#</th><th>项目</th><th style="width:110px">金额(元)</th></tr></thead>
-  <tbody id="clientRows"></tbody></table>
-  <div class="client-total">
-    合计金额:<span class="big" id="ci-total">¥0</span><br>
-    <span style="font-size:14px;font-weight:400;color:var(--accent-dim)" id="ci-cn"></span>
-  </div>
-  <div class="client-terms">
-    <p>注:1)如设计图有变更,以新设计图的报价为准。2)下单生产前,请支付全部货款;交货期从货款到账次日起计。</p>
-    <p>3)本报价表为初步报价,具体价格依据细化方案后为准,且此次价格有效期为30天。</p>
-    <p>总公司:索而智能家居有限公司 | 地址:东莞市洪梅镇海新路2号</p>
-  </div>
-  <div class="client-sign">
-    <div class="cs-box"><div class="cs-line"></div><div class="cs-label">客户签字回传</div></div>
-    <div class="cs-box"><div class="cs-line"></div><div class="cs-label">财务确认签字</div></div>
-  </div>
+</div>
+<div class="cv" id="cv">
+  <div class="ct">THOR 索而智能家居 - 报价单</div>
+  <table class="clt"><thead><tr><th style="width:40px">#</th><th>项目</th><th style="width:110px">金额(元)</th></tr></thead><tbody id="cvr"></tbody></table>
+  <div class="cto">合计金额:<span class="b" id="cit">¥0</span><br><span style="font-size:14px;color:var(--ac)" id="cicn"></span></div>
+  <div class="cterms"><p>注:1)如设计图有变更,以新设计图的报价为准。2)下单生产前,请支付全部货款;交货期从货款到账次日起计。</p><p>3)本报价表为初步报价,具体价格依据细化方案后为准,且此次价格有效期为30天。</p><p>总公司:索而智能家居有限公司 | 地址:东莞市洪梅镇海新路2号</p></div>
+  <div class="cs"><div class="b"><div class="l"></div><div class="lb">客户签字回传</div></div><div class="b"><div class="l"></div><div class="lb">财务确认签字</div></div></div>
+</div>
+<div class="act">
+  <button class="btn btn-c" onclick="scv()">📄 生成客户报价单</button>
+  <button class="btn btn-p" onclick="window.print()">🖨️ 打印</button>
+  <button class="btn btn-s" onclick="rst()">↺ 重置</button>
+</div>
 </div>
 
-<div class="actions">
-  <button class="btn btn-client" onclick="showClientView()">📄 生成客户报价单</button>
-  <button class="btn btn-primary" onclick="window.print()">🖨️ 打印</button>
-  <button class="btn btn-secondary" onclick="resetAll()">↺ 重置</button>
-</div>
-
-</div><!-- /editor -->
-
-<script>window.THOR_DATA = 
-
-
-
-{
-  
-  cabinet: {
-    series: [
-      '大千云纹','大悦韵纹','大影臻纹','大彩绚丽','大观金属',
-      '大语玉润','大传质影','铂金系列','铂金光学膜',
-      '云纹系列','韵纹系列','臻纹系列','绚丽系列','金属系列','玉润系列','质影/原色'
-    ],
-    types: ['洗手盘地柜','地柜','灶台吊柜','吊柜','高柜','上翻门吊柜'],
-    pricing: {
-      大千云纹:{'地柜680':5627,'地柜720':5908,'吊柜700':5077,'吊柜800':5331,'吊柜900':5597,panel:1598},
-      大悦韵纹:{'地柜680':6071,'地柜720':6375,'吊柜700':5535,'吊柜800':5811,'吊柜900':6102,panel:2226},
-      大影臻纹:{'地柜680':6753,'地柜720':7090,'吊柜700':6198,'吊柜800':6508,'吊柜900':6833,panel:3222},
-      大彩绚丽:{'地柜680':5946,'地柜720':6243,'吊柜700':5405,'吊柜800':5676,'吊柜900':5959,panel:2050},
-      大观金属:{'地柜680':6240,'地柜720':6552,'吊柜700':5715,'吊柜800':6001,'吊柜900':6301,panel:2467},
-      大语玉润:{'地柜680':6874,'地柜720':7218,'吊柜700':6361,'吊柜800':6679,'吊柜900':7013,panel:3365},
-      大传质影:{'地柜680':8145,'地柜720':8552,'吊柜700':7672,'吊柜800':8056,'吊柜900':8459,panel:5193},
-      铂金系列:{'地柜680':4297,'地柜720':4511,'吊柜700':3883,'吊柜800':4077,'吊柜900':4281,panel:1397},
-      铂金光学膜:{'地柜680':4502,'地柜720':4727,'吊柜700':4095,'吊柜800':4300,'吊柜900':4515,panel:1602},
-      云纹系列:{'地柜680':4631,'地柜720':4863,'吊柜700':4227,'吊柜800':4439,'吊柜900':4661,panel:1598},
-      韵纹系列:{'地柜680':5075,'地柜720':5329,'吊柜700':4686,'吊柜800':4920,'吊柜900':5166,panel:2226},
-      臻纹系列:{'地柜680':5697,'地柜720':5982,'吊柜700':5286,'吊柜800':5550,'吊柜900':5827,panel:3222},
-      绚丽系列:{'地柜680':4953,'地柜720':5201,'吊柜700':4560,'吊柜800':4787,'吊柜900':5027,panel:2050},
-      金属系列:{'地柜680':5161,'地柜720':5419,'吊柜700':4781,'吊柜800':5020,'吊柜900':5271,panel:2467},
-      玉润系列:{'地柜680':5796,'地柜720':6086,'吊柜700':5426,'吊柜800':5698,'吊柜900':5982,panel:3365},
-      '质影/原色':{'地柜680':7359,'地柜720':7727,'吊柜700':7041,'吊柜800':7393,'吊柜900':7763,panel:5193}
-    },
-    
-    images: {}
-  },
-
-  
-  countertop: {
-    series: ['琉晶-丝纹GY01','琉晶-绘纹GY02','晶灵-蚀刻GY03','晶灵-雾砂GY04','晶灵-珠星GY05','晶灵-雾瓷GY08','品灵-柳叶GY09','晶灵-印迹GY10','晶砾-银砂GY11','304#喷砂纹实心','琉晶等实心多层'],
-    thicknesses: ['5mm','10mm','12mm','15mm'],
-    pricing: {
-      '琉晶-丝纹GY01':{'5mm':0,'10mm':0,'12mm':1655,'15mm':0},
-      '琉晶-绘纹GY02':{'5mm':0,'10mm':0,'12mm':1585,'15mm':0},
-      '晶灵-蚀刻GY03':{'5mm':0,'10mm':0,'12mm':2765,'15mm':0},
-      '晶灵-雾砂GY04':{'5mm':0,'10mm':0,'12mm':3405,'15mm':0},
-      '晶灵-珠星GY05':{'5mm':0,'10mm':0,'12mm':2765,'15mm':0},
-      '晶灵-雾瓷GY08':{'5mm':0,'10mm':0,'12mm':3569,'15mm':0},
-      '品灵-柳叶GY09':{'5mm':0,'10mm':0,'12mm':3405,'15mm':0},
-      '晶灵-印迹GY10':{'5mm':0,'10mm':0,'12mm':3405,'15mm':0},
-      '晶砾-银砂GY11':{'5mm':5000,'10mm':0,'12mm':0,'15mm':0},
-      '304#喷砂纹实心':{'5mm':2506,'10mm':5035,'12mm':0,'15mm':0},
-      '琉晶等实心多层':{'5mm':4887,'10mm':6986,'12mm':0,'15mm':0}
-    },
-    images: {}
-  },
-
-  
-  hardware: [
-    {id:'h1',name:'百隆107°集成阻尼全盖铰链',price:77,unit:'个',icon:'hinge'},
-    {id:'h2',name:'百隆107°集成阻尼半盖铰链',price:82,unit:'个',icon:'hinge'},
-    {id:'h3',name:'百隆107°集成阻尼内掩铰链',price:83,unit:'个',icon:'hinge'},
-    {id:'h4',name:'百隆95°集成阻尼转角柜门铰链',price:110,unit:'个',icon:'hinge'},
-    {id:'h5',name:'反弹器',price:14,unit:'个',icon:'hinge'},
-    {id:'h6',name:'百隆155°集成阻尼全盖铰链',price:121,unit:'个',icon:'hinge'},
-    {id:'h7',name:'天地铰链(铝框)',price:690,unit:'套',icon:'hinge'},
-    {id:'h8',name:'百隆魅宝低抽400',price:1141,unit:'套',icon:'drawer'},
-    {id:'h9',name:'百隆魅宝扶杆高抽400',price:1406,unit:'套',icon:'drawer'},
-    {id:'h10',name:'百隆全拉托底轨410(阻尼)',price:624,unit:'套',icon:'drawer'},
-    {id:'h11',name:'百隆反弹全拉托底轨410',price:1005,unit:'套',icon:'drawer'},
-    {id:'h12',name:'百隆乐薄低抽450',price:1266,unit:'套',icon:'drawer'},
-    {id:'h13',name:'百隆乐薄高抽450',price:1605,unit:'套',icon:'drawer'},
-    {id:'h14',name:'百隆乐薄内低抽450',price:2091,unit:'套',icon:'drawer'},
-    {id:'h15',name:'百隆全拉隔板锁定装置',price:394,unit:'套',icon:'drawer'},
-    {id:'h16',name:'铝合金内分隔件600',price:603,unit:'套',icon:'drawer'},
-    {id:'h17',name:'铝合金内分隔件800',price:941,unit:'套',icon:'drawer'},
-    {id:'h18',name:'可调实木抽屉分隔件A',price:1003,unit:'套',icon:'drawer'},
-    {id:'h19',name:'希勒3.0三边平篮800',price:868,unit:'套',icon:'basket'},
-    {id:'h20',name:'希勒3.0三边碗碟篮800',price:1251,unit:'套',icon:'basket'},
-    {id:'h21',name:'希勒3.0调味篮400',price:1611,unit:'套',icon:'basket'},
-    {id:'h22',name:'希勒4.0三边平篮800',price:1423,unit:'套',icon:'basket'},
-    {id:'h23',name:'希勒4.0三边碗碟篮800',price:2000,unit:'套',icon:'basket'},
-    {id:'h24',name:'希勒飞碟篮900',price:3431,unit:'套',icon:'basket'},
-    {id:'h25',name:'希勒小怪物篮900',price:3339,unit:'套',icon:'basket'},
-    {id:'h26',name:'希勒四层高柜连动拉篮450',price:2919,unit:'套',icon:'basket'},
-    {id:'h27',name:'希勒六层高柜连动拉篮600',price:4180,unit:'套',icon:'basket'},
-    {id:'h28',name:'宁卡抽拉式垃圾桶',price:2817,unit:'套',icon:'basket'},
-    {id:'h29',name:'L型免拉手',price:59,unit:'米',icon:'handle'},
-    {id:'h30',name:'U型免拉手',price:73,unit:'米',icon:'handle'},
-    {id:'h31',name:'L型灯光免拉手',price:220,unit:'米',icon:'handle'},
-    {id:'h32',name:'水晶拉手(32孔距)',price:29,unit:'个',icon:'handle'},
-    {id:'h33',name:'水晶拉手(96孔距)',price:169,unit:'个',icon:'handle'},
-    {id:'h34',name:'金属拉手(96孔距)',price:14,unit:'个',icon:'handle'},
-    {id:'h35',name:'金属拉手(128孔距)',price:18,unit:'个',icon:'handle'},
-    {id:'h36',name:'皮革拉手',price:49,unit:'个',icon:'handle'},
-    {id:'h37',name:'嵌入式灯条600',price:104,unit:'个',icon:'light'},
-    {id:'h38',name:'嵌入式灯条800',price:140,unit:'个',icon:'light'},
-    {id:'h39',name:'嵌入式斜照灯条600',price:116,unit:'个',icon:'light'},
-    {id:'h40',name:'抽屉感应灯600',price:348,unit:'个',icon:'light'},
-    {id:'h41',name:'抽屉感应灯800',price:432,unit:'个',icon:'light'},
-    {id:'h42',name:'双面发光层板灯600',price:140,unit:'个',icon:'light'},
-    {id:'h43',name:'双面发光层板灯800',price:176,unit:'个',icon:'light'},
-    {id:'h44',name:'嵌入式手扫感应灯600',price:212,unit:'个',icon:'light'},
-    {id:'h45',name:'单门碰感应开关',price:112,unit:'个',icon:'switch'},
-    {id:'h46',name:'双门碰感应开关',price:172,unit:'个',icon:'switch'},
-    {id:'h47',name:'手扫感应开关',price:112,unit:'个',icon:'switch'},
-    {id:'h48',name:'触摸感应开关',price:128,unit:'个',icon:'switch'},
-    {id:'h49',name:'人体感应开关',price:132,unit:'个',icon:'switch'},
-    {id:'h50',name:'集控电源60W',price:340,unit:'个',icon:'switch'},
-    {id:'h51',name:'集控电源30W',price:180,unit:'个',icon:'switch'},
-    {id:'h52',name:'级联线',price:14,unit:'个',icon:'wire'},
-    {id:'h53',name:'玻璃夹板灯600',price:90,unit:'个',icon:'light'},
-    {id:'h54',name:'嵌入式灯条1500',price:246,unit:'个',icon:'light'},
-    {id:'h55',name:'嵌入式灯条1800',price:295,unit:'个',icon:'light'}
-  ],
-
-  
-  rules: {
-    countertop: {
-      
-      standard: { width: 600, thickness: 15, frontHeight: '12/19/39', splashHeight: 46, backHeight: 50 },
-      
-      widthMultiplier: [
-        { max: 600,  multiplier: 1.0 },
-        { max: 650,  multiplier: 1.3 },
-        { max: 900,  multiplier: 1.5 },
-        { max: 1050, multiplier: 2.0 }
-      ],
-      
-      minLength: 1000,
-      
-      edgeUpcharge: { '前斜边': 500, '前弧边': 500, unit: '元/米' }
-    },
-
-    
-    processing: {
-      stoveHole: 300,       
-      sinkHole: 900,        
-      sinkHoleNote: '公司配套水槽可免收',
-      woodCrate: 300,       
-      unit: '元/个'
-    },
-
-    
-    cabinet: {
-      
-      included: '柜体及连接件、门铰、门板、可调脚、柜体铝合金免拉手',
-      
-      wallCabinet: { halfPrice: 0.65, halfHeightRatio: 0.5 },
-      
-      tallCabinet: { halfMultiplier: 2, fullMultiplier: 3 },
-      
-      topPanel: {
-        noPattern: { threshold: 100, singleLayer: 400, unit: '元/米' },
-        minArea: 0.1
-      },
-      
-      baseShoe: {
-        '布纹板': 270,
-        '喷粉': 400,
-        unit: '元/米'
-      },
-      
-      doorUpcharges: {
-        '极光M.L48': 200,
-        '极光M.L49': 120,
-        '斜边门': 400,
-        '弧边门': 400,
-        '不锈钢压型/铝框造型': 1000,
-        '格栅门': 2000,
-        unit: '元/㎡'
-      },
-      
-      thicknessUpcharges: {
-        '18mm': { default: true },
-        '22mm': { upcharge: 1000, withHandle: 1500, unit: '元/㎡' }
-      },
-      
-      materialMultiplier: {
-        '哑光小雨滴板': 1.0,
-        '布纹板': 1.0,
-        '喷粉柜体': 1.1,
-        '云纹板体': 1.05
-      },
-      
-      doubleBackPanel: { upcharge: 1150, unit: '元/㎡' },
-      
-      wallHandle: { default: '斜边门型或门板下扣10mm', bottomHandleUpcharge: 150, unit: '元/m' }
-    }
-  }
-}</script>
 <script>
-// ★ 数据从 data.js 的 THOR_DATA 加载
-const CABINET_DATA = THOR_DATA.cabinet.pricing;
-const CABINET_SERIES = THOR_DATA.cabinet.series;
-const CABINET_TYPES = THOR_DATA.cabinet.types;
-const COUNTERTOP_DATA = THOR_DATA.countertop.pricing;
-const COUNTERTOP_SERIES = THOR_DATA.countertop.series;
-const THICKNESSES = THOR_DATA.countertop.thicknesses;
-const HARDWARE_DATA = THOR_DATA.hardware;
-const SVG_ICONS = {
-  cabinet:`<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>`,
-  countertop:`<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>`,
-  panel:`<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>`,
-  trim:`<svg viewBox="0 0 36 36"><rect x="3" y="7" width="30" height="5" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="24" width="30" height="5" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="3" y1="12" x2="3" y2="24" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/><line x1="33" y1="12" x2="33" y2="24" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/></svg>`,
-  hinge:`<svg viewBox="0 0 36 36"><rect x="6" y="8" width="24" height="8" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><circle cx="10" cy="12" r="2" fill="#bbb"/><circle cx="26" cy="12" r="2" fill="#bbb"/><rect x="12" y="18" width="12" height="4" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="14" y="24" width="8" height="4" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>`,
-  drawer:`<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="8" y="8" width="20" height="8" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="8" y="18" width="20" height="10" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><circle cx="18" cy="12" r="1.5" fill="#ccc"/><circle cx="18" cy="23" r="1.5" fill="#ccc"/></svg>`,
-  basket:`<svg viewBox="0 0 36 36"><rect x="6" y="6" width="24" height="24" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><line x1="6" y1="16" x2="30" y2="16" stroke="#ddd" stroke-width="1"/><line x1="6" y1="22" x2="30" y2="22" stroke="#ddd" stroke-width="1"/><line x1="12" y1="6" x2="12" y2="30" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/><line x1="24" y1="6" x2="24" y2="30" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/></svg>`,
-  handle:`<svg viewBox="0 0 36 36"><rect x="8" y="14" width="20" height="8" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><circle cx="14" cy="18" r="1.5" fill="#bbb"/><circle cx="22" cy="18" r="1.5" fill="#bbb"/><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#ddd" stroke-width="1"/></svg>`,
-  light:`<svg viewBox="0 0 36 36"><rect x="6" y="5" width="24" height="26" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><rect x="10" y="9" width="16" height="18" rx="1" fill="none" stroke="#bbb" stroke-width="1"/><line x1="12" y1="14" x2="24" y2="14" stroke="#ffd700" stroke-width="1.5" opacity=".6"/><line x1="12" y1="18" x2="24" y2="18" stroke="#ffd700" stroke-width="1.5" opacity=".6"/><line x1="12" y1="22" x2="24" y2="22" stroke="#ffd700" stroke-width="1.5" opacity=".6"/><circle cx="18" cy="11" r="2" fill="#ffe066"/></svg>`,
-  switch:`<svg viewBox="0 0 36 36"><rect x="8" y="10" width="20" height="16" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><circle cx="18" cy="18" r="4" fill="none" stroke="#aaa" stroke-width="1.3"/><line x1="18" y1="14" x2="18" y2="22" stroke="#666" stroke-width="1.5"/><line x1="14" y1="18" x2="22" y2="18" stroke="#666" stroke-width="1.5"/></svg>`,
-  wire:`<svg viewBox="0 0 36 36"><line x1="6" y1="10" x2="30" y2="10" stroke="#888" stroke-width="2"/><line x1="6" y1="18" x2="30" y2="18" stroke="#888" stroke-width="2"/><line x1="6" y1="26" x2="30" y2="26" stroke="#888" stroke-width="2"/><rect x="4" y="6" width="28" height="24" rx="2" fill="none" stroke="#ddd" stroke-width="1"/></svg>`,
-  sink:`<svg viewBox="0 0 36 36"><rect x="5" y="10" width="26" height="20" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="13" y="6" width="10" height="6" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><circle cx="18" cy="9" r="1.8" fill="#ccc"/><line x1="9" y1="20" x2="27" y2="20" stroke="#ddd" stroke-width="1"/><circle cx="18" cy="25" r="2.5" fill="none" stroke="#ccc" stroke-width="1"/></svg>`,
-  electric:`<svg viewBox="0 0 36 36"><rect x="5" y="5" width="26" height="26" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="9" y="9" width="18" height="16" rx="2" fill="none" stroke="#bbb" stroke-width="1"/><circle cx="18" cy="21" r="1.8" fill="#ccc"/><rect x="14" y="11" width="8" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>`,
-  extra:`<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="11" x2="18" y2="25" stroke="#aaa" stroke-width="1.5"/><line x1="11" y1="18" x2="25" y2="18" stroke="#aaa" stroke-width="1.5"/></svg>`,
-  hardware:`<svg viewBox="0 0 36 36"><circle cx="18" cy="12" r="6" fill="none" stroke="#888" stroke-width="1.3"/><rect x="10" y="18" width="16" height="12" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="18" x2="18" y2="30" stroke="#ccc" stroke-width="1"/><circle cx="18" cy="12" r="2" fill="#bbb"/></svg>`
-};
-const STD_DIMS = {
-  '洗手盘地柜':{w:800,h:700,d:570}, '地柜':{w:800,h:700,d:570},
-  '灶台吊柜':{w:800,h:700,d:370}, '吊柜':{w:800,h:700,d:370},
-  '高柜':{w:600,h:2100,d:570}, '上翻门吊柜':{w:800,h:700,d:370}
-};
-let cabinetRows=[{series:'大千云纹',type:'洗手盘地柜',qty:1,w:800,h:700,d:570}];
-let countertopRows=[{series:'琉晶-丝纹GY01',thick:'12mm',qty:1}];
-let panelRows=[{series:'大千云纹',face:'A立面',w:800,h:700,thick:20,ratio:1,qty:1}];
-let trimRows=[{name:'不锈钢地脚线',material:'',w:800,h:60,thick:20,ratio:1,qty:1,price:0},{name:'不锈钢顶封板',material:'',w:800,h:100,thick:20,ratio:1,qty:1,price:0}];
-let hardwareRows=[];
-let sinkRows=[{name:'手工单槽',material:'',dim:'',qty:1,price:500},{name:'抽拉龙头',material:'',dim:'',qty:1,price:350}];
-let electricRows=[{name:'嵌入式蒸烤一体机',dim:'',qty:1,price:3000}];
-let extraRows=[{name:'灶炉开槽费',dim:'',qty:1,price:100}];
+function id(i){return document.getElementById(i)}
+var log=function(e){console.error('THOR:',e)};
+var TD={
+cabinet:{s:['大千云纹','大悦韵纹','大影臻纹','大彩绚丽','大观金属','大语玉润','大传质影','铂金系列','铂金光学膜','云纹系列','韵纹系列','臻纹系列','绚丽系列','金属系列','玉润系列','质影/原色'],
+t:['洗手盘地柜','地柜','灶台吊柜','吊柜','高柜','上翻门吊柜'],
+p:{大千云纹:{'地柜680':5627,'地柜720':5908,'吊柜700':5077,'吊柜800':5331,'吊柜900':5597,panel:1598},大悦韵纹:{'地柜680':6071,'地柜720':6375,'吊柜700':5535,'吊柜800':5811,'吊柜900':6102,panel:2226},大影臻纹:{'地柜680':6753,'地柜720':7090,'吊柜700':6198,'吊柜800':6508,'吊柜900':6833,panel:3222},大彩绚丽:{'地柜680':5946,'地柜720':6243,'吊柜700':5405,'吊柜800':5676,'吊柜900':5959,panel:2050},大观金属:{'地柜680':6240,'地柜720':6552,'吊柜700':5715,'吊柜800':6001,'吊柜900':6301,panel:2467},大语玉润:{'地柜680':6874,'地柜720':7218,'吊柜700':6361,'吊柜800':6679,'吊柜900':7013,panel:3365},大传质影:{'地柜680':8145,'地柜720':8552,'吊柜700':7672,'吊柜800':8056,'吊柜900':8459,panel:5193},铂金系列:{'地柜680':4297,'地柜720':4511,'吊柜700':3883,'吊柜800':4077,'吊柜900':4281,panel:1397},铂金光学膜:{'地柜680':4502,'地柜720':4727,'吊柜700':4095,'吊柜800':4300,'吊柜900':4515,panel:1602},云纹系列:{'地柜680':4631,'地柜720':4863,'吊柜700':4227,'吊柜800':4439,'吊柜900':4661,panel:1598},韵纹系列:{'地柜680':5075,'地柜720':5329,'吊柜700':4686,'吊柜800':4920,'吊柜900':5166,panel:2226},臻纹系列:{'地柜680':5697,'地柜720':5982,'吊柜700':5286,'吊柜800':5550,'吊柜900':5827,panel:3222},绚丽系列:{'地柜680':4953,'地柜720':5201,'吊柜700':4560,'吊柜800':4787,'吊柜900':5027,panel:2050},金属系列:{'地柜680':5161,'地柜720':5419,'吊柜700':4781,'吊柜800':5020,'吊柜900':5271,panel:2467},玉润系列:{'地柜680':5796,'地柜720':6086,'吊柜700':5426,'吊柜800':5698,'吊柜900':5982,panel:3365},'质影/原色':{'地柜680':7359,'地柜720':7727,'吊柜700':7041,'吊柜800':7393,'吊柜900':7763,panel:5193}}},
+countertop:{s:['琉晶-丝纹GY01','琉晶-绘纹GY02','晶灵-蚀刻GY03','晶灵-雾砂GY04','晶灵-珠星GY05','晶灵-雾瓷GY08','品灵-柳叶GY09','晶灵-印迹GY10','晶砾-银砂GY11','304#喷砂纹实心','琉晶等实心多层'],tk:['5mm','10mm','12mm','15mm'],
+p:{'琉晶-丝纹GY01':{'5mm':0,'10mm':0,'12mm':1655,'15mm':0}}},
+hw:[{n:'百隆107°集成阻尼全盖铰链',p:77,u:'个',ic:'h'},{n:'百隆107°集成阻尼半盖铰链',p:82,u:'个',ic:'h'},{n:'百隆107°集成阻尼内掩铰链',p:83,u:'个',ic:'h'},{n:'百隆95°集成阻尼转角柜门铰链',p:110,u:'个',ic:'h'},{n:'反弹器',p:14,u:'个',ic:'h'},{n:'百隆155°集成阻尼全盖铰链',p:121,u:'个',ic:'h'},{n:'天地铰链(铝框)',p:690,u:'套',ic:'h'},{n:'百隆魅宝低抽400',p:1141,u:'套',ic:'d'},{n:'百隆魅宝扶杆高抽400',p:1406,u:'套',ic:'d'},{n:'百隆全拉托底轨410(阻尼)',p:624,u:'套',ic:'d'},{n:'百隆反弹全拉托底轨410',p:1005,u:'套',ic:'d'},{n:'百隆乐薄低抽450',p:1266,u:'套',ic:'d'},{n:'百隆乐薄高抽450',p:1605,u:'套',ic:'d'},{n:'百隆乐薄内低抽450',p:2091,u:'套',ic:'d'},{n:'百隆全拉隔板锁定装置',p:394,u:'套',ic:'d'},{n:'铝合金内分隔件600',p:603,u:'套',ic:'d'},{n:'铝合金内分隔件800',p:941,u:'套',ic:'d'},{n:'可调实木抽屉分隔件A',p:1003,u:'套',ic:'d'},{n:'希勒3.0三边平篮800',p:868,u:'套',ic:'b'},{n:'希勒3.0三边碗碟篮800',p:1251,u:'套',ic:'b'},{n:'希勒3.0调味篮400',p:1611,u:'套',ic:'b'},{n:'希勒4.0三边平篮800',p:1423,u:'套',ic:'b'},{n:'希勒4.0三边碗碟篮800',p:2000,u:'套',ic:'b'},{n:'希勒飞碟篮900',p:3431,u:'套',ic:'b'},{n:'希勒小怪物篮900',p:3339,u:'套',ic:'b'},{n:'希勒四层高柜连动拉篮450',p:2919,u:'套',ic:'b'},{n:'希勒六层高柜连动拉篮600',p:4180,u:'套',ic:'b'},{n:'宁卡抽拉式垃圾桶',p:2817,u:'套',ic:'b'},{n:'L型免拉手',p:59,u:'米',ic:'l'},{n:'U型免拉手',p:73,u:'米',ic:'l'},{n:'L型灯光免拉手',p:220,u:'米',ic:'l'},{n:'水晶拉手(32孔距)',p:29,u:'个',ic:'l'},{n:'水晶拉手(96孔距)',p:169,u:'个',ic:'l'},{n:'金属拉手(96孔距)',p:14,u:'个',ic:'l'},{n:'金属拉手(128孔距)',p:18,u:'个',ic:'l'},{n:'皮革拉手',p:49,u:'个',ic:'l'},{n:'嵌入式灯条600',p:104,u:'个',ic:'g'},{n:'嵌入式灯条800',p:140,u:'个',ic:'g'},{n:'嵌入式斜照灯条600',p:116,u:'个',ic:'g'},{n:'抽屉感应灯600',p:348,u:'个',ic:'g'},{n:'抽屉感应灯800',p:432,u:'个',ic:'g'},{n:'双面发光层板灯600',p:140,u:'个',ic:'g'},{n:'双面发光层板灯800',p:176,u:'个',ic:'g'},{n:'嵌入式手扫感应灯600',p:212,u:'个',ic:'g'},{n:'单门碰感应开关',p:112,u:'个',ic:'w'},{n:'双门碰感应开关',p:172,u:'个',ic:'w'},{n:'手扫感应开关',p:112,u:'个',ic:'w'},{n:'触摸感应开关',p:128,u:'个',ic:'w'},{n:'人体感应开关',p:132,u:'个',ic:'w'},{n:'集控电源60W',p:340,u:'个',ic:'w'},{n:'集控电源30W',p:180,u:'个',ic:'w'},{n:'级联线',p:14,u:'个',ic:'w'},{n:'玻璃夹板灯600',p:90,u:'个',ic:'g'},{n:'嵌入式灯条1500',p:246,u:'个',ic:'g'},{n:'嵌入式灯条1800',p:295,u:'个',ic:'g'}]};
+var CS=TD.cabinet.s,CT=TD.cabinet.t,CP=TD.cabinet.p;
+var CTS=TD.countertop.s,CTP=TD.countertop.p;
+var STD={'洗手盘地柜':{w:800,h:700,d:570},'地柜':{w:800,h:700,d:570},'灶台吊柜':{w:800,h:700,d:370},'吊柜':{w:800,h:700,d:370},'高柜':{w:600,h:2100,d:570},'上翻门吊柜':{w:800,h:700,d:370}};
+var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
+t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
+p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
+m:'<svg viewBox="0 0 36 36"><rect x="3" y="7" width="30" height="5" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="24" width="30" height="5" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="3" y1="12" x2="3" y2="24" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/><line x1="33" y1="12" x2="33" y2="24" stroke="#ddd" stroke-width="1" stroke-dasharray="2,2"/></svg>',
+h:'<svg viewBox="0 0 36 36"><circle cx="18" cy="12" r="6" fill="none" stroke="#888" stroke-width="1.3"/><rect x="10" y="18" width="16" height="12" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="18" x2="18" y2="30" stroke="#ccc" stroke-width="1"/><circle cx="18" cy="12" r="2" fill="#bbb"/></svg>',
+sk:'<svg viewBox="0 0 36 36"><rect x="5" y="10" width="26" height="20" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="13" y="6" width="10" height="6" rx="2" fill="none" stroke="#888" stroke-width="1.3"/><circle cx="18" cy="9" r="1.8" fill="#ccc"/><line x1="9" y1="20" x2="27" y2="20" stroke="#ddd" stroke-width="1"/><circle cx="18" cy="25" r="2.5" fill="none" stroke="#ccc" stroke-width="1"/></svg>',
+e:'<svg viewBox="0 0 36 36"><rect x="5" y="5" width="26" height="26" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="9" y="9" width="18" height="16" rx="2" fill="none" stroke="#bbb" stroke-width="1"/><circle cx="18" cy="21" r="1.8" fill="#ccc"/><rect x="14" y="11" width="8" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
+x:'<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="11" x2="18" y2="25" stroke="#aaa" stroke-width="1.5"/><line x1="11" y1="18" x2="25" y2="18" stroke="#aaa" stroke-width="1.5"/></svg>'};
+function ic(k){return'<div class="ic">'+(SVG[k]||SVG.x)+'</div>'}
+var cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',r:1,q:1,u:'米'}];
+var ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
+var pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
+var tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
+var hw=[],sk=[{n:'手工单槽',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:500},{n:'抽拉龙头',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:350}];
+var el=[{n:'嵌入式蒸烤一体机',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:3000}];
+var ex=[{n:'灶炉开槽费',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:100}];
 
-function imgCell(k){return `<div class="img-cell">${SVG_ICONS[k]||SVG_ICONS['extra']}</div>`;}
-function gCP(s,t){const d=CABINET_DATA[s];if(!d)return 0;if(t==='洗手盘地柜'||t==='地柜')return d['地柜680']||d['地柜720']||0;if(t==='灶台吊柜'||t==='吊柜')return d['吊柜700']||d['吊柜800']||0;if(t==='高柜')return d['地柜720']||d['地柜680']||0;if(t==='上翻门吊柜')return d['吊柜700']||0;return 0;}
-function sD(t){return STD_DIMS[t]||{w:800,h:700,d:570};}
-function iN(v,s){return Math.abs(v-s)>5;}
-function render(){document.getElementById('quoteDate').value=new Date().toISOString().split('T')[0];rC();rCT();rP();rT();rH();rSi();rE();rEx();calc();addGhostRows();}
-function addGhostRows(){document.querySelectorAll('.ghost-row').forEach(function(e){e.remove()});[
-  ['cabinetRows',10,addCabinetRow],['countertopRows',10,addCountertopRow],['panelRows',10,addPanelRow],
-  ['trimRows',10,addTrimRow],['hardwareRows',9,addHardwareRow],['sinkRows',9,addSinkRow],
-  ['electricRows',8,addElectricRow],['extraRows',8,addExtraRow]
-].forEach(function(a){var tb=document.getElementById(a[0]),r=document.createElement('tr');r.className='ghost-row';r.onclick=a[2];var h='<td class="plus">+</td>';for(var i=1;i<a[1];i++)h+='<td></td>';r.innerHTML=h;tb.appendChild(r)})}
-function rC(){document.getElementById('cabinetRows').innerHTML=cabinetRows.map((r,i)=>{const sd=sD(r.type),p=gCP(r.series,r.type),nw=iN(r.w,sd.w),nh=iN(r.h,sd.h),nd=iN(r.d,sd.d),ns=nw||nh||nd,ra=ns?1.2:1,st=r.qty*p*ra;return `<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('cabinet')}</td><td class="col-series"><select class="sel-narrow" onchange="cabinetRows[${i}].series=this.value;rC()">${CABINET_SERIES.map(s=>`<option ${s===r.series?'selected':''}>${s}</option>`).join('')}</select></td><td class="col-type"><select class="sel-narrow" onchange="const s=sD(this.value);cabinetRows[${i}].type=this.value;cabinetRows[${i}].w=s.w;cabinetRows[${i}].h=s.h;cabinetRows[${i}].d=s.d;rC()">${CABINET_TYPES.map(t=>`<option ${t===r.type?'selected':''}>${t}</option>`).join('')}</select></td><td style="white-space:nowrap;text-align:center"><input class="num ${nw?'nonstd':(!r.w||r.w===sd.w)?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.w}" style="width:58px;display:inline" placeholder="${sd.w}" title="宽" onchange="cabinetRows[${i}].w=parseInt(this.value)||${sd.w};rC()"><span style="color:#ccc">×</span><input class="num ${nh?'nonstd':(!r.h||r.h===sd.h)?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.h}" style="width:58px;display:inline" placeholder="${sd.h}" title="高" onchange="cabinetRows[${i}].h=parseInt(this.value)||${sd.h};rC()"><span style="color:#ccc">×</span><input class="num ${nd?'nonstd':(!r.d||r.d===sd.d)?'hint-placeholder':''}" type="number" min="50" step="10" value="${r.d}" style="width:55px;display:inline" placeholder="${sd.d}" title="深" onchange="cabinetRows[${i}].d=parseInt(this.value)||${sd.d};rC()"></td><td style="font-size:13px;font-weight:600">${ns?'<span style="color:var(--red)">1.2</span>':'<span style="color:var(--n-400)">1.0</span>'}</td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0.1" step="0.1" value="${r.qty}" onchange="cabinetRows[${i}].qty=parseFloat(this.value)||0;rC()"></td><td class="col-price" style="text-align:right">¥${p.toFixed(0)}</td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${st.toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="cabinetRows.splice(${i},1);rC()">✕</button></td></tr>`;}).join('');calc();addGhostRows();}
-function addCabinetRow(){const s=sD('洗手盘地柜');cabinetRows.push({series:'大千云纹',type:'洗手盘地柜',qty:1,w:s.w,h:s.h,d:s.d});rC();}
-function rCT(){const t=document.getElementById('countertopRows');t.innerHTML=countertopRows.map((r,i)=>{const p=(COUNTERTOP_DATA[r.series]||{})[r.thick]||0;return `<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('countertop')}</td><td class="col-series"><select class="sel-narrow" onchange="const n=COUNTERTOP_DATA[this.value]||{};const f=Object.keys(n).find(k=>n[k]>0)||'12mm';countertopRows[${i}].series=this.value;countertopRows[${i}].thick=f;rCT()">${COUNTERTOP_SERIES.map(s=>`<option ${s===r.series?'selected':''}>${s}</option>`).join('')}</select></td><td><select onchange="countertopRows[${i}].backsplash=this.value"><option ${r.backsplash==='A'?'selected':''}>A</option><option ${r.backsplash==='B'?'selected':''}>B</option><option ${r.backsplash==='C'?'selected':''}>C</option><option ${r.backsplash==='D'?'selected':''}>D</option></select></td><td style="white-space:nowrap"><input class="num ${r.w===3000||!r.w?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.w||3000}" style="width:58px;display:inline" placeholder="3000" title="宽"><span style="color:#ccc">×</span><input class="num ${r.h===5||!r.h?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.h||5}" style="width:55px;display:inline" placeholder="5" title="高"><span style="color:#ccc">×</span><input class="num ${r.d===600||!r.d?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.d||600}" style="width:58px;display:inline" placeholder="600" title="深"></td><td><input class="num ${(!r.ratio||r.ratio===1)?'hint-placeholder':''}" type="number" min="0.5" max="3" step="0.05" value="${r.ratio||1}" style="width:55px" onchange="countertopRows[${i}].ratio=parseFloat(this.value)||1;calc()"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="0.1" value="${r.qty}" onchange="countertopRows[${i}].qty=parseFloat(this.value)||0;rCT()"></td><td class="col-price" style="text-align:right">¥${p.toFixed(0)}</td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*p*(r.ratio||1)).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="countertopRows.splice(${i},1);rCT()">✕</button></td></tr>`;}).join('');calc();addGhostRows();}
-function addCountertopRow(){countertopRows.push({series:'琉晶-丝纹GY01',thick:'12mm',qty:1});rCT();}
-function rP(){document.getElementById('panelRows').innerHTML=panelRows.map((r,i)=>{const p=CABINET_DATA[r.series]?CABINET_DATA[r.series].panel:0;return `<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('panel')}</td><td class="col-series"><select class="sel-narrow" onchange="panelRows[${i}].series=this.value;rP()">${CABINET_SERIES.map(s=>`<option ${s===r.series?'selected':''}>${s}</option>`).join('')}</select></td><td class="col-face"><select onchange="panelRows[${i}].face=this.value">${['A立面','B立面','C立面','D立面'].map(f=>`<option ${f===r.face?'selected':''}>${f}</option>`).join('')}</select></td><td style="white-space:nowrap"><input class="num ${r.w===800||!r.w?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.w||800}" style="width:58px;display:inline" placeholder="800" title="宽"><span style="color:#ccc">×</span><input class="num ${r.h===2400||!r.h?'hint-placeholder':''}" type="number" min="100" step="10" value="${r.h||2400}" style="width:58px;display:inline" placeholder="2400" title="高"><span style="color:#ccc">×</span><input class="num ${r.thick===20||!r.thick?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.thick||20}" style="width:55px;display:inline" placeholder="20" title="厚"></td><td><input class="num ${(!r.ratio||r.ratio===1)?'hint-placeholder':''}" type="number" min="0.5" max="3" step="0.05" value="${r.ratio||1}" style="width:55px" onchange="panelRows[${i}].ratio=parseFloat(this.value)||1;calc()"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="0.01" value="${r.qty}" onchange="panelRows[${i}].qty=parseFloat(this.value)||0;rP()"></td><td class="col-price" style="text-align:right">¥${p.toFixed(0)}</td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*p*(r.ratio||1)).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="panelRows.splice(${i},1);rP()">✕</button></td></tr>`;}).join('');calc();addGhostRows();}
-function addPanelRow(){panelRows.push({series:'大千云纹',face:'A立面',thick:15,qty:1});rP();}
-function rT(){document.getElementById('trimRows').innerHTML=trimRows.map((r,i)=>{const m=r.material||'与柜体一致',hD=i===0?60:100;return `<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('trim')}</td><td style="width:161px">${r.name}</td><td style="width:100px"><input value="${m}" style="color:#bbb" onfocus="if(this.value==='与柜体一致'){this.value='';this.style.color='var(--n-900)'}" onblur="if(this.value===''){this.value='与柜体一致';this.style.color='#bbb'}" onchange="trimRows[${i}].material=this.value"></td><td style="white-space:nowrap"><input class="num" type="number" min="0" step="1" value="${r.w||800}" style="width:58px;display:inline" placeholder="800" title="宽" class="num ${(!r.w||r.w===800)?'hint-placeholder':''}"><span style="color:#ccc">×</span><input class="num ${(!r.h||r.h===100||r.h===60)?'hint-placeholder':''}" type="number" min="0" step="10" value="${r.h||100}" style="width:58px;display:inline" placeholder="100" title="高"><span style="color:#ccc">×</span><input class="num ${(!r.thick||r.thick===20)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.thick||20}" style="width:55px;display:inline" placeholder="20" title="厚"></td><td><input class="num ${(!r.ratio||r.ratio===1)?'hint-placeholder':''}" type="number" min="0.5" max="3" step="0.05" value="${r.ratio||1}" style="width:55px" onchange="trimRows[${i}].ratio=parseFloat(this.value)||1;calc()"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="0.1" value="${r.qty}" onchange="trimRows[${i}].qty=parseFloat(this.value)||0;rT()"></td><td class="col-price"><input class="num ${(!r.price||r.price===0)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.price}" placeholder="待确认" onchange="trimRows[${i}].price=parseFloat(this.value)||0;calc()"></td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*r.price*(r.ratio||1)).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="trimRows.splice(${i},1);rT()">✕</button></td></tr>`;}).join('');calc();addGhostRows();}
-function addTrimRow(){trimRows.push({name:'新增',material:'',w:800,h:60,thick:20,ratio:1,qty:1,price:0});rT();}
-function rH(){document.getElementById('hardwareRows').innerHTML=hardwareRows.map((r,i)=>{const h=HARDWARE_DATA.find(x=>x.name===r.name);const imgIdx=HARDWARE_DATA.indexOf(h)+1;const imgExt=[12,13,14,18,19,21,22,23,25,32,33,40,45,53].includes(imgIdx)?'png':'jpeg';const imgSrc=imgIdx>=1&&imgIdx<=55&&h?`03-Converted/01-images/hardware/image${imgIdx}.${imgExt}`:'';return `<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgSrc?`<div class="img-cell"><img src="${imgSrc}" onerror="this.style.display='none';this.parentNode.innerHTML='${imgCell(h?h.icon:'hardware')}'" style="max-width:48px;max-height:48px;object-fit:contain;border-radius:4px"></div>`:imgCell(h?h.icon:'hardware')}</td><td style="width:161px"><select onchange="const h=HARDWARE_DATA.find(x=>x.name===this.value);if(h){hardwareRows[${i}].name=h.name;hardwareRows[${i}].price=h.price;hardwareRows[${i}].unit=h.unit}rH()"><option value="">- 请选择 -</option>${HARDWARE_DATA.map(h=>`<option ${h.name===r.name?'selected':''} value="${h.name}">${h.name}</option>`).join('')}</select></td><td><input value="${r.material||''}" placeholder="材质" onchange="hardwareRows[${i}].material=this.value"></td><td><input value="${r.dim||''}" placeholder="尺寸" onchange="hardwareRows[${i}].dim=this.value"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.qty}" onchange="hardwareRows[${i}].qty=parseFloat(this.value)||0;rH()"></td><td class="col-price" style="text-align:right">¥${r.price}</td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*r.price).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="hardwareRows.splice(${i},1);rH()">✕</button></td></tr>`;}).join('');calc();addGhostRows();}
-function addHardwareRow(){hardwareRows.push({name:'',material:'',dim:'',price:0,qty:1,unit:'个'});rH();}
-function rSi(){document.getElementById('sinkRows').innerHTML=sinkRows.map((r,i)=>`<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('sink')}</td><td style="width:161px">${r.name}</td><td><input value="${r.material||''}" placeholder="材质" onchange="sinkRows[${i}].material=this.value"></td><td><input value="${r.dim||''}" placeholder="尺寸" onchange="sinkRows[${i}].dim=this.value"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.qty}" onchange="sinkRows[${i}].qty=parseFloat(this.value)||0;rSi()"></td><td class="col-price"><input class="num" type="number" min="0" step="1" value="${r.price}" onchange="sinkRows[${i}].price=parseFloat(this.value)||0;calc()"></td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*r.price).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="sinkRows.splice(${i},1);rSi()">✕</button></td></tr>`).join('');calc();addGhostRows();}
-function addSinkRow(){sinkRows.push({name:'新增',material:'',dim:'',qty:1,price:0});rSi();}
-function rE(){document.getElementById('electricRows').innerHTML=electricRows.map((r,i)=>`<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('electric')}</td><td style="width:161px"><input value="${r.name}" placeholder="电器名称" onchange="electricRows[${i}].name=this.value"></td><td><input value="${r.dim||''}" placeholder="尺寸" onchange="electricRows[${i}].dim=this.value"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.qty}" onchange="electricRows[${i}].qty=parseFloat(this.value)||0;rE()"></td><td class="col-price"><input class="num" type="number" min="0" step="1" value="${r.price}" onchange="electricRows[${i}].price=parseFloat(this.value)||0;calc()"></td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*r.price).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="electricRows.splice(${i},1);rE()">✕</button></td></tr>`).join('');calc();addGhostRows();}
-function addElectricRow(){electricRows.push({name:'新增电器',dim:'',qty:1,price:0});rE();}
-function rEx(){document.getElementById('extraRows').innerHTML=extraRows.map((r,i)=>`<tr><td class="col-idx">${i+1}</td><td class="col-img">${imgCell('extra')}</td><td style="width:161px"><input value="${r.name}" placeholder="项目名称" onchange="extraRows[${i}].name=this.value"></td><td><input value="${r.dim||''}" placeholder="尺寸" onchange="extraRows[${i}].dim=this.value"></td><td class="col-qty"><input class="num ${(!r.qty||r.qty===1)?'hint-placeholder':''}" type="number" min="0" step="1" value="${r.qty}" onchange="extraRows[${i}].qty=parseFloat(this.value)||0;rEx()"></td><td class="col-price"><input class="num" type="number" min="0" step="1" value="${r.price}" onchange="extraRows[${i}].price=parseFloat(this.value)||0;calc()"></td><td class="col-subtotal" style="text-align:right;font-weight:600">¥${(r.qty*r.price).toFixed(0)}</td><td class="col-del"><button class="row-del" onclick="extraRows.splice(${i},1);rEx()">✕</button></td></tr>`).join('');calc();addGhostRows();}
-function addExtraRow(){extraRows.push({name:'新增项目',dim:'',qty:1,price:0});rEx();}
-function calc(){const c1=cabinetRows.reduce((s,r)=>{const p=gCP(r.series,r.type),sd=sD(r.type),ns=iN(r.w,sd.w)||iN(r.h,sd.h)||iN(r.d,sd.d);return s+r.qty*p*(ns?1.2:1);},0);const c2=countertopRows.reduce((s,r)=>{const p=(COUNTERTOP_DATA[r.series]||{})[r.thick||'12mm']||0;return s+r.qty*p*(r.ratio||1);},0);const c3=panelRows.reduce((s,r)=>{const p=CABINET_DATA[r.series]?CABINET_DATA[r.series].panel:0;return s+r.qty*p*(r.ratio||1);},0);const c4=trimRows.reduce((s,r)=>s+r.qty*r.price*(r.ratio||1),0);const c5=hardwareRows.reduce((s,r)=>s+r.qty*r.price,0);const c6=sinkRows.reduce((s,r)=>s+r.qty*r.price,0);const c7=electricRows.reduce((s,r)=>s+r.qty*r.price,0);const c8=extraRows.reduce((s,r)=>s+r.qty*r.price,0);[c1,c2,c3,c4,c5,c6,c7,c8].forEach((v,i)=>{document.getElementById(['cabinetTotal','countertopTotal','panelTotal','trimTotal','hardwareTotal','sinkTotal','electricTotal','extraTotal'][i]).textContent=v.toFixed(0);document.getElementById('s'+(i+1)).textContent=v.toFixed(0);});const t=c1+c2+c3+c4+c5+c6+c7+c8;document.getElementById('grandTotal').textContent='¥'+t.toFixed(0);document.getElementById('cnAmount').textContent='人民币:'+n2c(t)+' 元整';}
-function n2c(n){if(!n||n===0)return'零';const d='零壹贰叁肆伍陆柒捌玖',u=['','拾','佰','仟'],b=['','万','亿'];n=Math.round(n);const s=n.toString(),p=[];for(let i=s.length;i>0;i-=4)p.push(s.substring(Math.max(0,i-4),i));let r='';for(let i=p.length-1;i>=0;i--){const q=p[i];let ps='',zf=false;for(let j=0;j<q.length;j++){const c=parseInt(q[j]);if(c===0)zf=true;else{if(zf){ps+='零';zf=false}ps+=d[c]+u[q.length-1-j]}}if(ps)r+=ps+b[i];else if(i===1&&p.length>2)r+='零'}return r||'零'}
-function showClientView(){const a=document.getElementById('app');a.classList.toggle('client-mode');const c=document.getElementById('clientView');c.classList.toggle('show');if(c.classList.contains('show')){const cats=[{n:'柜体',v:document.getElementById('s1').textContent},{n:'台面',v:document.getElementById('s2').textContent},{n:'见光板',v:document.getElementById('s3').textContent},{n:'地脚线/顶封板',v:document.getElementById('s4').textContent},{n:'功能配件',v:document.getElementById('s5').textContent},{n:'水槽/龙头',v:document.getElementById('s6').textContent},{n:'电器',v:document.getElementById('s7').textContent},{n:'增加项目',v:document.getElementById('s8').textContent}];document.getElementById('clientRows').innerHTML=cats.map((c,i)=>`<tr><td>${i+1}</td><td style="text-align:left">${c.n}</td><td>￥${parseFloat(c.v).toFixed(0)}</td></tr>`).join('');const t=document.getElementById('grandTotal').textContent;document.getElementById('ci-total').textContent=t;document.getElementById('ci-cn').textContent='人民币：'+n2c(parseFloat(t.replace('￥','')))+' 元整';}}
-function toggleCat(id){const b=document.getElementById(id);b.style.display=b.style.display==='none'?'block':'none';}
-function resetAll(){if(!confirm('确定要重置?'))return;const s=sD('洗手盘地柜');cabinetRows=[{series:'大千云纹',type:'洗手盘地柜',qty:1,w:s.w,h:s.h,d:s.d}];countertopRows=[{series:'琉晶-丝纹GY01',backsplash:'A',w:3000,h:5,d:600,ratio:1,qty:1}];panelRows=[{series:'大千云纹',face:'A立面',w:800,h:2400,thick:20,ratio:1,qty:1}];trimRows=[{name:'不锈钢地脚线',material:'',w:800,h:60,thick:20,ratio:1,qty:1,price:0},{name:'不锈钢顶封板',material:'',w:800,h:100,thick:20,ratio:1,qty:1,price:0}];hardwareRows=[];sinkRows=[{name:'手工单槽',material:'',dim:'',qty:1,price:500},{name:'抽拉龙头',material:'',dim:'',qty:1,price:350}];electricRows=[{name:'嵌入式蒸烤一体机',dim:'',qty:1,price:3000}];extraRows=[{name:'灶炉开槽费',dim:'',qty:1,price:100}];render();}
-render();
+function gp(s,t){var d=CP[s];if(!d)return 0;if(t==='洗手盘地柜'||t==='地柜')return d['地柜680']||d['地柜720']||0;if(t==='灶台吊柜'||t==='吊柜')return d['吊柜700']||d['吊柜800']||0;if(t==='高柜')return d['地柜720']||d['地柜680']||0;if(t==='上翻门吊柜')return d['吊柜700']||0;return 0}
+function sd(t){return STD[t]||{w:800,h:700,d:570}}
+function nv(v,s){return Math.abs(v-s)>5}
+
+function mkm(data,cfg){
+  return data.map(function(r,i){
+    var dm=cfg.dim(r,i),s=cfg.sel(r,i),ns=dm.ns;
+    return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic(cfg.icon)+'</td>'
+      +'<td dl="名称">'+s.name+'</td>'
+      +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="'+cfg.a+'['+i+'].c=this.value;'+cfg.f+'()"></td>'
+      +'<td dl="尺寸" style="white-space:nowrap"><input class="num'+(dm.nw?' non':(!r.w||r.w===dm.sw)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.w||dm.sw)+'" style="width:50px;display:inline" placeholder="'+dm.sw+'" title="宽" onchange="'+cfg.a+'['+i+'].w=parseInt(this.value)||'+dm.sw+';'+cfg.f+'()"><span style="color:#ccc">×</span><input class="num'+(dm.nh?' non':(!r.h||r.h===dm.sh)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.h||dm.sh)+'" style="width:48px;display:inline" placeholder="'+dm.sh+'" title="高" onchange="'+cfg.a+'['+i+'].h=parseInt(this.value)||'+dm.sh+';'+cfg.f+'()"><span style="color:#ccc">×</span><input class="num'+(dm.nd?' non':(!r.d||r.d===dm.sd)?' hp':'')+'" type="number" min="50" step="10" value="'+(r.d||dm.sd)+'" style="width:48px;display:inline" placeholder="'+dm.sd+'" title="深" onchange="'+cfg.a+'['+i+'].d=parseInt(this.value)||'+dm.sd+';'+cfg.f+'()"></td>'
+      +'<td dl="材料" class="al-m">'+s.mat+'</td>'
+      +'<td dl="非标系数" class="al-r" style="font-weight:600">'+dm.rh+'</td>'
+      +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="'+cfg.a+'['+i+'].q=parseFloat(this.value)||0;'+cfg.f+'()"></td>'
+      +'<td dl="单位">'+s.unit+'</td>'
+      +'<td dl="单价" style="text-align:right">¥'+(cfg.price(r,i)).toFixed(0)+'</td>'
+      +'<td dl="金额" style="text-align:right;font-weight:600">¥'+(cfg.total(r,i)).toFixed(0)+'</td>'
+      +'<td dl=""><button class="row-del" onclick="'+cfg.a+'.splice('+i+',1);'+cfg.f+'()">✕</button></td></tr>';
+  }).join('');
+}
+
+function mkOther(data,cfg){
+  return data.map(function(r,i){
+    return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic(cfg.icon)+'</td>'
+      +'<td dl="名称">'+cfg.name(r,i)+'</td>'
+      +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="'+cfg.a+'['+i+'].c=this.value"></td>'
+      +'<td dl="尺寸">'+cfg.dim(r,i)+'</td>'
+      +'<td dl="技术参数" class="al-par">'+cfg.para(r,i)+'</td>'
+      +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0" step="1" value="'+r.q+'" onchange="'+cfg.a+'['+i+'].q=parseFloat(this.value)||0;'+cfg.f+'()"></td>'
+      +'<td dl="单位">'+cfg.unit(r,i)+'</td>'
+      +'<td dl="单价" style="text-align:right">¥'+((r.p||0)).toFixed(0)+'</td>'
+      +'<td dl="金额" style="text-align:right;font-weight:600">¥'+((r.q||0)*(r.p||0)).toFixed(0)+'</td>'
+      +'<td dl=""><button class="row-del" onclick="'+cfg.a+'.splice('+i+',1);'+cfg.f+'()">✕</button></td></tr>';
+  }).join('');
+}
+
+function rc(){id('cr').innerHTML=cb.map(function(r,i){
+  var p=gp(r.m||'大千云纹',r.n),sd2=sd(r.n),nw=nv(r.w,sd2.w),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),ns=nw||nh||nd,st=r.q*p*(ns?1.2:1);
+  return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('c')+'</td>'
+    +'<td dl="名称"><select onchange="var sd2=sd(this.value);cb['+i+'].n=this.value;cb['+i+'].w=sd2.w;cb['+i+'].h=sd2.h;cb['+i+'].d=sd2.d;rc()">'+CT.map(function(t){return'<option'+(t===r.n?'selected':'')+'>'+t+'</option>'}).join('')+'</select></td>'
+    +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="cb['+i+'].c=this.value"></td>'
+    +'<td dl="尺寸" style="white-space:nowrap"><input class="num'+(nw?' non':(!r.w||r.w===sd2.w)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.w||sd2.w)+'" style="width:50px;display:inline" placeholder="'+sd2.w+'" title="宽" onchange="cb['+i+'].w=parseInt(this.value)||'+sd2.w+';rc()"><span style="color:#ccc">×</span><input class="num'+(nh?' non':(!r.h||r.h===sd2.h)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.h||sd2.h)+'" style="width:48px;display:inline" placeholder="'+sd2.h+'" title="高" onchange="cb['+i+'].h=parseInt(this.value)||'+sd2.h+';rc()"><span style="color:#ccc">×</span><input class="num'+(nd?' non':(!r.d||r.d===sd2.d)?' hp':'')+'" type="number" min="50" step="10" value="'+(r.d||sd2.d)+'" style="width:48px;display:inline" placeholder="'+sd2.d+'" title="深" onchange="cb['+i+'].d=parseInt(this.value)||'+sd2.d+';rc()"></td>'
+    +'<td dl="材料" class="al-m"><select onchange="cb['+i+'].m=this.value;rc()">'+CS.map(function(s){return'<option'+(s===(r.m||'大千云纹')?'selected':'')+'>'+s+'</option>'}).join('')+'</select></td>'
+    +'<td dl="非标系数" class="al-r" style="font-weight:600">'+(ns?'<span style="color:var(--red)">1.2</span>':'<span style="color:var(--n400)">1.0</span>')+'</td>'
+    +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="cb['+i+'].q=parseFloat(this.value)||0;rc()"></td>'
+    +'<td dl="单位"><select onchange="cb['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='米'?'selected':'')+'>米</option><option'+(r.u==='套'?'selected':'')+'>套</option></select></td>'
+    +'<td dl="单价" style="text-align:right">¥'+p.toFixed(0)+'</td>'
+    +'<td dl="金额" style="text-align:right;font-weight:600">¥'+st.toFixed(0)+'</td>'
+    +'<td dl=""><button class="row-del" onclick="cb.splice('+i+',1);rc()">✕</button></td></tr>';
+}).join('');try{cal()}catch(e){log(e)}ag();}
+function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',r:1,q:1,u:'米'});rc();}
+
+function rct(){id('tr').innerHTML=mkm(ct,{a:'ct',f:'rct',icon:'t',
+sel:function(r,i){return{
+name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="ct['+i+'].n=this.value">',
+mat:'<select onchange="ct['+i+'].m=this.value;rct()">'+CTS.map(function(s){return'<option'+(s===(r.m||'琉晶-丝纹GY01')?'selected':'')+'>'+s+'</option>'}).join('')+'</select>',
+unit:'<select onchange="ct['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='米'?'selected':'')+'>米</option><option'+(r.u==='套'?'selected':'')+'>套</option></select>'}},
+dim:function(r,i){return{sw:3000,sh:5,sd:600,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:50px" onchange="ct['+i+'].r=parseFloat(this.value)||1;rct()">'}},
+price:function(r){var m=r.m||'琉晶-丝纹GY01';return(CTP[m]||{})[r.tk||'12mm']||0;},
+total:function(r){var m=r.m||'琉晶-丝纹GY01',p=(CTP[m]||{})[r.tk||'12mm']||0;return r.q*p*(r.r||1);}});try{cal()}catch(e){log(e)}ag();}
+function act(){ct.push({n:'',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'});rct();}
+
+function rp(){id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
+sel:function(r,i){return{
+name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value">',
+mat:'<select onchange="pn['+i+'].m=this.value;rp()">'+CS.map(function(s){return'<option'+(s===(r.m||'大千云纹')?'selected':'')+'>'+s+'</option>'}).join('')+'</select>',
+unit:'<select onchange="pn['+i+'].u=this.value"><option'+(r.u==='㎡'?'selected':'')+'>㎡</option><option'+(r.u==='个'?'selected':'')+'>个</option></select>'}},
+dim:function(r,i){return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:50px" onchange="pn['+i+'].r=parseFloat(this.value)||1;rp()">'}},
+price:function(r){var m=r.m||'大千云纹';return CP[m]?CP[m].panel:0;},
+total:function(r){var m=r.m||'大千云纹',p=CP[m]?CP[m].panel:0;return r.q*p*(r.r||1);}});try{cal()}catch(e){log(e)}ag();}
+function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:'大千云纹',r:1,q:1,u:'㎡'});rp();}
+
+function rtr(){id('trr').innerHTML=mkm(tr,{a:'tr',f:'rtr',icon:'m',
+sel:function(r,i){return{
+name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="tr['+i+'].n=this.value">',
+mat:'<input value="'+(r.m||'与柜体一致')+'" style="color:#bbb" onfocus="if(this.value===\'与柜体一致\'){this.value=\'\';this.style.color=\'var(--n900)\'}" onblur="if(this.value===\'\'){this.value=\'与柜体一致\';this.style.color=\'#bbb\'}" onchange="tr['+i+'].m=this.value">',
+unit:'<select onchange="tr['+i+'].u=this.value"><option'+(r.u==='米'?'selected':'')+'>米</option><option'+(r.u==='个'?'selected':'')+'>个</option></select>'}},
+dim:function(r,i){var ih=i===0?60:100;return{sw:800,sh:ih,sd:20,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:50px" onchange="tr['+i+'].r=parseFloat(this.value)||1;rtr()">'}},
+price:function(r){return r.p||0;},
+total:function(r){return(r.q||0)*(r.p||0)*(r.r||1);}});try{cal()}catch(e){log(e)}ag();}
+function atr(){tr.push({n:'',c:'',w:800,h:60,d:20,m:'',r:1,q:1,u:'米',p:0});rtr();}
+
+function rh(){id('hr').innerHTML=mkOther(hw,{a:'hw',f:'rh',icon:'h',
+name:function(r,i){return'<select onchange="var h=TD.hw.find(function(x){return x.n===this.value}.bind(this));if(h){hw['+i+'].n=h.n;hw['+i+'].p=h.p;hw['+i+'].u=h.u}rh()"><option value="">- 请选择 -</option>'+TD.hw.map(function(h){return'<option'+(h.n===r.n?'selected':'')+'>'+h.n+'</option>'}).join('')+'</select>'},
+dim:function(r,i){return'<input value="'+(r.d||'')+'" placeholder="尺寸" onchange="hw['+i+'].d=this.value">'},
+para:function(r,i){return'<input value="'+(r.para||'')+'" placeholder="材质/参数" onchange="hw['+i+'].para=this.value">'},
+unit:function(r,i){return'<select onchange="hw['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='套'?'selected':'')+'>套</option><option'+(r.u==='米'?'selected':'')+'>米</option></select>'}});try{cal()}catch(e){log(e)}ag();}
+function ah(){hw.push({n:'',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:0});rh();}
+
+function rsk(){id('sr').innerHTML=mkOther(sk,{a:'sk',f:'rsk',icon:'sk',
+name:function(r,i){return'<input value="'+(r.n||'')+'" placeholder="名称" onchange="sk['+i+'].n=this.value">'},
+dim:function(r,i){return'<input value="'+(r.d||'')+'" placeholder="尺寸" onchange="sk['+i+'].d=this.value">'},
+para:function(r,i){return'<input value="'+(r.para||'')+'" placeholder="材质" onchange="sk['+i+'].para=this.value">'},
+unit:function(r,i){return'<select onchange="sk['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='套'?'selected':'')+'>套</option></select>'}});try{cal()}catch(e){log(e)}ag();}
+function ask(){sk.push({n:'新增',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:0});rsk();}
+
+function re(){id('er').innerHTML=mkOther(el,{a:'el',f:'re',icon:'e',
+name:function(r,i){return'<input value="'+(r.n||'')+'" placeholder="电器名称" onchange="el['+i+'].n=this.value">'},
+dim:function(r,i){return'<input value="'+(r.d||'')+'" placeholder="尺寸" onchange="el['+i+'].d=this.value">'},
+para:function(r,i){return'<input value="'+(r.para||'')+'" placeholder="规格" onchange="el['+i+'].para=this.value">'},
+unit:function(r,i){return'<select onchange="el['+i+'].u=this.value"><option'+(r.u==='台'?'selected':'')+'>台</option><option'+(r.u==='个'?'selected':'')+'>个</option></select>'}});try{cal()}catch(e){log(e)}ag();}
+function ae(){el.push({n:'新增电器',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:0});re();}
+
+function rx(){id('xr').innerHTML=mkOther(ex,{a:'ex',f:'rx',icon:'x',
+name:function(r,i){return'<input value="'+(r.n||'')+'" placeholder="项目名称" onchange="ex['+i+'].n=this.value">'},
+dim:function(r,i){return'<input value="'+(r.d||'')+'" placeholder="尺寸" onchange="ex['+i+'].d=this.value">'},
+para:function(r,i){return'<input value="'+(r.para||'')+'" placeholder="备注" onchange="ex['+i+'].para=this.value">'},
+unit:function(r,i){return'<select onchange="ex['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='项'?'selected':'')+'>项</option></select>'}});try{cal()}catch(e){log(e)}ag();}
+function ax(){ex.push({n:'新增项目',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:0});rx();}
+
+function cal(){
+  var vs=[function(){return cb.reduce(function(s,r){var m=r.m||'大千云纹',p=gp(m,r.n),s2=sd(r.n),ns=nv(r.w,s2.w)||nv(r.h,s2.h)||nv(r.d,s2.d);return s+r.q*p*(ns?1.2:1);},0)}(),
+    function(){return ct.reduce(function(s,r){var m=r.m||'琉晶-丝纹GY01',p=(CTP[m]||{})[r.tk||'12mm']||0;return s+r.q*p*(r.r||1);},0)}(),
+    function(){return pn.reduce(function(s,r){var m=r.m||'大千云纹',p=CP[m]?CP[m].panel:0;return s+r.q*p*(r.r||1);},0)}(),
+    function(){return tr.reduce(function(s,r){return s+(r.q||0)*(r.p||0)*(r.r||1);},0)}(),
+    function(){return hw.reduce(function(s,r){return s+(r.q||0)*(r.p||0);},0)}(),
+    function(){return sk.reduce(function(s,r){return s+r.q*r.p;},0)}(),
+    function(){return el.reduce(function(s,r){return s+r.q*r.p;},0)}(),
+    function(){return ex.reduce(function(s,r){return s+r.q*r.p;},0)}()];
+  vs.forEach(function(v,i){id(['ct0','ct1','ct2','ct3','ct4','ct5','ct6','ct7'][i]).textContent=v.toFixed(0);id('s'+i).textContent=v.toFixed(0);});
+  var t=vs.reduce(function(a,b){return a+b},0);id('gt').textContent='¥'+t.toFixed(0);id('cn').textContent='人民币:'+n2c(t)+' 元整';
+}
+function n2c(n){if(!n||n===0)return'零';var d='零壹贰叁肆伍陆柒捌玖',u=['','拾','佰','仟'],b=['','万','亿'];n=Math.round(n);var s=n.toString(),p=[];for(var i=s.length;i>0;i-=4)p.push(s.substring(Math.max(0,i-4),i));var r='';for(var i=p.length-1;i>=0;i--){var q=p[i],ps='',zf=false;for(var j=0;j<q.length;j++){var c=parseInt(q[j]);if(c===0)zf=true;else{if(zf){ps+='零';zf=false}ps+=d[c]+u[q.length-1-j]}}if(ps)r+=ps+b[i];else if(i===1&&p.length>2)r+='零'}return r||'零'}
+function scv(){var a=id('app');a.classList.toggle('cm');var c=id('cv');c.classList.toggle('s');if(c.classList.contains('s')){var ns=['柜体','台面','见光板','地脚线/顶封板','功能配件','水槽/龙头','电器','增加项目'];id('cvr').innerHTML=ns.map(function(n,i){return'<tr><td>'+(i+1)+'</td><td style="text-align:left">'+n+'</td><td>￥'+parseFloat(id('s'+i).textContent).toFixed(0)+'</td></tr>'}).join('');var t=id('gt').textContent;id('cit').textContent=t;id('cicn').textContent='人民币：'+n2c(parseFloat(t.replace('¥','')))+' 元整';}}
+function tog(id2){var b=id(id2);b.style.display=b.style.display==='none'?'block':'none';}
+function ag(){document.querySelectorAll('.ghost').forEach(function(e){e.remove()});[
+  ['cr',12,acb],['tr',12,act],['pr',12,ap],['trr',12,atr],['hr',11,ah],['sr',11,ask],['er',11,ae],['xr',11,ax]
+].forEach(function(a){var tb=id(a[0]),r=document.createElement('tr');r.className='ghost';r.onclick=a[2];var h='<td class="plus">+</td>';for(var i=1;i<a[1];i++)h+='<td></td>';r.innerHTML=h;tb.appendChild(r)})}
+function rst(){if(!confirm('确定要重置?'))return;
+  cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',r:1,q:1,u:'米'}];
+  ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
+  pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
+  tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
+  hw=[];sk=[{n:'手工单槽',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:500},{n:'抽拉龙头',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:350}];
+  el=[{n:'嵌入式蒸烤一体机',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:3000}];ex=[{n:'灶炉开槽费',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:100}];
+  id('qd').value=new Date().toISOString().split('T')[0];rc();rct();rp();rtr();rh();rsk();re();rx();
+}
+id('qd').value=new Date().toISOString().split('T')[0];rc();rct();rp();rtr();rh();rsk();re();rx();ag();
 </script>
 </body>
 </html>
