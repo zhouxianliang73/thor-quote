@@ -45,6 +45,7 @@
 <body>
 <div class="editor" id="app">
 <div class="subtitle">- 橱柜报价单 -</div>
+<div style="text-align:right;font-size:11px;color:var(--n-400);margin-bottom:8px" id="userInfo"></div>
 <h1>THOR 索而智能家居</h1>
 
 <div class="info-section">
@@ -228,6 +229,7 @@
 <body>
 <div class="editor" id="app">
 <div class="subtitle">- 橱柜报价单 -</div>
+<div style="text-align:right;font-size:11px;color:var(--n-400);margin-bottom:8px" id="userInfo"></div>
 <h1>THOR 索而智能家居</h1>
 
 <div class="info-section">
@@ -379,6 +381,9 @@
   <div class="cs"><div class="b"><div class="l"></div><div class="lb">客户签字回传</div></div><div class="b"><div class="l"></div><div class="lb">财务确认签字</div></div></div>
 </div>
 <div class="act" style="display:flex!important;gap:10px;justify-content:center;margin:18px 0 0">
+  <button class="btn btn-p" onclick="saveProject()">💾 保存</button>
+  <button class="btn btn-s" onclick="loadProject()">📂 加载</button>
+  <button class="btn btn-s" onclick="deleteProject()">🗑️ 删除项目</button>
   <button class="btn btn-c" onclick="window.open('selector.html','_blank')" style="padding:8px 24px;background:var(--accent,#b8860b);color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:600">🎯 选品</button>
   <button class="btn btn-c" onclick="scv()">📄 生成客户报价单</button>
   <button class="btn btn-p" onclick="window.print()">🖨️ 打印</button>
@@ -593,6 +598,77 @@ id('hr').addEventListener('change',function(e){
 function sdToggle(el){var w=el.parentElement,d=w.querySelector(".sd-drop"),l=d.querySelector(".sd-list"),s=d.querySelector(".sd-search");if(!d.classList.toggle("open"))return;var r=el.getBoundingClientRect();d.style.top=(r.bottom+4)+"px";d.style.left=r.left+"px";d.style.width=Math.max(r.width,200)+"px";var opts=[];if(el.classList.contains("s-mat"))opts=CS;else if(el.classList.contains("s-hwname"))opts=TD.hw.map(function(x){return x.n});l.innerHTML=opts.map(function(o){return'<div class="sd-item" onclick="sdSelect(this)">'+o+'</div>'}).join("");s.value="";s.focus();sdFilter(s);function cl(ev){if(!w.contains(ev.target)&&!d.contains(ev.target)){d.classList.remove("open");document.removeEventListener("click",cl)}}setTimeout(function(){document.addEventListener("click",cl)},10)}
 function sdFilter(el){var l=el.closest(".sd-wrap").querySelector(".sd-list"),v=el.value.toLowerCase();l.querySelectorAll(".sd-item").forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(v)?"":"none"})}
 function sdSelect(el){var w=el.closest(".sd-wrap"),t=w.querySelector(".sd-trigger"),d=w.querySelector(".sd-drop");t.value=el.textContent;t.style.color="";d.classList.remove("open");var ev=new Event("change",{bubbles:true});t.dispatchEvent(ev)}
+
+
+// 项目存取
+function getProjectId() {
+  return 'THOR-' + new Date().toISOString().split('T')[0] + '-' + String(Math.floor(Math.random()*1000)).padStart(3,'0');
+}
+function collectFormData() {
+  return {
+    customer: {name: id('cust').value, phone: id('ph').value, address: id('addr').value},
+    order: {no: id('ono').value, date: id('qd').value, salesperson: id('sm').value, store: id('sh').value},
+    items: {cabinet: cb, countertop: ct, panel: pn, trim: tr, hardware: hw, sink: sk, electric: el, extra: ex},
+    totals: {grandTotal: parseFloat((id('gt').textContent||'').replace('\u00a5',''))||0},
+    updatedAt: new Date().toISOString()
+  };
+}
+function saveProject() {
+  var n = prompt('项目名称:', id('cust').value || '未命名');
+  if (!n) return;
+  var ps = JSON.parse(localStorage.getItem('thorP')||'[]');
+  var d = collectFormData();
+  var ex = ps.findIndex(function(p){return p.n===n});
+  if (ex>=0) {if(!confirm('覆盖？')) return; ps[ex]={n:n,d:d,id:ps[ex].id}}
+  else ps.push({n:n,d:d,id:getProjectId()});
+  localStorage.setItem('thorP',JSON.stringify(ps));
+  alert('已保存');
+}
+function loadProject() {
+  var ps = JSON.parse(localStorage.getItem('thorP')||'[]');
+  if (!ps.length) {alert('无项目');return}
+  var s = ps.map(function(p,i){return (i+1)+'. '+p.n}).join('\n');
+  var c = prompt('选择项目:\n'+s);
+  if (!c) return;
+  var i = parseInt(c)-1;
+  if (i<0||i>=ps.length) {alert('无效');return}
+  restoreProject(ps[i].d);
+}
+function restoreProject(d) {
+  if (!d) return;
+  if(d.customer){id('cust').value=d.customer.name||'';id('ph').value=d.customer.phone||'';id('addr').value=d.customer.address||''}
+  if(d.order){id('ono').value=d.order.no||'';id('qd').value=d.order.date||'';id('sm').value=d.order.salesperson||'';id('sh').value=d.order.store||''}
+  if(d.items){
+    if(d.items.cabinet&&cb){cb.length=0;d.items.cabinet.forEach(function(r){cb.push(r)})}
+    if(d.items.countertop&&ct){ct.length=0;d.items.countertop.forEach(function(r){ct.push(r)})}
+    if(d.items.panel&&pn){pn.length=0;d.items.panel.forEach(function(r){pn.push(r)})}
+    if(d.items.trim&&tr){tr.length=0;d.items.trim.forEach(function(r){tr.push(r)})}
+    if(d.items.hardware&&hw){hw.length=0;d.items.hardware.forEach(function(r){hw.push(r)})}
+    if(d.items.sink&&sk){sk.length=0;d.items.sink.forEach(function(r){sk.push(r)})}
+    if(d.items.electric&&el){el.length=0;d.items.electric.forEach(function(r){el.push(r)})}
+    if(d.items.extra&&ex){ex.length=0;d.items.extra.forEach(function(r){ex.push(r)})}
+  }
+  render();
+}
+function deleteProject() {
+  var ps = JSON.parse(localStorage.getItem('thorP')||'[]');
+  if (!ps.length) {alert('无项目');return}
+  var s = ps.map(function(p,i){return (i+1)+'. '+p.n}).join('\n');
+  var c = prompt('选择删除:\n'+s);
+  if (!c) return;
+  var i = parseInt(c)-1;
+  if (i<0||i>=ps.length) {alert('无效');return}
+  if(!confirm('删除 "'+ps[i].n+'"?')) return;
+  ps.splice(i,1);localStorage.setItem('thorP',JSON.stringify(ps));alert('已删除');
+}
+
+(function(){
+  var u = localStorage.getItem('thorUser');
+  var ui = document.getElementById('userInfo');
+  if(!ui)return;
+  if(u){try{var d=JSON.parse(u);ui.innerHTML='<span>'+d.name+'</span> &middot; <span>'+d.role+'</span> &middot; <a href="login.html" style="color:var(--accent);text-decoration:none;font-size:11px">切换</a>'}catch(e){ui.innerHTML='<a href="login.html" style="color:var(--accent)">登录</a>'}}
+  else{ui.innerHTML='<a href="login.html" style="color:var(--accent);text-decoration:none;font-size:11px">登录</a>'}
+})();
 </script>
 </body>
 </html>

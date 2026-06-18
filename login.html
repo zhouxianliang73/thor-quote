@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOR · 登录</title>
+<link rel="stylesheet" href="_shared/design-tokens.css">
+<link rel="stylesheet" href="_shared/skins/production.css">
+<style>
+body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--n-100);padding:20px}
+.login{background:#fff;padding:40px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:380px;width:100%;text-align:center}
+.login h1{font-size:22px;font-weight:700;color:var(--n-900);margin-bottom:4px}
+.login .sub{font-size:12px;color:var(--n-400);margin-bottom:24px}
+.login .field{margin-bottom:14px;text-align:left}
+.login .field label{font-size:11px;color:var(--n-500);display:block;margin-bottom:4px}
+.login .field input{width:100%;padding:10px 12px;border:1px solid var(--n-200);border-radius:6px;font-size:14px;outline:none}
+.login .field input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
+.login .role-select{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.login .role-select button{padding:10px;border:2px solid var(--n-200);border-radius:8px;background:#fff;cursor:pointer;font-size:12px;transition:all .12s;text-align:center}
+.login .role-select button:hover{border-color:var(--accent-lt)}
+.login .role-select button.active{border-color:var(--accent);background:var(--accent-lt);font-weight:600}
+.login .btn-login{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
+.login .btn-login:hover{opacity:.9}
+.login .roles-desc{margin-top:20px;padding:14px;background:var(--n-50);border-radius:8px;text-align:left;font-size:11px;line-height:1.7;color:var(--n-500)}
+.login .roles-desc strong{color:var(--n-800);display:block;margin-bottom:2px}
+</style>
+</head>
+<body>
+<div class="login">
+  <h1>THOR</h1>
+  <div class="sub">索而智能家居 · 报价系统</div>
+  <div class="field">
+    <label>账号</label>
+    <input id="loginUser" placeholder="管理员账号" value="admin">
+  </div>
+  <div class="field">
+    <label>密码</label>
+    <input type="password" id="loginPass" placeholder="密码" value="123456">
+  </div>
+  <div style="font-size:11px;color:var(--n-400);margin-bottom:12px">选择权限等级（演示）</div>
+  <div class="role-select" id="roleSelect">
+    <button class="active" data-role="L1" onclick="selectRole(this)">L1 销售</button>
+    <button data-role="L2" onclick="selectRole(this)">L2 主管</button>
+    <button data-role="L3" onclick="selectRole(this)">L3 老板</button>
+    <button data-role="L4" onclick="selectRole(this)">L4 超级管理员</button>
+  </div>
+  <button class="btn-login" onclick="login()">登 录</button>
+  <div class="roles-desc">
+    <strong>L1 销售</strong> 查产品库 · 做报价 · 看自己历史
+    <strong>L2 主管</strong> 看全部报价 · 看出厂价 · 门店统计
+    <strong>L3 老板</strong> 管理产品库 · 定价策略 · 用户管理
+    <strong>L4 超级管理员</strong> 系统配置 · 日志 · 数据导出
+  </div>
+</div>
+<script>
+function selectRole(el) {
+  document.querySelectorAll('#roleSelect button').forEach(function(b){b.classList.remove('active')});
+  el.classList.add('active');
+}
+function login() {
+  var role = document.querySelector('#roleSelect button.active').getAttribute('data-role') || 'L1';
+  var user = document.getElementById('loginUser').value || '管理员';
+  localStorage.setItem('thorUser', JSON.stringify({name: user, role: role, loginAt: new Date().toISOString()}));
+  window.location.href = 'index.html?login=1';
+}
+</script>
+</body>
+</html>
