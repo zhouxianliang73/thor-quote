@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOR · 项目看板</title>
+<link rel="stylesheet" href="_shared/design-tokens.css">
+<link rel="stylesheet" href="_shared/skins/production.css">
+<style>
+body{background:var(--n-100);padding:24px;font-family:system-ui,-apple-system,sans-serif}
+
+/* ── Header ── */
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px;padding-bottom:16px;border-bottom:1px solid var(--n-150)}
+.header-left{display:flex;align-items:center;gap:16px}
+.header-left .logo-mark{width:42px;height:42px;background:var(--n-800);border-radius:10px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px;letter-spacing:1px}
+.header-left h1{font-size:20px;font-weight:700;color:var(--n-900);margin:0}
+.header-left .tagline{font-size:11px;color:var(--n-400);margin-top:1px}
+.header-right{display:flex;align-items:center;gap:12px}
+.header-right .user{font-size:12px;color:var(--n-500);padding:4px 12px;background:var(--n-50);border-radius:6px}
+.header-right .user a{color:var(--accent);text-decoration:none;font-size:11px}
+
+/* ── Stats Cards ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:24px}
+.card{background:#fff;border-radius:10px;padding:18px 22px;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--n-150);transition:box-shadow .15s}
+.card:hover{box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.card .num{font-size:28px;font-weight:700;color:var(--n-900);line-height:1.2}
+.card .label{font-size:11px;color:var(--n-400);margin-top:3px;letter-spacing:.3px}
+.card .num.accent{color:var(--accent)}
+.card .num.red{color:var(--red)}
+
+/* ── Toolbar ── */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;background:#fff;padding:10px 16px;border-radius:8px;border:1px solid var(--n-150);box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.toolbar input{padding:8px 12px;border:1px solid var(--n-200);border-radius:6px;font-size:13px;flex:1;min-width:160px;outline:none;transition:border-color .12s}
+.toolbar input:focus{border-color:var(--accent)}
+.toolbar select{padding:7px 8px;border:1px solid var(--n-200);border-radius:6px;font-size:12px;color:var(--n-500);background:#fff}
+.toolbar .sep{width:1px;height:24px;background:var(--n-150);margin:0 4px}
+.btn-tb{padding:7px 14px;border-radius:6px;cursor:pointer;font-size:12px;border:none;font-weight:600;transition:opacity .12s}
+.btn-tb:hover{opacity:.85}
+.btn-tb.primary{background:var(--n-800);color:#fff}
+.btn-tb.secondary{background:var(--n-100);color:var(--n-600);border:1px solid var(--n-200)}
+.btn-tb.accent{background:var(--accent);color:#fff}
+
+/* ── Table ── */
+#tableWrap{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid var(--n-150)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--n-100);padding:10px 14px;text-align:left;font-weight:600;color:var(--n-500);font-size:11px;border-bottom:1px solid var(--n-200);letter-spacing:.3px;white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--n-150);color:var(--n-800);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--n-50)}
+
+/* ── Status ── */
+.status{display:inline-block;padding:2px 9px;border-radius:100px;font-size:10px;font-weight:600;text-align:center}
+.status.draft{background:var(--n-100);color:var(--n-500)}
+.status.quoted{background:var(--blue-bg);color:var(--blue)}
+.status.confirmed{background:var(--accent-lt);color:var(--accent)}
+.status.ordered{background:var(--green-bg);color:var(--green)}
+
+/* ── Status Select ── */
+.status-select{border:1px solid var(--n-200);border-radius:4px;padding:2px 6px;font-size:11px;background:#fff;cursor:pointer;outline:none}
+.status-select:focus{border-color:var(--accent)}
+
+/* ── Actions ── */
+.actions{white-space:nowrap}
+.actions button{padding:4px 10px;border:1px solid var(--n-200);border-radius:4px;background:#fff;cursor:pointer;font-size:11px;color:var(--n-600);transition:background .1s}
+.actions button:hover{background:var(--n-100)}
+.actions button.danger{color:var(--red);border-color:var(--red-lt)}
+.actions button.danger:hover{background:var(--red-bg)}
+
+/* ── Empty ── */
+.empty{text-align:center;padding:60px 48px;color:var(--n-400);font-size:14px}
+.empty .icon{font-size:42px;margin-bottom:10px}
+.empty .sub{font-size:12px;margin-top:6px;color:var(--n-300)}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+.toast.success{background:var(--n-800);color:#fff}
+.toast.warn{background:#e67e22;color:#fff}
+
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <div class="logo-mark">TH</div>
+    <div>
+      <h1>项目看板</h1>
+      <div class="tagline">THOR 索而智能家居 · 报价项目管理</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="user" id="userInfo"></div>
+  </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="cards">
+  <div class="card"><div class="num" id="statTotal">0</div><div class="label">总项目数</div></div>
+  <div class="card"><div class="num accent" id="statMonth">0</div><div class="label">本月报价</div></div>
+  <div class="card"><div class="num accent" id="statAmount">¥0</div><div class="label">本月总额</div></div>
+  <div class="card"><div class="num red" id="statAvg">¥0</div><div class="label">平均单值</div></div>
+  <div class="card"><div class="num" id="statActive">0</div><div class="label">跟进中（草稿+报价）</div></div>
+  <div class="card"><div class="num" id="statWin">0</div><div class="label">已成交（确认+下单）</div></div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <input id="searchInput" placeholder="搜索项目名称、客户..." oninput="renderTable()" style="flex:1;min-width:140px">
+  <select id="statusFilter" onchange="renderTable()">
+    <option value="">全部状态</option>
+    <option value="draft">草稿</option>
+    <option value="quoted">已报价</option>
+    <option value="confirmed">已确认</option>
+    <option value="ordered">已下单</option>
+  </select>
+  <div class="sep"></div>
+  <button class="btn-tb secondary" onclick="renderTable()">🔄 刷新</button>
+  <button class="btn-tb primary" onclick="window.location='index.html'">＋ 新建报价</button>
+  <button class="btn-tb accent" onclick="exportProjects()">📥 导出</button>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Table -->
+<div id="tableWrap">
+  <table>
+    <thead><tr>
+      <th>项目名称</th><th>客户</th><th>金额</th><th>状态</th><th>业务员</th><th>门店</th><th>日期</th><th>操作</th>
+    </tr></thead>
+    <tbody id="projectRows"></tbody>
+  </table>
+</div>
+
+<div class="empty" id="emptyState" style="display:none">
+  <div class="icon">📋</div>
+  <p>暂无项目数据</p>
+  <p class="sub">去报价单新建一个项目，或从侧边栏导入</p>
+</div>
+
+<script>
+function id(s){return document.getElementById(s)}
+
+function showToast(msg, type) {
+  var t = id('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type||'success') + ' show';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(function(){t.classList.remove('show')}, 2200);
+}
+
+function init() {
+  var u = localStorage.getItem('thorUser');
+  var ui = id('userInfo');
+  if (u) {
+    try{var d=JSON.parse(u);ui.innerHTML = d.name+' · '+d.role+' · <a href="login.html">切换</a>'}
+    catch(e){ui.innerHTML='<a href="login.html">登录</a>'}
+  } else {
+    ui.innerHTML='<a href="login.html">登录</a>';
+  }
+  renderTable();
+}
+
+function getProjects() {
+  try{return JSON.parse(localStorage.getItem('thorP')||'[]')}catch(e){return []}
+}
+
+function renderTable() {
+  var all = getProjects();
+  var q = (id('searchInput').value||'').toLowerCase();
+  var st = id('statusFilter').value;
+  
+  // ── Stats: use ALL projects (not filtered) ──
+  var now = new Date();
+  var thisMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  var monthTotal = 0, monthCount = 0;
+  var activeCount = 0, winCount = 0;
+  
+  all.forEach(function(p){
+    var d = (p.updatedAt||'').slice(0,7);
+    var st2 = (p.d||{}).status || 'draft';
+    if (d === thisMonth) {
+      monthCount++;
+      monthTotal += (p.d||{}).totals ? ((p.d.totals.grandTotal||0)) : 0;
+    }
+    if (st2 === 'draft' || st2 === 'quoted') activeCount++;
+    if (st2 === 'confirmed' || st2 === 'ordered') winCount++;
+  });
+  
+  id('statTotal').textContent = all.length;
+  id('statMonth').textContent = monthCount;
+  id('statAmount').textContent = '¥' + monthTotal.toFixed(0);
+  id('statAvg').textContent = '¥' + (monthCount > 0 ? (monthTotal/monthCount).toFixed(0) : '0');
+  id('statActive').textContent = activeCount;
+  id('statWin').textContent = winCount;
+  
+  // ── Filter for table display ──
+  var filtered = all.filter(function(p){
+    if (q) {
+      var name = (p.n||'').toLowerCase();
+      var cname = ((p.d||{}).customer||{}).name || '';
+      if (!name.includes(q) && !cname.toLowerCase().includes(q)) return false;
+    }
+    if (st) {
+      var pst = (p.d||{}).status || 'draft';
+      if (pst !== st) return false;
+    }
+    return true;
+  });
+  
+  // ── Rows ──
+  var tbody = id('projectRows');
+  var empty = id('emptyState');
+  if (all.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = 'block';
+    id('tableWrap').style.display = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+  id('tableWrap').style.display = '';
+  
+  if (filtered.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--n-400)">没有匹配的项目</td></tr>';
+    return;
+  }
+  
+  var statusLabels = {draft:'草稿', quoted:'已报价', confirmed:'已确认', ordered:'已下单'};
+  
+  tbody.innerHTML = filtered.map(function(p, i){
+    var d = p.d || {};
+    var c = d.customer || {};
+    var t = d.totals || {};
+    var date = (p.updatedAt||'').slice(0,10);
+    var status = d.status || 'draft';
+    // Find original index in ALL projects for status update
+    var origIdx = all.indexOf(p);
+    return '<tr>' +
+      '<td style="font-weight:600">' + (p.n||'未命名') + '</td>' +
+      '<td>' + (c.name||'') + '</td>' +
+      '<td style="font-weight:700;color:var(--n-900)">¥' + (t.grandTotal||0).toFixed(0) + '</td>' +
+      '<td><span class="status ' + status + '">' + (statusLabels[status]||status) + '</span></td>' +
+      '<td>' + ((d.order||{}).salesperson||'') + '</td>' +
+      '<td>' + ((d.order||{}).store||'') + '</td>' +
+      '<td style="color:var(--n-400)">' + date + '</td>' +
+      '<td class="actions">' +
+        '<select class="status-select" data-idx="' + origIdx + '" onchange="updateStatus(this)">' +
+          '<option value="draft"' + (status==='draft'?' selected':'') + '>草稿</option>' +
+          '<option value="quoted"' + (status==='quoted'?' selected':'') + '>已报价</option>' +
+          '<option value="confirmed"' + (status==='confirmed'?' selected':'') + '>已确认</option>' +
+          '<option value="ordered"' + (status==='ordered'?' selected':'') + '>已下单</option>' +
+        '</select> ' +
+        '<button onclick="loadAndOpen(' + origIdx + ')">📂 打开</button> ' +
+        '<button class="danger" onclick="deleteProject(' + origIdx + ')">🗑️</button>' +
+      '</td></tr>';
+  }).join('');
+}
+
+function updateStatus(el) {
+  var idx = parseInt(el.getAttribute('data-idx'));
+  var newStatus = el.value;
+  var all = getProjects();
+  if (!all[idx]) return;
+  if (!all[idx].d) all[idx].d = {};
+  all[idx].d.status = newStatus;
+  all[idx].d.updatedAt = new Date().toISOString();
+  localStorage.setItem('thorP', JSON.stringify(all));
+  renderTable();
+  showToast('状态已更新为「' + (el.options[el.selectedIndex].text) + '」');
+}
+
+function loadAndOpen(idx) {
+  var all = getProjects();
+  if (!all[idx]) return;
+  localStorage.setItem('thorLoadIdx', idx);
+  window.location.href = 'index.html?load=' + idx;
+}
+
+function deleteProject(idx) {
+  if (!confirm('确定删除？')) return;
+  var all = getProjects();
+  all.splice(idx, 1);
+  localStorage.setItem('thorP', JSON.stringify(all));
+  renderTable();
+  showToast('已删除');
+}
+
+function exportProjects() {
+  var all = getProjects();
+  if (!all.length) {
+    showToast('没有可导出的项目', 'warn');
+    return;
+  }
+  var json = JSON.stringify(all, null, 2);
+  var blob = new Blob([json], {type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'thor-projects-' + new Date().toISOString().slice(0,10) + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('导出成功 (' + all.length + ' 个项目)');
+}
+
+init();
+</script>
+</body>
+</html>
