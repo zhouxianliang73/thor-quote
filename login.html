@@ -6,6 +6,7 @@
 <title>THOR · 登录</title>
 <link rel="stylesheet" href="_shared/design-tokens.css">
 <link rel="stylesheet" href="_shared/skins/production.css">
+<script src="api.js"></script>
 <style>
 body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--n-100);padding:20px}
 .login{background:#fff;padding:40px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:380px;width:100%;text-align:center}
@@ -57,11 +58,22 @@ function selectRole(el) {
   document.querySelectorAll('#roleSelect button').forEach(function(b){b.classList.remove('active')});
   el.classList.add('active');
 }
-function login() {
+async function login() {
   var role = document.querySelector('#roleSelect button.active').getAttribute('data-role') || 'L1';
   var user = document.getElementById('loginUser').value || '管理员';
-  localStorage.setItem('thorUser', JSON.stringify({name: user, role: role, loginAt: new Date().toISOString()}));
-  window.location.href = 'index.html?login=1';
+  var pass = document.getElementById('loginPass').value || '123456';
+  var btn = document.querySelector('.btn-login');
+  btn.textContent = '登录中...';
+  btn.disabled = true;
+  var r = await API.login(user, pass);
+  if (r.ok) {
+    localStorage.setItem('thorUser', JSON.stringify({name: r.data.name, role: role, loginAt: new Date().toISOString()}));
+    window.location.href = 'index.html?login=1';
+  } else {
+    alert('登录失败: ' + (r.error || '未知错误'));
+    btn.textContent = '登 录';
+    btn.disabled = false;
+  }
 }
 </script>
 </body>

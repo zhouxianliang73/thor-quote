@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>用户管理 - Thor Quote</title>
+<link rel="stylesheet" href="_shared/design-tokens.css" />
+<link rel="stylesheet" href="_shared/skins/production.css" />
+<script src="api.js"></script>
+<style>
+body { font-family: Arial, Helvetica, sans-serif; margin: 20px; }
+h1 { font-size: 1.8rem; display: flex; align-items: center; }
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1em;
+}
+th, td {
+    padding: .5em;
+    border: 1px solid var(--color-border, #ccc);
+    text-align: left;
+}
+th { background-color: var(--color-bg-header, #f0f0f0); }
+</style>
+</head>
+<body>
+<h1>👥 用户管理</h1>
+<table id="user-table">
+<thead>
+<tr><th>#</th><th>姓名</th><th>角色</th><th>门店</th><th>登录时间</th><th>操作</th></tr>
+</thead>
+<tbody></tbody>
+</table>
+
+<script>
+// Hardcoded mock users
+const mockUsers = [
+    { name: '管理员', role: 'L4', store: '总部', loginAt: '2026-06-18' },
+    { name: '张三', role: 'L1', store: '门店A', loginAt: '2026-06-17' },
+    { name: '李四', role: 'L2', store: '门店B', loginAt: '2026-06-16' }
+];
+
+// Store mock data in localStorage
+localStorage.setItem('mockUsers', JSON.stringify(mockUsers));
+
+// Render table from stored data
+const tbody = document.querySelector('#user-table tbody');
+const users = JSON.parse(localStorage.getItem('mockUsers'));
+users.forEach((u, i) => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${u.name}</td>
+        <td>${u.role}</td>
+        <td>${u.store}</td>
+        <td>${u.loginAt}</td>
+        <td><button data-id="${i}">删除</button></td>`;
+    tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
