@@ -1,6 +1,6 @@
-# THOR 报价系统 · 总体建设规划
+# THOR 报价系统 · 总体建设规划（定版）
 
-> 规划时间：2026-06-18 | 关联：DD ProductHub 产品中心系统
+> 规划时间：2026-06-18 v2 | 关联：DD ProductHub 产品中心系统
 > 定位：THOR索而品牌橱柜报价工具 → 逐步扩展为通用报价+项目管理系统
 
 ---
@@ -25,16 +25,36 @@
 
 **目标：** 每个板块独立的大图 + 列表选择界面
 
-#### 1.1 产品选择器组件
+#### 1.1 选品页（独立页面）
 ```
-板块表头 → 点击"选择" → 弹出选品模态框
-  ├── 顶部：分类筛选/搜索
-  ├── 中间：大图网格（4~6列，每张图可放大预览）
-  ├── 底部：规格参数 + 颜色/尺寸选项
-  └── 确认 → 选中的产品信息填入表格行
+独立的选品页面，进入每个板块：
+  ├── 容器化展示每个产品
+  │    ├── 编号（THOR编码）
+  │    ├── 名称
+  │    ├── 基本尺寸
+  │    └── 缩略图
+  ├── 点击图片 → 进入详情页
+  │    ├── 大图预览（可缩放）
+  │    ├── 详细信息（材质/颜色/规格）
+  │    ├── 使用场景图
+  │    └── 关联产品推荐
+  └── 选品 → 加入报价单
 ```
 
-#### 1.2 各板块图片来源
+#### 1.2 产品详情卡片
+```
+点击图片 → 卡片浮现在页面最上方
+  ├── 大图
+  ├── 产品编号
+  ├── 名称
+  ├── 规格尺寸
+  ├── 材质/颜色选项
+  ├── 技术参数
+  ├── 使用场景图（多张）
+  └── "加入报价单" 按钮
+```
+
+#### 1.3 各板块图片来源
 | 板块 | 图片状态 | 实施 |
 |------|---------|------|
 | 柜体 | 系列门板花色图 → 后续补充 | 先用材料名+色块占位 |
@@ -43,116 +63,152 @@
 | 水槽 | ⏳ 待补充 | 占位图标 |
 | 电器 | ⏳ 待补充 | 占位图标 |
 
-#### 1.3 选品模态框标准
-```javascript
-// 通用接口
-showProductPicker({
-  category: 'cabinet' | 'countertop' | 'hardware' | 'sink' | 'electric',
-  onSelect: function(item) { /* 填入表格行 */ }
-})
-```
-
 ---
 
 ### 维度二：后台管理 + 项目统计（Phase 2）
 
 **现状问题：** 报价单不能保存，无法追溯，无数据分析
 
-**目标：** 完整的后端存储 + 项目管理 + 数据看板
+**目标：** PostgreSQL（免费额度）+ 完整的后端存储 + 项目管理 + 多维分析
 
-#### 2.1 架构方案
+#### 2.1 技术选型
+| 组件 | 方案 | 原因 |
+|------|------|------|
+| 数据库 | Supabase (PostgreSQL) | 免费额度够用，自带 Auth |
+| API | Supabase Edge Functions / Cloudflare Workers | Serverless |
+| 前端 | 当前 HTML+CSS+JS → 逐步组件化 | 渐进式 |
+| 部署 | Cloudflare Pages | 免费，全球 CDN |
+| 文件存储 | Supabase Storage / R2 | S3 兼容 |
+
+**PostgreSQL 免费额度说明：**
+Supabase Free Tier: 500MB 数据库, 5GB 带宽, 50,000 月活用户
+→ THOR 初期完全够用，后期可随时扩展付费
+
+#### 2.2 统计分析维度
 ```
-选择A：轻量方案（近期）
-  ┌─────────────┐
-  │ THOR报价单   │ ← 纯前端，localStorage 存草稿
-  │ (当前)       │
-  └──────┬──────┘
-         ↓
-  ┌─────────────┐
-  │ JSON数据文件  │ ← 每次报价保存为JSON
-  │ (02-Database) │    文件名: YYYYMMDD-客户名.json
-  └─────────────┘
-
-选择B：完整方案（中期，推荐）
-  ┌─────────────┐
-  │ 前端报价工具    │ ← 当前这个HTML
-  ├─────────────┤
-  │ API层 (可选)   │ ← Node.js / Cloudflare Workers
-  ├─────────────┤
-  │ 数据库        │ ← SQLite / Supabase
-  │  ├─ 项目表     │   id, 客户名, 日期, 总金额, 状态
-  │  ├─ 行项目表   │   板块, 产品名, 数量, 单价, 小计
-  │  ├─ 产品表     │   关联 DD ProductHub 产品库
-  │  └─ 统计视图   │   月销量, 热力图, 爆款排行
-  └─────────────┘
-```
-
-#### 2.2 数据项
-```json
-{
-  "projectId": "THOR-20260618-001",
-  "customer": { "name": "", "phone": "", "address": "" },
-  "items": {
-    "cabinet":   [{ "name":"洗手盘地柜", "series":"大千云纹", "qty":1, ... }],
-    "countertop":  [{ "name":"台面", "series":"琉晶-丝纹GY01", ... }],
-    "hardware":    [{ "name":"百隆铰链", "qty":2, ... }],
-    ...
-  },
-  "totals": { "subtotal": 0, "discount": 0, "grandTotal": 0 },
-  "status": "draft|quoted|confirmed|ordered|delivered",
-  "createdAt": "2026-06-18T08:00:00Z",
-  "updatedAt": "2026-06-18T08:00:00Z"
-}
+┌──────────────────────────────────────────┐
+│              统计看板                      │
+├────────────┬─────────────┬───────────────┤
+│  按门店统计  │  按人员统计   │  按月统计      │
+├────────────┼─────────────┼───────────────┤
+│ 门店A: 12单 │ 张三: 8单    │ 本月: 23单     │
+│ 门店B: 8单  │ 李四: 5单    │ 上月: 18单     │
+│ 门店C: 3单  │ 王五: 2单    │ 同比: +27%    │
+├────────────┴─────────────┴───────────────┤
+│ 热销TOP5                                  │
+│ 1. 大千云纹地柜(800)     × 12单  ¥67,524  │
+│ 2. 百隆107°铰链          × 35个   ¥2,695  │
+│ 3. 琉晶-丝纹GY01台面     × 8单   ¥13,240  │
+│ 4. 嵌入式蒸烤一体机       × 5台   ¥15,000  │
+│ 5. L型免拉手             × 42米   ¥2,478  │
+├──────────────────────────────────────────┤
+│ 系列偏好（饼图）                            │
+│ 大千云纹: 35% │ 铂金系列: 22% │ 其他: 43%  │
+└──────────────────────────────────────────┘
 ```
 
-#### 2.3 统计看板
+#### 2.3 数据模型
+```sql
+-- 项目表
+CREATE TABLE projects (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_no TEXT UNIQUE,              -- THOR-20260618-001
+  customer_name TEXT,
+  customer_phone TEXT,
+  store_name TEXT,                     -- 下单店面
+  salesperson TEXT,                    -- 报价人员
+  total_amount DECIMAL(10,2),
+  status TEXT DEFAULT 'draft',         -- draft|quoted|confirmed|ordered
+  created_by UUID REFERENCES users(id),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- 行项目表
+CREATE TABLE line_items (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  project_id UUID REFERENCES projects(id) ON DELETE CASCADE,
+  section TEXT,                        -- cabinet|countertop|hardware|...
+  product_code TEXT,                   -- THOR编码
+  product_name TEXT,
+  material TEXT,                       -- 门板系列/材料
+  width INT, height INT, depth INT,
+  quantity DECIMAL(10,2),
+  unit TEXT,
+  unit_price DECIMAL(10,2),
+  subtotal DECIMAL(10,2)
+);
+
+-- 门店/人员统计视图（PostgreSQL 聚合）
+CREATE VIEW monthly_stats AS
+SELECT
+  store_name,
+  salesperson,
+  date_trunc('month', created_at) AS month,
+  COUNT(*) AS quote_count,
+  SUM(total_amount) AS total_amount
+FROM projects
+GROUP BY store_name, salesperson, date_trunc('month', created_at);
 ```
-┌─────────────────────────────────────────┐
-│          月报统计看板                     │
-├──────────┬──────────┬──────────────────┤
-│ 本月报价数 │ 本月成交数 │ 本月成交金额        │
-│   23      │   12     │ ¥168,500        │
-├──────────┴──────────┴──────────────────┤
-│ 热销TOP5                                │
-│ 1. 大千云纹地柜(800)     × 12单  ¥67,524 │
-│ 2. 百隆107°铰链          × 35个   ¥2,695 │
-│ 3. 琉晶-丝纹GY01台面     × 8单   ¥13,240 │
-│ 4. 嵌入式蒸烤一体机       × 5台   ¥15,000 │
-│ 5. L型免拉手             × 42米   ¥2,478 │
-├─────────────────────────────────────────┤
-│ 系列偏好（饼图）                          │
-│ 大千云纹: 35% │ 铂金系列: 22% │ 其他: 43% │
-└─────────────────────────────────────────┘
+
+#### 2.4 数据库表关联图示
+```
+┌──────────┐     ┌──────────────┐     ┌─────────────┐
+│  users    │     │   projects   │     │  line_items  │
+├──────────┤     ├──────────────┤     ├─────────────┤
+│ id (PK)  │←───→│ created_by   │     │ id (PK)     │
+│ name     │     │ id (PK)      │←───→│ project_id  │
+│ role(L1~4)│     │ project_no   │     │ section     │
+│ store    │     │ store_name   │     │ product_name│
+│ phone    │     │ salesperson  │     │ quantity    │
+└──────────┘     │ total_amount │     │ unit_price  │
+                 │ status       │     │ subtotal    │
+                 │ created_at   │     └─────────────┘
+                 └──────────────┘
 ```
 
 ---
 
-### 维度三：客户上传图片 + 图库建设（Phase 2~3）
+### 维度三：客户上传图片 + 图库系统（Phase 2~3）
 
-**现状问题：** 客户想自己上传参考图，目前无入口
-
-**目标：** 客户可上传 → 自动 / 手动美化 → 入图库复用
-
-#### 3.1 上传流程
+#### 3.1 上传入口
 ```
-报价单页面 → 每个板块 "上传参考图" 按钮
-  → 客户拖拽/选择图片
-  → 前端预览（临时展示）
-  → 保存到项目文件夹
-    CAB\04-Work\Active\{项目名}\customer-images\
-  → （可选）发送到 ComfyUI 流水线处理
-    去背景 → 调色 → 白底图 → 入库
+每个板块的图片列增加 "+" 按钮
+  ├── 点击 → 打开文件选择器
+  ├── 支持拖拽、多图上传
+  ├── 上传后前端预览（临时展示在图片列）
+  ├── 发送到 ComfyUI 流水线处理
+  │    ├── 去背景
+  │    ├── 调色/调光
+  │    ├── 标准裁剪 800x800
+  │    └── 缩略图 200x200
+  ├── 处理完成后入库
+  └── 图片列自动更新为处理后的图片
 ```
 
-#### 3.2 图片库结构
+#### 3.2 点击图片 → 详情卡片
+```
+点击板块内的任一图片
+  → 详情卡片浮现在页面最上方
+  ├── 大图展示
+  ├── 产品编号
+  ├── 名称
+  ├── 规格尺寸
+  ├── 材质/颜色
+  ├── 技术参数
+  ├── 使用场景图（多张轮播）
+  └── "加入报价单" / "替换图片" 按钮
+```
+
+#### 3.3 图片库结构
 ```
 CAB\01-Raw-Materials\Image-Library\
 ├── Styles\               ← 风格分类
-│   ├── Modern\           ← 现代风
-│   ├── Luxury\           ← 轻奢
-│   ├── Nordic\           ← 北欧
-│   ├── Industrial\       ← 工业风
-│   └── Wabisabi\         ← 侘寂
+│   ├── Modern\
+│   ├── Luxury\
+│   ├── Nordic\
+│   ├── Industrial\
+│   └── Wabisabi\
 ├── Categories\           ← 品类分类  
 │   ├── Cabinet-Doors\
 │   ├── Countertops\
@@ -163,12 +219,14 @@ CAB\01-Raw-Materials\Image-Library\
 └── index.json5           ← 图片索引（标签/风格/品类/来源）
 ```
 
-#### 3.3 优化流水线
+#### 3.4 图片优化流水线
 ```
-客户上传原图
-  → ComfyUI Workflow: 去背景 + 调光 + 标准裁剪
-  → 输出: 800x800 白底图 + 缩略图 200x200
-  → 自动归类到 Image-Library
+客户上传原图 → ComfyUI Workflow
+  → 步骤1: 去背景（RemoveBG / SAM）
+  → 步骤2: 调光/调色（自动白平衡）
+  → 步骤3: 标准输出 800x800 白底图
+  → 步骤4: 缩略图 200x200
+  → 输出到 Image-Library/Customer-Uploads/{项目名}/
   → 更新 index.json5
 ```
 
@@ -184,45 +242,45 @@ CAB\01-Raw-Materials\Image-Library\
   └── WhatsApp Number（中东客户 - 后期）
 
 管理员账号密码登录
-  └── 设在后端管理入口
+  └── 设在后端管理入口（Supabase Auth）
 ```
 
 #### 4.2 四级权限体系（L1~L4）
 ```
 L1 - 销售/客服（前端权限）
-  ├── 查看产品库
+  ├── 查看产品库（销售价可见）
   ├── 制作和修改报价单
   ├── 查看自己的报价历史
-  └── 查看产品库存/价格（销售价可见，出厂价不可见）
+  └── 客户上传图片
 
 L2 - 主管/店长（中级权限）
   ├── L1所有权限
   ├── 查看所有报价单（不限人）
   ├── 查看出厂价/利润率
-  ├── 修改折扣（在店长权限范围内）
-  └── 查看团队统计
+  ├── 查看门店月度统计
+  └── 按人员查看业绩
 
 L3 - 老板/管理员（高级权限）
   ├── L2所有权限
   ├── 修改出厂价/定价策略
-  ├── 管理产品库（增删改产品）
+  ├── 管理产品库（增删改）
   ├── 管理用户账号/权限
-  └── 查看全维度统计（带利润分析）
+  └── 全维度统计（带利润分析）
 
 L4 - 超级管理员（系统权限）
   ├── L3所有权限
   ├── 系统配置（数据库/API）
-  ├── 查看操作日志
+  ├── 操作日志
   └── 数据导出/备份
 ```
 
 #### 4.3 权限与界面联动
 ```
-前端根据用户权限动态展示：
-  ├── L1：只看到销售价和基本产品信息
-  ├── L2：看到出厂价、折扣区间、利润率
-  ├── L3：看到所有管理入口
-  └── L4：看到系统设置
+前端根据用户 role 动态展示：
+  ├── L1：只看销售价，只看自己报价
+  ├── L2：看出厂价、折扣区间、店铺统计
+  ├── L3：管理入口、定价策略、用户管理
+  └── L4：系统设置、日志、数据导出
 ```
 
 ---
@@ -257,43 +315,46 @@ THOR 报价系统（前端应用）
 
 ## 阶段路线图
 
-### Phase 1：可视化选品（1~2周）
-1. 设计选品模态框组件（通用的 ProductPicker）
-2. 柜体/台面/配件三大板块先行
-3. 图片占位 + 大图预览
-4. 选品结果填入表格行
+### Phase 1：可视化选品 + 选品页（1~2周）
+1. 设计选品页容器布局
+2. 每个板块的独立选品页
+3. 产品卡片（编号/名称/尺寸/缩略图）
+4. 详情页（大图/参数/场景）
+5. 产品详情卡片浮层（点击图片 → 顶部展示）
 
 ### Phase 2：后端 + 统计（3~4周）
-1. 选择后端方案（推荐 Supabase + Edge Functions）
-2. 项目 CRUD API
-3. 报价单保存/加载/列表
-4. 统计看板（按时间/按分类/按客户）
-5. 热销分析 + 爆款标记
+1. Supabase 项目搭建
+2. 数据表创建（projects / line_items / users）
+3. 项目 CRUD API
+4. 报价单保存/加载/列表
+5. 统计看板（按门店/按人员/按月/热销）
+6. 按门店、人员月统计报表
 
 ### Phase 3：图片 + 图库（5~6周）
-1. 客户上传入口（每个板块）
-2. 前端预览 + 裁剪
+1. 每个板块图片列 "+" 上传按钮
+2. 前端预览 + 拖拽上传
 3. ComfyUI 流水线对接
 4. Image-Library 索引系统
-5. 素材复用（见图选材）
+5. 点击图片 → 详情卡片浮层
 
 ### Phase 4：用户 + 权限（7~8周）
-1. 社媒登录集成
-2. 四级权限模型实现
-3. L1/L2/L3/L4 界面差异化
+1. Supabase Auth 社媒登录集成
+2. 四级权限模型（L1~L4）
+3. 前端界面根据 role 差异化
 4. 操作日志
 5. 数据导出
 
 ---
 
-## 技术选型建议
+## 技术选型总表
 
 | 模块 | 方案 | 原因 |
 |------|------|------|
-| 前端 | 当前 HTML+CSS+JS（或逐步迁移到 React） | 当前够用，后续需要组件化再迁移 |
-| 后端 | Supabase (PostgreSQL + Auth + Edge Functions) | 免费额度够用，自带认证 |
-| 部署 | Cloudflare Pages | 已有，免费，全球 CDN |
-| 图片处理 | ComfyUI + Flux（现有） | 3090 已有 |
-| 社媒登录 | Supabase Auth (WeChat / Google) | 内置支持 |
-| 文件存储 | Cloudflare R2 / Supabase Storage | S3 兼容，低价 |
-| 统计分析 | Supabase SQL Views | 直接在数据库层聚合 |
+| 前端 | 当前 HTML+CSS+JS → 逐步 React | 渐进式，当前够用 |
+| 数据库 | Supabase PostgreSQL（免费 500MB） | 额度够用，自带 Auth |
+| API | Supabase Edge Functions | Serverless，同数据库 |
+| 部署 | Cloudflare Pages | 已有，免费 CDN |
+| 图片处理 | ComfyUI + Flux（3090） | 已有 |
+| 文件存储 | Supabase Storage / R2 | S3 兼容 |
+| 社媒登录 | Supabase Auth | 微信/Google 内置 |
+| 统计分析 | PostgreSQL SQL Views + Charts | 数据库层聚合 |
