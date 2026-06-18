@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THOR 索而 · 选品系统</title>
+<link rel="stylesheet" href="_shared/design-tokens.css">
+<link rel="stylesheet" href="_shared/skins/marketing.css">
+<style>
+/* ── 选品页专属 ── */
+:root {
+  --header-h: 56px;
+  --filter-h: 44px;
+  --search-h: 50px;
+}
+body{background:var(--bg)}
+.header-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
+.filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 24px;position:sticky;top:var(--header-h);z-index:99}
+.filter-inner{max-width:1400px;margin:0 auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.sticky-search{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 24px;position:sticky;top:calc(var(--header-h) + var(--filter-h));z-index:98}
+.search-inner{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.search-inner input{flex:1;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--surface-alt);color:var(--text);outline:none;min-width:160px}
+.search-inner input:focus{border-color:var(--accent)}
+.search-inner .count{font-size:12px;color:var(--text-muted);white-space:nowrap}
+
+/* ── 产品网格 ── */
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:20px 24px;max-width:1400px;margin:0 auto}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
+.product-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-3px)}
+.product-card .img-wrap{width:100%;aspect-ratio:1;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.product-card .img-wrap img{width:100%;height:100%;object-fit:cover}
+.product-card .img-wrap .placeholder{font-size:32px;color:var(--text-muted)}
+.product-card .badge{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600}
+.product-card .info{padding:10px 14px 12px}
+.product-card .code{font-size:11px;color:var(--text-muted)}
+.product-card .name{font-size:14px;font-weight:600;color:var(--text);margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.product-card .spec{font-size:12px;color:var(--text-sec)}
+.product-card .price{font-size:15px;font-weight:700;color:var(--accent);margin-top:4px}
+
+/* ── 详情浮层 ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
+.overlay.open{display:flex}
+.detail{background:var(--surface);border-radius:12px;max-width:800px;width:100%;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.2)}
+.detail .img-main{width:100%;aspect-ratio:16/10;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;position:relative}
+.detail .img-main img{max-width:100%;max-height:100%;object-fit:contain}
+.detail .img-main .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.8);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--text)}
+.detail .img-main .nav.prev{left:12px}
+.detail .img-main .nav.next{right:12px}
+.detail .img-main .close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.4);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px}
+.detail .body{padding:24px}
+.detail .body h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.detail .body .code{font-size:13px;color:var(--text-muted);margin-bottom:12px}
+.detail .body .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:16px 0;padding:16px;background:var(--surface-alt);border-radius:8px}
+.detail .body .meta dt{font-size:12px;color:var(--text-muted)}
+.detail .body .meta dd{font-size:14px;color:var(--text);font-weight:500}
+.detail .body .scene-title{font-size:15px;font-weight:600;margin:16px 0 8px}
+.detail .body .scene-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.detail .body .scene-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-alt)}
+.detail .add-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:20px;transition:opacity .15s}
+.detail .add-btn:hover{opacity:.9}
+
+/* ── 空状态 ── */
+.empty{text-align:center;padding:80px 24px;color:var(--text-muted)}
+.empty .icon{font-size:48px;margin-bottom:12px}
+.empty p{font-size:14px}
+
+/* ── 响应式 ── */
+@media(max-width:768px){
+  .product-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
+  .filter-bar{padding:6px 12px}
+  .sticky-search{padding:8px 12px}
+  .detail .body .meta{grid-template-columns:1fr}
+  .detail .body .scene-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="header-logo">
+      <div class="mark">TH</div>
+      <h1>THOR 选品系统</h1>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span class="theme-badge" id="catLabel">柜体</span>
+      <button class="cart-btn" onclick="backToQuote()" title="返回报价单">←</button>
+    </div>
+  </div>
+</header>
+
+<!-- Filter Bar -->
+<div class="filter-bar" id="filterBar">
+  <div class="filter-inner" id="catNav">
+    <!-- categories populated by JS -->
+  </div>
+</div>
+
+<!-- Search Bar -->
+<div class="sticky-search">
+  <div class="search-inner">
+    <input id="searchInput" placeholder="搜索产品名称、编号..." oninput="filterProducts()">
+    <span class="count" id="productCount">共 0 个产品</span>
+  </div>
+</div>
+
+<!-- Product Grid -->
+<div class="product-grid" id="productGrid">
+  <!-- products populated by JS -->
+</div>
+
+<!-- Detail Overlay -->
+<div class="overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
+  <div class="detail" id="detailCard">
+    <div class="img-main" id="detailImg">
+      <img id="detailMainImg" src="" alt="">
+      <button class="nav prev" onclick="changeImage(-1)">‹</button>
+      <button class="nav next" onclick="changeImage(1)">›</button>
+      <button class="close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="body" id="detailBody">
+      <h2 id="detailName"></h2>
+      <div class="code" id="detailCode"></div>
+      <div class="meta" id="detailMeta"></div>
+      <div id="detailScenes"></div>
+      <button class="add-btn" onclick="addToQuote()">＋ 加入报价单</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 数据（从 THOR 报价系统数据模拟） ──
+var CATEGORIES = [
+  { id:'cabinet', name:'柜体', icon:'🗄️' },
+  { id:'countertop', name:'台面', icon:'🔲' },
+  { id:'hardware', name:'功能配件', icon:'🔩' },
+  { id:'sink', name:'水槽/龙头', icon:'🚰' },
+  { id:'electric', name:'电器', icon:'⚡' },
+  { id:'extra', name:'增加项目', icon:'📋' }
+];
+
+// 模拟产品数据（后续从 ProductHub 读取）
+var ALL_PRODUCTS = [];
+var currentCat = 'cabinet';
+var currentDetail = null;
+var detailImages = [];
+var detailImgIdx = 0;
+var selectedProducts = [];
+
+// 生成柜体产品数据
+(function(){
+  var types = ['洗手盘地柜','地柜','灶台吊柜','吊柜','高柜','上翻门吊柜'];
+  var series = ['大千云纹','大悦韵纹','大影臻纹','大彩绚丽','大观金属','铂金系列'];
+  var stdDims = {'洗手盘地柜':'800×700×570','地柜':'800×700×570','灶台吊柜':'800×700×370','吊柜':'800×700×370','高柜':'600×2100×570','上翻门吊柜':'800×700×370'};
+  var idx = 0;
+  series.forEach(function(s){
+    types.forEach(function(t){
+      idx++;
+      ALL_PRODUCTS.push({
+        id: 'DD-CB-' + String(idx).padStart(3,'0'),
+        category: 'cabinet',
+        name: s + ' · ' + t,
+        series: s,
+        type: t,
+        dim: stdDims[t],
+        price: 5000 + Math.floor(Math.random() * 3000),
+        material: '304不锈钢雨滴板',
+        color: '木纹/纯色可选',
+        desc: s + '系列' + t + '，' + stdDims[t],
+        images: ['03-Converted/01-images/cabinet/series'+(idx)+'.jpeg'],
+        scenes: []
+      });
+    });
+  });
+  // 配件
+  var hw = ['百隆107°集成阻尼全盖铰链','百隆107°集成阻尼半盖铰链','反弹器','L型免拉手','嵌入式灯条600','抽屉感应灯800'];
+  hw.forEach(function(n,i){
+    ALL_PRODUCTS.push({
+      id: 'DD-HW-' + String(i+1).padStart(3,'0'),
+      category: 'hardware',
+      name: n,
+      dim: '标准',
+      price: [77,82,14,59,104,432][i],
+      material: '不锈钢/铝合金',
+      images: ['03-Converted/01-images/hardware/image'+(i+1)+'.jpeg'],
+      scenes: []
+    });
+  });
+  // 台面
+  var ct = ['琉晶-丝纹GY01','琉晶-绘纹GY02','晶灵-蚀刻GY03','晶灵-雾砂GY04'];
+  ct.forEach(function(n,i){
+    ALL_PRODUCTS.push({
+      id: 'DD-CT-' + String(i+1).padStart(3,'0'),
+      category: 'countertop',
+      name: n,
+      dim: '600×12mm（可定制）',
+      price: [1655,1585,2765,3405][i],
+      material: '不锈钢复合双层',
+      images: [],
+      scenes: []
+    });
+  });
+})();
+
+function init() {
+  renderNav();
+  renderGrid();
+}
+
+function renderNav() {
+  var html = '';
+  CATEGORIES.forEach(function(c){
+    html += '<button class="filter-pill' + (c.id === currentCat ? ' active' : '') + '" onclick="switchCat(\'' + c.id + '\')">' + c.icon + ' ' + c.name + '</button>';
+  });
+  document.getElementById('catNav').innerHTML = html;
+}
+
+function switchCat(cat) {
+  currentCat = cat;
+  document.getElementById('catLabel').textContent = CATEGORIES.find(function(c){return c.id===cat}).name;
+  document.getElementById('searchInput').value = '';
+  renderNav();
+  renderGrid();
+}
+
+function filterProducts() {
+  renderGrid();
+}
+
+function getProducts() {
+  var q = document.getElementById('searchInput').value.toLowerCase();
+  return ALL_PRODUCTS.filter(function(p){
+    if (p.category !== currentCat) return false;
+    if (!q) return true;
+    return p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q);
+  });
+}
+
+function renderGrid() {
+  var list = getProducts();
+  document.getElementById('productCount').textContent = '共 ' + list.length + ' 个产品';
+  if (list.length === 0) {
+    document.getElementById('productGrid').innerHTML = '<div class="empty"><div class="icon">🔍</div><p>没有找到匹配的产品</p></div>';
+    return;
+  }
+  var html = '';
+  list.forEach(function(p){
+    var img = p.images && p.images[0] ? '<img src="' + p.images[0] + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="placeholder" style="display:none">📷</div>' : '<div class="placeholder">📷</div>';
+    html += '<div class="product-card" onclick="showDetail(\'' + p.id + '\')">' +
+      '<div class="img-wrap">' + img + '</div>' +
+      '<div class="info">' +
+      '<div class="code">' + p.id + '</div>' +
+      '<div class="name">' + p.name + '</div>' +
+      '<div class="spec">' + p.dim + '</div>' +
+      '<div class="price">¥' + p.price.toFixed(0) + '</div>' +
+      '</div></div>';
+  });
+  document.getElementById('productGrid').innerHTML = html;
+}
+
+function showDetail(id) {
+  var p = ALL_PRODUCTS.find(function(x){return x.id===id});
+  if (!p) return;
+  currentDetail = p;
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailCode').textContent = p.id + ' | ' + p.dim;
+  
+  // Meta info
+  document.getElementById('detailMeta').innerHTML = 
+    '<dt>材料</dt><dd>' + (p.material||'—') + '</dd>' +
+    '<dt>颜色</dt><dd>' + (p.color||'—') + '</dd>' +
+    '<dt>系列</dt><dd>' + (p.series||'—') + '</dd>' +
+    '<dt>单价</dt><dd style="font-size:18px;font-weight:700;color:var(--accent)">¥' + p.price.toFixed(0) + '</dd>';
+  
+  // Images
+  detailImages = p.images && p.images.length ? p.images : [];
+  detailImgIdx = 0;
+  updateDetailImage();
+  
+  // Scenes
+  document.getElementById('detailScenes').innerHTML = p.scenes && p.scenes.length ? 
+    '<div class="scene-title">📸 使用场景</div><div class="scene-grid">' + p.scenes.map(function(s){return '<img src="'+s+'" onerror="this.style.display=\'none\'">'}).join('') + '</div>' : '';
+  
+  document.getElementById('detailOverlay').classList.add('open');
+}
+
+function updateDetailImage() {
+  var img = document.getElementById('detailMainImg');
+  if (detailImages.length > 0) {
+    img.src = detailImages[detailImgIdx];
+    img.style.display = '';
+  } else {
+    img.style.display = 'none';
+  }
+}
+
+function changeImage(dir) {
+  if (detailImages.length < 2) return;
+  detailImgIdx = (detailImgIdx + dir + detailImages.length) % detailImages.length;
+  updateDetailImage();
+}
+
+function closeDetail() {
+  document.getElementById('detailOverlay').classList.remove('open');
+}
+
+function addToQuote() {
+  if (!currentDetail) return;
+  selectedProducts.push(currentDetail);
+  var btn = document.querySelector('.add-btn');
+  btn.textContent = '✅ 已加入 (' + selectedProducts.length + ')';
+  setTimeout(function(){btn.textContent = '＋ 加入报价单';}, 1500);
+}
+
+function backToQuote() {
+  // 返回报价单页面，携带选品数据
+  if (selectedProducts.length > 0) {
+    localStorage.setItem('thorSelections', JSON.stringify(selectedProducts));
+  }
+  window.location.href = 'index.html';
+}
+
+init();
+</script>
+</body>
+</html>

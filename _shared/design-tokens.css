@@ -1,0 +1,68 @@
+/* ═══════════════════════════════════
+   DD Design System · Design Tokens
+   ═══════════════════════════════════
+   所有项目共享的底层设计变量
+   版本: 1.0 | 2026-06-18
+   ═══════════════════════════════════ */
+
+/* ── 暖色中性色（oklch 体系，主色相偏琥珀/胡桃色） ── */
+:root {
+  --n-50:  oklch(98% 0.004 60);
+  --n-100: oklch(95% 0.006 60);
+  --n-150: oklch(92% 0.008 60);
+  --n-200: oklch(88% 0.01 60);
+  --n-300: oklch(78% 0.015 60);
+  --n-400: oklch(65% 0.02 60);
+  --n-500: oklch(55% 0.025 60);
+  --n-700: oklch(35% 0.02 60);
+  --n-800: oklch(25% 0.015 60);
+  --n-900: oklch(16% 0.01 60);
+}
+
+/* ── 强调色 ── */
+:root {
+  --accent:     oklch(45% 0.12 70);
+  --accent-lt:  oklch(75% 0.06 70);
+  --accent-dim: oklch(60% 0.06 70);
+}
+
+/* ── 语义色 ── */
+:root {
+  --red:    oklch(50% 0.18 25);
+  --red-bg: oklch(93% 0.03 25);
+  --green:    oklch(50% 0.16 140);
+  --green-bg: oklch(93% 0.03 140);
+  --blue:     oklch(45% 0.14 260);
+  --blue-bg:  oklch(93% 0.03 260);
+}
+
+/* ── 字体 ── */
+:root {
+  --font-sans:  -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei',
+                'Segoe UI', system-ui, sans-serif;
+  --font-serif: 'Noto Serif SC', 'Songti SC', Georgia, serif;
+  --font-mono:  'SF Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+/* ── 圆角 ── */
+:root {
+  --r-sm:  3px;
+  --r-md:  6px;
+  --r-lg:  12px;
+  --r-full: 100px;
+}
+
+/* ── 阴影 ── */
+:root {
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.1);
+}
+
+/* ── 动画 ── */
+:root {
+  --dur-fast:  0.12s;
+  --dur-normal: 0.2s;
+  --dur-slow:  0.3s;
+  --ease:      cubic-bezier(.4,0,.2,1);
+}
