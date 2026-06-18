@@ -278,6 +278,15 @@ h1{text-align:center;font-size:22px;font-weight:650;letter-spacing:5px;color:var
 </div>
 <div class="cv" id="cv">
   <div class="ct">THOR 索而智能家居 - 报价单</div>
+  <div class="cv-info" style="max-width:100%;margin-bottom:16px;padding:10px 14px;background:var(--n50);border-radius:4px;border:1px solid var(--n150);display:grid;grid-template-columns:1fr 1fr;gap:6px 24px;font-size:12px">
+    <div><span style="color:var(--n400)">订单编号：</span><span id="cvo-no"></span></div>
+    <div><span style="color:var(--n400)">报价日期：</span><span id="cvo-date"></span></div>
+    <div><span style="color:var(--n400)">报价人员：</span><span id="cvo-sm"></span></div>
+    <div><span style="color:var(--n400)">下单店面：</span><span id="cvo-sh"></span></div>
+    <div><span style="color:var(--n400)">客户姓名：</span><span id="cvo-cust"></span></div>
+    <div><span style="color:var(--n400)">联系电话：</span><span id="cvo-ph"></span></div>
+    <div style="grid-column:span 2"><span style="color:var(--n400)">客户地址：</span><span id="cvo-addr"></span></div>
+  </div>
   <table class="clt"><thead><tr><th style="width:40px">#</th><th>项目</th><th style="width:110px">金额(元)</th></tr></thead><tbody id="cvr"></tbody></table>
   <div class="cto">合计金额:<span class="b" id="cit">¥0</span><br><span style="font-size:14px;color:var(--ac)" id="cicn"></span></div>
   <div class="cterms"><p>注:1)如设计图有变更,以新设计图的报价为准。2)下单生产前,请支付全部货款;交货期从货款到账次日起计。</p><p>3)本报价表为初步报价,具体价格依据细化方案后为准,且此次价格有效期为30天。</p><p>总公司:索而智能家居有限公司 | 地址:东莞市洪梅镇海新路2号</p></div>
@@ -463,7 +472,7 @@ function cal(){
   var t=vs.reduce(function(a,b){return a+b},0);id('gt').textContent='¥'+t.toFixed(0);id('cn').textContent='人民币:'+n2c(t)+' 元整';
 }
 function n2c(n){if(!n||n===0)return'零';var d='零壹贰叁肆伍陆柒捌玖',u=['','拾','佰','仟'],b=['','万','亿'];n=Math.round(n);var s=n.toString(),p=[];for(var i=s.length;i>0;i-=4)p.push(s.substring(Math.max(0,i-4),i));var r='';for(var i=p.length-1;i>=0;i--){var q=p[i],ps='',zf=false;for(var j=0;j<q.length;j++){var c=parseInt(q[j]);if(c===0)zf=true;else{if(zf){ps+='零';zf=false}ps+=d[c]+u[q.length-1-j]}}if(ps)r+=ps+b[i];else if(i===1&&p.length>2)r+='零'}return r||'零'}
-function scv(){var a=id('app');a.classList.toggle('cm');var c=id('cv');c.classList.toggle('s');if(c.classList.contains('s')){var ns=['柜体','台面','见光板','地脚线/顶封板','功能配件','水槽/龙头','电器','增加项目'];id('cvr').innerHTML=ns.map(function(n,i){return'<tr><td>'+(i+1)+'</td><td style="text-align:left">'+n+'</td><td>￥'+parseFloat(id('s'+i).textContent).toFixed(0)+'</td></tr>'}).join('');var t=id('gt').textContent;id('cit').textContent=t;id('cicn').textContent='人民币：'+n2c(parseFloat(t.replace('¥','')))+' 元整';}}
+function scv(){var a=id('app');a.classList.toggle('cm');var c=id('cv');c.classList.toggle('s');if(c.classList.contains('s')){var ns=['柜体','台面','见光板','地脚线/顶封板','功能配件','水槽/龙头','电器','增加项目'];id('cvr').innerHTML=ns.map(function(n,i){return'<tr><td>'+(i+1)+'</td><td style="text-align:left">'+n+'</td><td>￥'+parseFloat(id('s'+i).textContent).toFixed(0)+'</td></tr>'}).join('');var t=id('gt').textContent;id('cit').textContent=t;id('cicn').textContent='人民币：'+n2c(parseFloat(t.replace('¥','')))+' 元整';;id('cvo-no').textContent=id('ono').value||'';id('cvo-date').textContent=id('qd').value||'';id('cvo-sm').textContent=id('sm').value||'';id('cvo-sh').textContent=id('sh').value||'';id('cvo-cust').textContent=id('cust').value||'';id('cvo-ph').textContent=id('ph').value||'';id('cvo-addr').textContent=id('addr').value||'';}}
 function tog(id2){var b=id(id2);b.style.display=b.style.display==='none'?'block':'none';}
 function ag(){document.querySelectorAll('.ghost').forEach(function(e){e.remove()});[
   ['cr',14,acb],['tr',14,act],['pr',14,ap],['trr',14,atr],['hr',13,ah],['sr',13,ask],['er',13,ae],['xr',13,ax]
