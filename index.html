@@ -29,10 +29,10 @@ h1{text-align:center;font-size:22px;font-weight:650;letter-spacing:5px;color:var
 .cat-t{background:var(--ac);color:#fff;padding:3px 12px;border-radius:3px;font-size:13px;font-weight:600}
 .cat-n{font-size:15px}
 .cat-bd{padding:0}
-.ghost td{padding:0!important;height:20px;line-height:20px;cursor:pointer;border-bottom:1px dashed var(--n300);font-size:11px;color:var(--n400)}
+.ghost td{padding:0!important;height:17px!important;line-height:17px;cursor:pointer;border-bottom:1px solid var(--n200);font-size:11px;color:var(--n400)}
 .ghost:hover td{background:var(--ac-lt);border-color:var(--ac)}
-.ghost .plus{font-size:14px;font-weight:700;color:var(--ac);display:inline-block;width:18px;height:18px;line-height:18px;border-radius:3px;border:1px solid var(--ac);text-align:center}
-.ghost:hover .plus{color:#fff;background:var(--ac)}
+.ghost .plus{background:none;border:none;color:var(--n400);cursor:pointer;font-size:16px;padding:1px 4px;border-radius:3px;line-height:1}
+.ghost:hover .plus{color:var(--red);background:var(--red-bg)}
 .tw{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .tw table{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums;table-layout:fixed;width:100%;white-space:nowrap}
 .tw th{background:var(--n100);padding:7px 4px;text-align:center;font-weight:600;border:1px solid var(--n200);color:var(--n500);font-size:11.5px}
@@ -99,7 +99,7 @@ h1{text-align:center;font-size:22px;font-weight:650;letter-spacing:5px;color:var
   .cat-hd{padding:6px 10px;font-size:12px}.cat-n{font-size:13px}.cat-t{font-size:11px;padding:2px 8px}
   .tw table,.tw thead,.tw tbody,.tw th,.tw td,.tw tr{display:block}
   .tw thead{display:none!important}
-  .tw .ghost td{height:28px;line-height:28px}
+  .tw .ghost td{height:14px!important;line-height:14px}
   .tw tr:not(.ghost){border:1px solid var(--n200);border-radius:4px;margin-bottom:6px;padding:6px 8px;height:auto;background:#fff;position:relative}
   .tw td{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border:none;height:auto;min-height:36px;gap:6px}
   .tw td::before{content:attr(dl);font-weight:600;color:var(--n500);font-size:11px;white-space:nowrap;flex-shrink:0;min-width:52px}
@@ -356,19 +356,26 @@ function mkOther(data,cfg){
 function rc(){id('cr').innerHTML=cb.map(function(r,i){
   var p=gp(r.m||'大千云纹',r.n),sd2=sd(r.n),nw=nv(r.w,sd2.w),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),ns=nw||nh||nd,st=r.q*p*(ns?1.2:1);
   return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('c')+'</td>'
-    +'<td dl="名称"><select onchange="var sd2=sd(this.value);cb['+i+'].n=this.value;cb['+i+'].w=sd2.w;cb['+i+'].h=sd2.h;cb['+i+'].d=sd2.d;rc()">'+CT.map(function(t){return'<option'+(t===r.n?'selected':'')+'>'+t+'</option>'}).join('')+'</select></td>'
+    +'<td dl="名称"><select class="s-name" data-i="'+i+'">'+CT.map(function(t){return'<option'+(t===r.n?'':'')+'>'+t+'</option>'}).join('')+'</select></td>'
     +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="cb['+i+'].c=this.value"></td>'
     +'<td dl="尺寸" style="white-space:nowrap"><input class="num'+(nw?' non':(!r.w||r.w===sd2.w)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.w||sd2.w)+'" style="width:50px;display:inline" placeholder="'+sd2.w+'" title="宽" onchange="cb['+i+'].w=parseInt(this.value)||'+sd2.w+';rc()"><span style="color:#ccc">×</span><input class="num'+(nh?' non':(!r.h||r.h===sd2.h)?' hp':'')+'" type="number" min="100" step="10" value="'+(r.h||sd2.h)+'" style="width:48px;display:inline" placeholder="'+sd2.h+'" title="高" onchange="cb['+i+'].h=parseInt(this.value)||'+sd2.h+';rc()"><span style="color:#ccc">×</span><input class="num'+(nd?' non':(!r.d||r.d===sd2.d)?' hp':'')+'" type="number" min="50" step="10" value="'+(r.d||sd2.d)+'" style="width:48px;display:inline" placeholder="'+sd2.d+'" title="深" onchange="cb['+i+'].d=parseInt(this.value)||'+sd2.d+';rc()"></td>'
-    +'<td dl="材料" class="al-m"><select onchange="cb['+i+'].m=this.value;rc()">'+CS.map(function(s){return'<option'+(s===(r.m||'大千云纹')?'selected':'')+'>'+s+'</option>'}).join('')+'</select></td>'
+    +'<td dl="材料" class="al-m"><select class="s-mat" data-i="'+i+'">'+CS.map(function(s){return'<option'+(s===(r.m||'大千云纹')?'':'')+'>'+s+'</option>'}).join('')+'</select></td>'
     +'<td dl="非标系数" class="al-r" style="font-weight:600">'+(ns?'<span style="color:var(--red)">1.2</span>':'<span style="color:var(--n400)">1.0</span>')+'</td>'
     +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="cb['+i+'].q=parseFloat(this.value)||0;rc()"></td>'
-    +'<td dl="单位"><select onchange="cb['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='米'?'selected':'')+'>米</option><option'+(r.u==='套'?'selected':'')+'>套</option></select></td>'
+    +'<td dl="单位"><select class="s-unit" data-i="'+i+'"><option'+(r.u==='个'?'':'')+'>个</option><option'+(r.u==='米'?'':'')+'>米</option><option'+(r.u==='套'?'':'')+'>套</option></select></td>'
     +'<td dl="单价" style="text-align:right">¥'+p.toFixed(0)+'</td>'
     +'<td dl="金额" style="text-align:right;font-weight:600">¥'+st.toFixed(0)+'</td>'
     +'<td dl=""><button class="row-del" onclick="cb.splice('+i+',1);rc()">✕</button></td></tr>';
-}).join('');try{cal()}catch(e){log(e)}ag();}
+}).join('');
+// 显式设置下拉值
+var tb=id('cr');
+cb.forEach(function(r,i){
+  var sName=tb.querySelector('.s-name[data-i="'+i+'"]');if(sName){sName.value=r.n;sName.onchange=function(){var sd2=sd(this.value);cb[i].n=this.value;cb[i].w=sd2.w;cb[i].h=sd2.h;cb[i].d=sd2.d;rc();}}
+  var sMat=tb.querySelector('.s-mat[data-i="'+i+'"]');if(sMat){sMat.value=r.m;sMat.onchange=function(){cb[i].m=this.value;rc();}}
+  var sUnit=tb.querySelector('.s-unit[data-i="'+i+'"]');if(sUnit){sUnit.value=r.u;sUnit.onchange=function(){cb[i].u=this.value;}}
+});
+try{cal()}catch(e){log(e)}ag();}
 function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',r:1,q:1,u:'米'});rc();}
-
 function rct(){id('tr').innerHTML=mkm(ct,{a:'ct',f:'rct',icon:'t',
 sel:function(r,i){return{
 name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="ct['+i+'].n=this.value">',
