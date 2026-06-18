@@ -1,0 +1,4 @@
+-- 仅授权，不重建表
+GRANT USAGE ON SCHEMA public TO anon;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon;
