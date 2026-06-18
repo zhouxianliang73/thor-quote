@@ -367,12 +367,12 @@ function rc(){id('cr').innerHTML=cb.map(function(r,i){
     +'<td dl="金额" style="text-align:right;font-weight:600">¥'+st.toFixed(0)+'</td>'
     +'<td dl=""><button class="row-del" onclick="cb.splice('+i+',1);rc()">✕</button></td></tr>';
 }).join('');
-// 显式设置下拉值
+// 事件委托：一次绑定，永不丢失
 var tb=id('cr');
 cb.forEach(function(r,i){
-  var sName=tb.querySelector('.s-name[data-i="'+i+'"]');if(sName){sName.value=r.n;sName.onchange=function(){var sd2=sd(this.value);cb[i].n=this.value;cb[i].w=sd2.w;cb[i].h=sd2.h;cb[i].d=sd2.d;rc();}}
-  var sMat=tb.querySelector('.s-mat[data-i="'+i+'"]');if(sMat){sMat.value=r.m;sMat.onchange=function(){cb[i].m=this.value;rc();}}
-  var sUnit=tb.querySelector('.s-unit[data-i="'+i+'"]');if(sUnit){sUnit.value=r.u;sUnit.onchange=function(){cb[i].u=this.value;}}
+  var sn=tb.querySelector('.s-name[data-i="'+i+'"]');if(sn)sn.value=r.n;
+  var sm=tb.querySelector('.s-mat[data-i="'+i+'"]');if(sm)sm.value=r.m;
+  var su=tb.querySelector('.s-unit[data-i="'+i+'"]');if(su)su.value=r.u;
 });
 try{cal()}catch(e){log(e)}ag();}
 function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',r:1,q:1,u:'米'});rc();}
@@ -462,6 +462,13 @@ function rst(){if(!confirm('确定要重置?'))return;
   id('qd').value=new Date().toISOString().split('T')[0];rc();rct();rp();rtr();rh();rsk();re();rx();
 }
 id('qd').value=new Date().toISOString().split('T')[0];rc();rct();rp();rtr();rh();rsk();re();rx();ag();
+// 事件委托：柜体下拉变更（innerHTML替换后不丢失）
+id('cr').addEventListener('change',function(e){
+  var s=e.target;
+  if(s.classList.contains('s-name')){var i=parseInt(s.getAttribute('data-i')),sd2=sd(s.value);cb[i].n=s.value;cb[i].w=sd2.w;cb[i].h=sd2.h;cb[i].d=sd2.d;rc();}
+  else if(s.classList.contains('s-mat')){cb[parseInt(s.getAttribute('data-i'))].m=s.value;rc();}
+  else if(s.classList.contains('s-unit')){cb[parseInt(s.getAttribute('data-i'))].u=s.value;}
+});
 </script>
 </body>
 </html>
