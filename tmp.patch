@@ -1,0 +1,6 @@
+diff --git a/index.html b/index.html
+--- a/index.html
++++ b/index.html
+@@ -335,1 +335,1 @@
+- var imgHtml=imgIdx>=1&&imgIdx<=55?'<div class="ic"><img src="03-Converted/01-images/hardware/image'+imgIdx+'.'+imgExt+'" onerror="this.style.display='\'';this.parentNode.innerHTML='<svg...>'" style="max-width:34px;max-height:34px;object-fit:contain"></div>':ic('h');
++ var imgHtml=imgIdx>=1&&imgIdx<=55?'<div class="ic"><img src="03-Converted/01-images/hardware/image'+imgIdx+'.'+imgExt+'" onerror="this.style.display='\'';this.parentNode.innerHTML=ic('\'h\')" style="max-width:34px;max-height:34px;object-fit:contain"></div>':ic('h');

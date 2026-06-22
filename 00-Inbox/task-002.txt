@@ -1,0 +1,19 @@
+在 D:\CAB-sites\thor-quote\index.html 中添加"导入选品"功能。
+
+1. 在 act 按钮区，💾 保存 按钮前面加：
+<button class="btn btn-c" onclick="importSelections()">📥 导入选品</button>
+
+2. 在脚本末尾（deleteProject 函数后面）添加函数：
+
+function importSelections() {
+  var sel = localStorage.getItem('thorSelections');
+  if (!sel) { alert('没有选品数据，请先去选品页选择产品'); return; }
+  try {
+    var data = JSON.parse(sel);
+    alert('已导入 ' + data.length + ' 个产品（功能开发中）');
+    localStorage.removeItem('thorSelections');
+    render();
+  } catch(e) { alert('数据错误'); }
+}
+
+3. 只修改 index.html 这一个文件。

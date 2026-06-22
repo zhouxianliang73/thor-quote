@@ -1,0 +1,16 @@
+项目上下文见：00-Inbox/PROJECT-CONTEXT.md
+
+### 小任务：修硬件图片fallback
+
+在 D:\CAB-sites\thor-quote\index.html 中，找到 rh() 函数。
+硬件图片加载失败时显示文字 '<svg...>'，这是 bug。
+改成调用 ic('h') 显示正确的铰链图标。
+
+找到这行：
+onerror="this.style.display='none';this.parentNode.innerHTML='<svg...>'"
+
+改成：
+onerror="this.style.display='none';this.parentNode.innerHTML=ic('h')"
+
+完成后运行 node 检查语法：
+node -e "var h=require('fs').readFileSync('index.html','utf8');try{new Function(h.match(/<script>[\s\S]*?<\/script>/g).map(function(s){return s.replace(/<\/?script>/g,'')}).join(';'));console.log('OK')}catch(e){console.log('ERROR:'+e.message)}"

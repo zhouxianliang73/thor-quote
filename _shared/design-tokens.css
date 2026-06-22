@@ -1,68 +1,75 @@
 /* ═══════════════════════════════════
-   DD Design System · Design Tokens
-   ═══════════════════════════════════
-   所有项目共享的底层设计变量
-   版本: 1.0 | 2026-06-18
+   THOR Design System · Tokens v2
+   现代 Slate + Teal，多端统一
    ═══════════════════════════════════ */
 
-/* ── 暖色中性色（oklch 体系，主色相偏琥珀/胡桃色） ── */
 :root {
-  --n-50:  oklch(98% 0.004 60);
-  --n-100: oklch(95% 0.006 60);
-  --n-150: oklch(92% 0.008 60);
-  --n-200: oklch(88% 0.01 60);
-  --n-300: oklch(78% 0.015 60);
-  --n-400: oklch(65% 0.02 60);
-  --n-500: oklch(55% 0.025 60);
-  --n-700: oklch(35% 0.02 60);
-  --n-800: oklch(25% 0.015 60);
-  --n-900: oklch(16% 0.01 60);
-}
+  /* ── 中性色（冷灰 Slate） ── */
+  --n-50:  oklch(98.2% 0.004 250);
+  --n-100: oklch(96% 0.006 250);
+  --n-150: oklch(93% 0.008 250);
+  --n-200: oklch(89% 0.01 250);
+  --n-300: oklch(78% 0.014 250);
+  --n-400: oklch(62% 0.018 250);
+  --n-500: oklch(52% 0.02 250);
+  --n-600: oklch(42% 0.02 250);
+  --n-700: oklch(32% 0.02 250);
+  --n-800: oklch(24% 0.018 250);
+  --n-900: oklch(16% 0.015 250);
 
-/* ── 强调色 ── */
-:root {
-  --accent:     oklch(45% 0.12 70);
-  --accent-lt:  oklch(75% 0.06 70);
-  --accent-dim: oklch(60% 0.06 70);
-}
+  /* ── 品牌色（Teal 智能家居） ── */
+  --accent:       oklch(52% 0.13 195);
+  --accent-hover: oklch(46% 0.13 195);
+  --accent-lt:    oklch(94% 0.04 195);
+  --accent-dim:   oklch(62% 0.08 195);
+  --accent-glow:  oklch(52% 0.13 195 / 0.25);
 
-/* ── 语义色 ── */
-:root {
-  --red:    oklch(50% 0.18 25);
-  --red-bg: oklch(93% 0.03 25);
-  --green:    oklch(50% 0.16 140);
-  --green-bg: oklch(93% 0.03 140);
-  --blue:     oklch(45% 0.14 260);
-  --blue-bg:  oklch(93% 0.03 260);
-}
+  /* ── 语义色 ── */
+  --red:      oklch(55% 0.2 25);
+  --red-lt:   oklch(88% 0.06 25);
+  --red-bg:   oklch(96% 0.03 25);
+  --green:    oklch(52% 0.15 155);
+  --green-bg: oklch(95% 0.04 155);
+  --blue:     oklch(50% 0.14 260);
+  --blue-bg:  oklch(94% 0.04 260);
+  --price:    oklch(50% 0.17 35);
 
-/* ── 字体 ── */
-:root {
-  --font-sans:  -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Microsoft YaHei',
+  /* ── 表面 & 边框 ── */
+  --bg-app:     oklch(97% 0.008 250);
+  --surface:    #fff;
+  --surface-2:  oklch(98.5% 0.005 250);
+  --border:     oklch(91% 0.01 250);
+  --border-strong: oklch(85% 0.012 250);
+
+  /* ── 字体 ── */
+  --font-sans:  'PingFang SC', 'Microsoft YaHei', -apple-system, BlinkMacSystemFont,
                 'Segoe UI', system-ui, sans-serif;
   --font-serif: 'Noto Serif SC', 'Songti SC', Georgia, serif;
   --font-mono:  'SF Mono', 'Fira Code', 'Consolas', monospace;
-}
 
-/* ── 圆角 ── */
-:root {
-  --r-sm:  3px;
-  --r-md:  6px;
-  --r-lg:  12px;
-  --r-full: 100px;
-}
+  /* ── 圆角 ── */
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   16px;
+  --r-xl:   24px;
+  --r-full: 999px;
 
-/* ── 阴影 ── */
-:root {
-  --shadow-sm: 0 1px 3px rgba(0,0,0,.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,.1);
-}
+  /* ── 阴影 ── */
+  --shadow-xs: 0 1px 2px oklch(20% 0.02 250 / 0.04);
+  --shadow-sm: 0 2px 8px oklch(20% 0.02 250 / 0.06);
+  --shadow-md: 0 8px 24px oklch(20% 0.02 250 / 0.08);
+  --shadow-lg: 0 16px 48px oklch(20% 0.02 250 / 0.12);
 
-/* ── 动画 ── */
-:root {
-  --dur-fast:  0.12s;
-  --dur-normal: 0.2s;
-  --dur-slow:  0.3s;
-  --ease:      cubic-bezier(.4,0,.2,1);
+  /* ── 动画 ── */
+  --dur-fast:   0.15s;
+  --dur-normal: 0.25s;
+  --ease:       cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── 断点（供文档/JS 参考） ── */
+  --bp-sm: 640px;
+  --bp-md: 1024px;
+  --bp-lg: 1280px;
+
+  /* ── 顶栏高度 ── */
+  --topbar-h: 56px;
 }

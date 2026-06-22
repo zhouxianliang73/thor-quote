@@ -5,62 +5,101 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THOR 索而智能家居 · 橱柜报价系统</title>
 <link rel="stylesheet" href="_shared/design-tokens.css">
+<link rel="stylesheet" href="_shared/app-shell.css">
 <link rel="stylesheet" href="_shared/skins/production.css">
+<script src="data.js"></script>
+<script src="js/shared.js"></script>
 <script src="api.js"></script>
 <style>
 /* THOR 报价单专属 */
 .col-i{width:28px}.col-p{width:46px}.col-s{width:90px}.col-c{width:75px}
 .col-w{width:70px}.col-h{width:70px}.col-d{width:70px}
-.col-m{width:120px}.col-r{width:55px}.col-par{width:175px}
+.col-m{width:130px}.col-r{width:55px}.col-par{width:175px}
 .col-q{width:52px}.col-u{width:48px}.col-pr{width:72px}.col-t{width:82px}.col-x{width:28px}
 .al-m{text-align:right}.al-r,.al-par{text-align:left}
-.ghost td{padding:0!important;height:17px!important;line-height:17px;cursor:pointer;font-size:11px;color:var(--n-400);border:none}
-.ghost:hover td{background:var(--accent-lt)}
-.ghost .plus{background:none;border:none;color:var(--n-400);cursor:pointer;font-size:16px;padding:1px 4px;border-radius:3px;line-height:1}
-.ghost:hover .plus{color:var(--red);background:var(--red-bg)}
 .tw td input.num{text-align:center;min-width:40px}
 .tw td input,.tw td select{border:none!important;background:transparent!important}
 .tw td input[type=number]::-webkit-inner-spin-button,
 .tw td input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 .tw td input[type=number]{-moz-appearance:textfield}
-.sign{display:flex;justify-content:space-between;margin-top:14px;padding-top:10px;border-top:1px solid var(--n-200)}
-.sb{width:220px}.sb .ln{border-bottom:1px solid var(--n-700);height:26px;margin-bottom:3px}
+.sign{display:flex;justify-content:space-between;margin-top:14px;padding-top:10px;border-top:1px solid var(--border);flex-wrap:wrap;gap:16px}
+.sb{flex:1;min-width:160px;max-width:220px}.sb .ln{border-bottom:1px solid var(--n-700);height:26px;margin-bottom:3px}
 .sb label{font-size:11px;color:var(--n-400)}
-.terms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:10px;padding:8px 14px;background:var(--n-50);border-radius:3px}
+.terms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:10px;padding:12px 16px;background:var(--surface-2);border-radius:var(--r-md);border:1px solid var(--border)}
 .terms p{margin-bottom:2px}
-.cv{display:none;padding:28px 40px;max-width:750px;margin:0 auto}
+.cv{display:none;padding:clamp(16px,3vw,28px);max-width:750px;margin:0 auto}
 .cv.s{display:block}
 .editor.cm .eb{display:none}
 .editor.cm .cv{display:block}
 .clt{width:100%;border-collapse:collapse;margin-bottom:22px;font-size:13.5px}
-.clt th{background:var(--n-100);padding:8px 12px;border:1px solid var(--n-200);text-align:center;font-size:12px;color:var(--n-500)}
-.clt td{padding:8px 12px;border:1px solid var(--n-150);text-align:center}
+.clt th{background:var(--n-50);padding:8px 12px;border:1px solid var(--border);text-align:center;font-size:12px;color:var(--n-500)}
+.clt td{padding:8px 12px;border:1px solid var(--border);text-align:center}
 .cto{text-align:right;font-size:18px;font-weight:650;padding:12px 0;border-top:2px solid var(--n-800);margin-top:8px}
-.cto .b{font-size:26px;color:var(--red);font-weight:700}
-.cterms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:16px;padding:10px 14px;background:var(--n-50);border-radius:3px}
-.cs{display:flex;justify-content:space-between;margin-top:20px}
-.cs .b{width:220px}.cs .l{border-bottom:1px solid var(--n-700);height:28px;margin-bottom:3px}
+.cto .b{font-size:26px;color:var(--price);font-weight:700}
+.cterms{font-size:11px;color:var(--n-400);line-height:1.8;margin-top:16px;padding:12px 16px;background:var(--surface-2);border-radius:var(--r-md)}
+.cs{display:flex;justify-content:space-between;margin-top:20px;flex-wrap:wrap;gap:16px}
+.cs .b{flex:1;min-width:160px;max-width:220px}.cs .l{border-bottom:1px solid var(--n-700);height:28px;margin-bottom:3px}
 .cs .lb{font-size:11px;color:var(--n-400)}
-/* 底部操作按钮始终显示（不受 eb/cv 模式切换影响） */
-.act{display:flex!important;gap:10px;justify-content:center;margin:18px 0 0}
+.ghost td{padding:0!important;height:20px!important;line-height:20px;cursor:pointer;font-size:11px;color:var(--n-400);border:none!important;background:transparent!important}
+.ghost:hover td{background:var(--accent-lt)!important}
+.ghost .plus{background:none;border:none;color:var(--n-400);cursor:pointer;font-size:18px;padding:2px 6px;border-radius:var(--r-sm);line-height:1}
+.ghost:hover .plus{color:var(--accent);background:var(--accent-lt)}
+.mat-rows{display:flex;flex-direction:column;gap:5px;width:100%}
+.mat-row{display:flex;align-items:center;gap:6px;min-width:0}
+.mat-tag{font-size:10px;font-weight:700;color:var(--n-400);width:26px;flex-shrink:0;text-align:right;line-height:1.2}
+.mat-row .sd-wrap{flex:1;min-width:0}
+.sd-table-hd{display:flex;justify-content:space-between;padding:4px 8px 6px;font-size:10px;font-weight:700;color:var(--n-400);border-bottom:1px solid var(--border);background:var(--n-50)}
+.sd-item-row{display:flex!important;justify-content:space-between;align-items:center;gap:8px}
+.sd-item-row span:last-child{font-size:11px;color:var(--accent);font-weight:600;white-space:nowrap}
+.mat-split .sd-trigger{font-size:12px;padding:4px 6px}
+@media(max-width:768px){.sign,.cs{flex-direction:column}.sb,.cs .b{max-width:none}}
 </style>
 </head>
 <body>
+<div class="app-shell">
+<header class="app-topbar">
+  <div class="app-topbar-inner">
+    <a class="app-brand" href="index.html">
+      <div class="app-brand-mark">TH</div>
+      <div class="app-brand-text">
+        <strong>THOR 索而</strong>
+        <span>智能家居 · 报价</span>
+      </div>
+    </a>
+    <nav class="app-nav">
+      <a href="index.html" class="active">报价单</a>
+      <a href="selector.html">选品</a>
+      <a href="dashboard.html">看板</a>
+      <a href="login.html">登录</a>
+    </nav>
+    <div class="app-user" id="userInfo"></div>
+  </div>
+</header>
+
+<div class="quote-total-bar" id="quoteTotalBar">
+  <span class="label">合计</span>
+  <span class="amount" id="gtMobile">¥0</span>
+</div>
+
+<main class="app-main has-dock">
+<div class="page-hero">
+  <div class="eyebrow">Cabinet Quote</div>
+  <h1>THOR 索而智能家居</h1>
+  <p>橱柜报价单 · 多端同步编辑</p>
+</div>
+
 <div class="editor" id="app">
-<div class="subtitle">- 橱柜报价单 -</div>
-<div style="text-align:right;font-size:11px;color:var(--n-400);margin-bottom:8px" id="userInfo"></div>
-<h1>THOR 索而智能家居</h1>
 
 <div class="info-section">
   <div class="info-head">报价信息 / 客户信息</div>
-  <div class="info-grid" style="grid-template-columns:auto auto auto 1fr;gap:8px 8px">
-    <div><label>订单编号</label><input id="ono" placeholder="THOR-" style="max-width:180px"></div>
-    <div><label>报价日期</label><input type="date" id="qd" style="max-width:180px"></div>
-    <div><label>报价人员</label><input id="sm" placeholder="姓名" style="max-width:180px"></div>
+  <div class="info-grid">
+    <div><label>订单编号</label><input id="ono" placeholder="THOR-"></div>
+    <div><label>报价日期</label><input type="date" id="qd"></div>
+    <div><label>报价人员</label><input id="sm" placeholder="姓名"></div>
     <div><label>下单店面</label><input id="sh" placeholder="店面名称"></div>
-    <div><label>客户姓名</label><input id="cust" placeholder="客户姓名" style="max-width:180px"></div>
-    <div><label>联系电话</label><input id="ph" placeholder="联系电话" style="max-width:180px"></div>
-    <div style="grid-column:span 2"><label>客户地址</label><input id="addr" placeholder="地址"></div>
+    <div><label>客户姓名</label><input id="cust" placeholder="客户姓名"></div>
+    <div><label>联系电话</label><input id="ph" placeholder="联系电话"></div>
+    <div class="span-2"><label>客户地址</label><input id="addr" placeholder="地址"></div>
   </div>
 </div>
 <div class="eb" id="eb">
@@ -204,25 +243,22 @@
   <button class="btn btn-p" onclick="saveProject()">💾 保存</button>
   <button class="btn btn-s" onclick="loadProject()">📂 加载</button>
   <button class="btn btn-s" onclick="deleteProject()">🗑️ 删除项目</button>
-  <button class="btn btn-c" onclick="window.open('selector.html','_blank')" style="padding:8px 24px;background:var(--accent,#b8860b);color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;font-weight:600">🎯 选品</button>
+  <button class="btn btn-c" onclick="window.open('selector.html','_blank')">🎯 选品</button>
   <button class="btn btn-c" onclick="scv()">📄 生成客户报价单</button>
   <button class="btn btn-p" onclick="window.print()">🖨️ 打印</button>
   <button class="btn btn-s" onclick="rst()">↺ 重置</button>
 </div>
 </div>
+</main>
+</div>
 
 <script>
 function id(i){return document.getElementById(i)}
 var log=function(e){console.error('THOR:',e)};
-var TD={
-cabinet:{s:['大千云纹','大悦韵纹','大影臻纹','大彩绚丽','大观金属','大语玉润','大传质影','铂金系列','铂金光学膜','云纹系列','韵纹系列','臻纹系列','绚丽系列','金属系列','玉润系列','质影/原色'],
-t:['洗手盘地柜','地柜','灶台吊柜','吊柜','高柜','上翻门吊柜'],
-p:{大千云纹:{'地柜680':5627,'地柜720':5908,'吊柜700':5077,'吊柜800':5331,'吊柜900':5597,panel:1598},大悦韵纹:{'地柜680':6071,'地柜720':6375,'吊柜700':5535,'吊柜800':5811,'吊柜900':6102,panel:2226},大影臻纹:{'地柜680':6753,'地柜720':7090,'吊柜700':6198,'吊柜800':6508,'吊柜900':6833,panel:3222},大彩绚丽:{'地柜680':5946,'地柜720':6243,'吊柜700':5405,'吊柜800':5676,'吊柜900':5959,panel:2050},大观金属:{'地柜680':6240,'地柜720':6552,'吊柜700':5715,'吊柜800':6001,'吊柜900':6301,panel:2467},大语玉润:{'地柜680':6874,'地柜720':7218,'吊柜700':6361,'吊柜800':6679,'吊柜900':7013,panel:3365},大传质影:{'地柜680':8145,'地柜720':8552,'吊柜700':7672,'吊柜800':8056,'吊柜900':8459,panel:5193},铂金系列:{'地柜680':4297,'地柜720':4511,'吊柜700':3883,'吊柜800':4077,'吊柜900':4281,panel:1397},铂金光学膜:{'地柜680':4502,'地柜720':4727,'吊柜700':4095,'吊柜800':4300,'吊柜900':4515,panel:1602},云纹系列:{'地柜680':4631,'地柜720':4863,'吊柜700':4227,'吊柜800':4439,'吊柜900':4661,panel:1598},韵纹系列:{'地柜680':5075,'地柜720':5329,'吊柜700':4686,'吊柜800':4920,'吊柜900':5166,panel:2226},臻纹系列:{'地柜680':5697,'地柜720':5982,'吊柜700':5286,'吊柜800':5550,'吊柜900':5827,panel:3222},绚丽系列:{'地柜680':4953,'地柜720':5201,'吊柜700':4560,'吊柜800':4787,'吊柜900':5027,panel:2050},金属系列:{'地柜680':5161,'地柜720':5419,'吊柜700':4781,'吊柜800':5020,'吊柜900':5271,panel:2467},玉润系列:{'地柜680':5796,'地柜720':6086,'吊柜700':5426,'吊柜800':5698,'吊柜900':5982,panel:3365},'质影/原色':{'地柜680':7359,'地柜720':7727,'吊柜700':7041,'吊柜800':7393,'吊柜900':7763,panel:5193}}},
-countertop:{s:['琉晶-丝纹GY01','琉晶-绘纹GY02','晶灵-蚀刻GY03','晶灵-雾砂GY04','晶灵-珠星GY05','晶灵-雾瓷GY08','品灵-柳叶GY09','晶灵-印迹GY10','晶砾-银砂GY11','304#喷砂纹实心','琉晶等实心多层'],tk:['5mm','10mm','12mm','15mm'],p:{'琉晶-丝纹GY01':{'5mm':0,'10mm':0,'12mm':1655,'15mm':0}}},
-hw:[{n:'百隆107°集成阻尼全盖铰链',p:77,u:'个',ic:'h',id:'h1'},{n:'百隆107°集成阻尼半盖铰链',p:82,u:'个',ic:'h',id:'h1'},{n:'百隆107°集成阻尼内掩铰链',p:83,u:'个',ic:'h',id:'h2'},{n:'百隆95°集成阻尼转角柜门铰链',p:110,u:'个',ic:'h',id:'h3'},{n:'反弹器',p:14,u:'个',ic:'h',id:'h4'},{n:'百隆155°集成阻尼全盖铰链',p:121,u:'个',ic:'h',id:'h5'},{n:'天地铰链(铝框)',p:690,u:'套',ic:'h',id:'h6'},{n:'百隆魅宝低抽400',p:1141,u:'套',ic:'d',id:'h7'},{n:'百隆魅宝扶杆高抽400',p:1406,u:'套',ic:'d',id:'h8'},{n:'百隆全拉托底轨410(阻尼)',p:624,u:'套',ic:'d',id:'h9'},{n:'百隆反弹全拉托底轨410',p:1005,u:'套',ic:'d',id:'h10'},{n:'百隆乐薄低抽450',p:1266,u:'套',ic:'d',id:'h11'},{n:'百隆乐薄高抽450',p:1605,u:'套',ic:'d',id:'h12'},{n:'百隆乐薄内低抽450',p:2091,u:'套',ic:'d',id:'h13'},{n:'百隆全拉隔板锁定装置',p:394,u:'套',ic:'d',id:'h14'},{n:'铝合金内分隔件600',p:603,u:'套',ic:'d',id:'h15'},{n:'铝合金内分隔件800',p:941,u:'套',ic:'d',id:'h16'},{n:'可调实木抽屉分隔件A',p:1003,u:'套',ic:'d',id:'h17'},{n:'希勒3.0三边平篮800',p:868,u:'套',ic:'b',id:'h18'},{n:'希勒3.0三边碗碟篮800',p:1251,u:'套',ic:'b',id:'h19'},{n:'希勒3.0调味篮400',p:1611,u:'套',ic:'b',id:'h20'},{n:'希勒4.0三边平篮800',p:1423,u:'套',ic:'b',id:'h21'},{n:'希勒4.0三边碗碟篮800',p:2000,u:'套',ic:'b',id:'h22'},{n:'希勒飞碟篮900',p:3431,u:'套',ic:'b',id:'h23'},{n:'希勒小怪物篮900',p:3339,u:'套',ic:'b',id:'h24'},{n:'希勒四层高柜连动拉篮450',p:2919,u:'套',ic:'b',id:'h25'},{n:'希勒六层高柜连动拉篮600',p:4180,u:'套',ic:'b',id:'h26'},{n:'宁卡抽拉式垃圾桶',p:2817,u:'套',ic:'b',id:'h27'},{n:'L型免拉手',p:59,u:'米',ic:'l',id:'h28'},{n:'U型免拉手',p:73,u:'米',ic:'l',id:'h29'},{n:'L型灯光免拉手',p:220,u:'米',ic:'l',id:'h30'},{n:'水晶拉手(32孔距)',p:29,u:'个',ic:'l',id:'h31'},{n:'水晶拉手(96孔距)',p:169,u:'个',ic:'l',id:'h32'},{n:'金属拉手(96孔距)',p:14,u:'个',ic:'l',id:'h33'},{n:'金属拉手(128孔距)',p:18,u:'个',ic:'l',id:'h34'},{n:'皮革拉手',p:49,u:'个',ic:'l',id:'h35'},{n:'嵌入式灯条600',p:104,u:'个',ic:'g',id:'h36'},{n:'嵌入式灯条800',p:140,u:'个',ic:'g',id:'h37'},{n:'嵌入式斜照灯条600',p:116,u:'个',ic:'g',id:'h38'},{n:'抽屉感应灯600',p:348,u:'个',ic:'g',id:'h39'},{n:'抽屉感应灯800',p:432,u:'个',ic:'g',id:'h40'},{n:'双面发光层板灯600',p:140,u:'个',ic:'g',id:'h41'},{n:'双面发光层板灯800',p:176,u:'个',ic:'g',id:'h42'},{n:'嵌入式手扫感应灯600',p:212,u:'个',ic:'g',id:'h43'},{n:'单门碰感应开关',p:112,u:'个',ic:'w',id:'h44'},{n:'双门碰感应开关',p:172,u:'个',ic:'w',id:'h45'},{n:'手扫感应开关',p:112,u:'个',ic:'w',id:'h46'},{n:'触摸感应开关',p:128,u:'个',ic:'w',id:'h47'},{n:'人体感应开关',p:132,u:'个',ic:'w',id:'h48'},{n:'集控电源60W',p:340,u:'个',ic:'w',id:'h49'},{n:'集控电源30W',p:180,u:'个',ic:'w',id:'h50'},{n:'级联线',p:14,u:'个',ic:'w',id:'h51'},{n:'玻璃夹板灯600',p:90,u:'个',ic:'g',id:'h52'},{n:'嵌入式灯条1500',p:246,u:'个',ic:'g',id:'h53'},{n:'嵌入式灯条1800',p:295,u:'个',ic:'g',id:'h54'}]};
+var TD=ThorShared.buildTD(THOR_DATA);
 var CS=TD.cabinet.s,CT=TD.cabinet.t,CP=TD.cabinet.p;
 var CTS=TD.countertop.s,CTP=TD.countertop.p;
-var STD={'洗手盘地柜':{w:800,h:700,d:570},'地柜':{w:800,h:700,d:570},'灶台吊柜':{w:800,h:700,d:370},'吊柜':{w:800,h:700,d:370},'高柜':{w:600,h:2100,d:570},'上翻门吊柜':{w:800,h:700,d:370}};
+var STD=ThorShared.STD_DIMS;
 var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
 p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
@@ -232,7 +268,7 @@ sk:'<svg viewBox="0 0 36 36"><rect x="5" y="10" width="26" height="20" rx="3" fi
 e:'<svg viewBox="0 0 36 36"><rect x="5" y="5" width="26" height="26" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="9" y="9" width="18" height="16" rx="2" fill="none" stroke="#bbb" stroke-width="1"/><circle cx="18" cy="21" r="1.8" fill="#ccc"/><rect x="14" y="11" width="8" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 x:'<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="11" x2="18" y2="25" stroke="#aaa" stroke-width="1.5"/><line x1="11" y1="18" x2="25" y2="18" stroke="#aaa" stroke-width="1.5"/></svg>'};
 function ic(k){return'<div class="ic">'+(SVG[k]||SVG.x)+'</div>'}
-var cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',r:1,q:1,u:'米'}];
+var cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'}];
 var ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
 var pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
 var tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
@@ -282,8 +318,12 @@ function mkOther(data,cfg){
   }).join('');
 }
 
+function matDrop(cls,i){return '<div class="sd-wrap"><input class="sd-trigger '+cls+'" data-i="'+i+'" readonly placeholder="选系列..." onclick="sdToggle(this)"><div class="sd-drop"><input class="sd-search" placeholder="搜索..." oninput="sdFilter(this)"><div class="sd-list"></div></div></div>';}
+function matCell(i){return '<td dl="材料" class="al-m"><div class="mat-rows"><div class="mat-row"><span class="mat-tag">柜体</span>'+matDrop('s-mat-body',i)+'</div><div class="mat-row"><span class="mat-tag">柜门</span>'+matDrop('s-mat-door',i)+'</div></div></td>';}
+
 // ★ 柜体（内联渲染+事件委托）
-function rc(){id('cr').innerHTML=cb.map(function(r,i){
+function rc(){
+id('cr').innerHTML=cb.map(function(r,i){
   var p=gp(r.m||'大千云纹',r.n),sd2=sd(r.n),nw=nv(r.w,sd2.w),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),ns=nw||nh||nd,st=r.q*p*(ns?1.2:1);
   return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('c')+'</td>'
     +'<td dl="名称"><select class="s-name" data-i="'+i+'">'+CT.map(function(t){return'<option>'+t+'</option>'}).join('')+'</select></td>'
@@ -291,7 +331,7 @@ function rc(){id('cr').innerHTML=cb.map(function(r,i){
     +'<td dl="宽"><input class="num'+(nw?' non':(!r.w||r.w===sd2.w)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.w||sd2.w)+'" style="width:56px" placeholder="'+sd2.w+'" title="宽" onchange="cb['+i+'].w=parseInt(this.value)||'+sd2.w+';rc()"></td>'
     +'<td dl="高"><input class="num'+(nh?' non':(!r.h||r.h===sd2.h)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.h||sd2.h)+'" style="width:56px" placeholder="'+sd2.h+'" title="高" onchange="cb['+i+'].h=parseInt(this.value)||'+sd2.h+';rc()"></td>'
     +'<td dl="深"><input class="num'+(nd?' non':(!r.d||r.d===sd2.d)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.d||sd2.d)+'" style="width:56px" placeholder="'+sd2.d+'" title="深" onchange="cb['+i+'].d=parseInt(this.value)||'+sd2.d+';rc()"></td>'
-    +'<td dl="材料" class="al-m"><div class="sd-wrap"><input class="sd-trigger s-mat" data-i="'+i+'" readonly placeholder="选择材料..." onclick="sdToggle(this)"><div class="sd-drop"><input class="sd-search" placeholder="搜索..." oninput="sdFilter(this)"><div class="sd-list"></div></div></div></td>'
+    +matCell(i)
     +'<td dl="非标系数" class="al-r" style="font-weight:600">'+(ns?'<span style="color:var(--red)">1.2</span>':'<span style="color:var(--n400)">1.0</span>')+'</td>'
     +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="cb['+i+'].q=parseFloat(this.value)||0;rc()"></td>'
     +'<td dl="单位"><select class="s-unit" data-i="'+i+'"><option>个</option><option>米</option><option>套</option></select></td>'
@@ -299,18 +339,19 @@ function rc(){id('cr').innerHTML=cb.map(function(r,i){
     +'<td dl="金额" style="text-align:right;font-weight:600">¥'+st.toFixed(0)+'</td>'
     +'<td dl=""><button class="row-del" onclick="cb.splice('+i+',1);rc()">✕</button></td></tr>';
 }).join('');
-var tb=id('cr');cb.forEach(function(r,i){var sn=tb.querySelector('.s-name[data-i="'+i+'"]');if(sn)sn.value=r.n;var sm=tb.querySelector('.s-mat[data-i="'+i+'"]');if(sm)sm.value=r.m;var su=tb.querySelector('.s-unit[data-i="'+i+'"]');if(su)su.value=r.u;});
+var tb=id('cr');cb.forEach(function(r,i){var sn=tb.querySelector('.s-name[data-i="'+i+'"]');if(sn)sn.value=r.n;var smb=tb.querySelector('.s-mat-body[data-i="'+i+'"]');if(smb){smb.value=r.m||'';smb.style.color=r.m?'':'#bbb'}var smd=tb.querySelector('.s-mat-door[data-i="'+i+'"]');if(smd){smd.value=r.dm||'';smd.style.color=r.dm?'':'#bbb'}var su=tb.querySelector('.s-unit[data-i="'+i+'"]');if(su)su.value=r.u;});
 try{cal()}catch(e){log(e)}ag();}
-function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',r:1,q:1,u:'米'});rc();}
+function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'});rc();}
 
-function rct(){id('tr').innerHTML=mkm(ct,{a:'ct',f:'rct',icon:'t',
+function rct(){ct.forEach(function(r){if(!r.u)r.u='米';});
+id('tr').innerHTML=mkm(ct,{a:'ct',f:'rct',icon:'t',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="ct['+i+'].n=this.value">',
 mat:'<select onchange="ct['+i+'].m=this.value;rct()">'+CTS.map(function(s){return'<option'+(s===(r.m||'琉晶-丝纹GY01')?'selected':'')+'>'+s+'</option>'}).join('')+'</select>',
-unit:'<select onchange="ct['+i+'].u=this.value"><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='米'?'selected':'')+'>米</option><option'+(r.u==='套'?'selected':'')+'>套</option></select>'}},
+unit:'<select onchange="ct['+i+'].u=this.value"><option'+(r.u==='米'||!r.u?'selected':'')+'>米</option><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='套'?'selected':'')+'>套</option></select>'}},
 dim:function(r,i){return{sw:3000,sh:5,sd:600,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:48px" onchange="ct['+i+'].r=parseFloat(this.value)||1;rct()">'}},
 price:function(r){var m=r.m||'琉晶-丝纹GY01';return(CTP[m]||{})[r.tk||'12mm']||0;},
 total:function(r){var m=r.m||'琉晶-丝纹GY01',p=(CTP[m]||{})[r.tk||'12mm']||0;return r.q*p*(r.r||1);}});try{cal()}catch(e){log(e)}ag();}
-function act(){ct.push({n:'',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'});rct();}
+function act(){ct.push({n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'});rct();}
 
 function rp(){id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value">',
@@ -334,7 +375,7 @@ function rh(){id('hr').innerHTML=hw.map(function(r,i){
   var h=TD.hw.find(function(x){return x.n===r.n});
   var imgIdx=h?parseInt(h.id.replace("h","")):0;
   var imgExt=imgIdx&&[12,13,14,18,19,21,22,23,25,32,33,40,45,53].includes(imgIdx)?'png':'jpeg';
-  var imgHtml=imgIdx>=1&&imgIdx<=55?'<div class="ic"><img src="03-Converted/01-images/hardware/image'+imgIdx+'.'+imgExt+'" onerror="this.style.display=\'none\';this.parentNode.innerHTML=\'<svg...>\'" style="max-width:34px;max-height:34px;object-fit:contain"></div>':ic('h');
+  var imgHtml=imgIdx>=1&&imgIdx<=55?'<div class="ic"><img src="03-Converted/01-images/hardware/image'+imgIdx+'.'+imgExt+'" onerror="this.style.display=\'none\';this.parentNode.innerHTML=ic(\'h\')" style="max-width:34px;max-height:34px;object-fit:contain"></div>':ic('h');
   return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+imgHtml+'</td>'
     +'<td dl="名称"><div class="sd-wrap"><input class="sd-trigger s-hwname" data-i="'+i+'" readonly placeholder="选择配件..." onclick="sdToggle(this)"><div class="sd-drop"><input class="sd-search" placeholder="搜索..." oninput="sdFilter(this)"><div class="sd-list"></div></div></div></td>'
     +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码"></td>'
@@ -382,6 +423,7 @@ function cal(){
     function(){return ex.reduce(function(s,r){return s+r.q*r.p;},0)}()];
   vs.forEach(function(v,i){id(['ct0','ct1','ct2','ct3','ct4','ct5','ct6','ct7'][i]).textContent=v.toFixed(0);id('s'+i).textContent=v.toFixed(0);});
   var t=vs.reduce(function(a,b){return a+b},0);id('gt').textContent='¥'+t.toFixed(0);id('cn').textContent='人民币:'+n2c(t)+' 元整';
+  var gm=id('gtMobile');if(gm)gm.textContent=id('gt').textContent;
 }
 function n2c(n){if(!n||n===0)return'零';var d='零壹贰叁肆伍陆柒捌玖',u=['','拾','佰','仟'],b=['','万','亿'];n=Math.round(n);var s=n.toString(),p=[];for(var i=s.length;i>0;i-=4)p.push(s.substring(Math.max(0,i-4),i));var r='';for(var i=p.length-1;i>=0;i--){var q=p[i],ps='',zf=false;for(var j=0;j<q.length;j++){var c=parseInt(q[j]);if(c===0)zf=true;else{if(zf){ps+='零';zf=false}ps+=d[c]+u[q.length-1-j]}}if(ps)r+=ps+b[i];else if(i===1&&p.length>2)r+='零'}return r||'零'}
 function scv(){var a=id('app');a.classList.toggle('cm');var c=id('cv');c.classList.toggle('s');if(c.classList.contains('s')){var ns=['柜体','台面','见光板','地脚线/顶封板','功能配件','水槽/龙头','电器','增加项目'];id('cvr').innerHTML=ns.map(function(n,i){return'<tr><td>'+(i+1)+'</td><td style="text-align:left">'+n+'</td><td>￥'+parseFloat(id('s'+i).textContent).toFixed(0)+'</td></tr>'}).join('');var t=id('gt').textContent;id('cit').textContent=t;id('cicn').textContent='人民币：'+n2c(parseFloat(t.replace('¥','')))+' 元整'}}
@@ -390,7 +432,7 @@ function ag(){document.querySelectorAll('.ghost').forEach(function(e){e.remove()
   ['cr',14,acb],['tr',14,act],['pr',14,ap],['trr',14,atr],['hr',13,ah],['sr',13,ask],['er',13,ae],['xr',13,ax]
 ].forEach(function(a){var tb=id(a[0]),r=document.createElement('tr');r.className='ghost';r.onclick=a[2];var h='<td class="plus">+</td>';for(var i=1;i<a[1];i++)h+='<td></td>';r.innerHTML=h;tb.appendChild(r)})}
 function rst(){if(!confirm('确定要重置?'))return;
-  cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',r:1,q:1,u:'米'}];
+  cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'}];
   ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
   pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
   tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
@@ -402,7 +444,8 @@ id('qd').value=new Date().toISOString().split('T')[0];rc();rct();rp();rtr();rh()
 id('cr').addEventListener('change',function(e){
   var s=e.target;
   if(s.classList.contains('s-name')){var i=parseInt(s.getAttribute('data-i')),sd2=sd(s.value);cb[i].n=s.value;cb[i].w=sd2.w;cb[i].h=sd2.h;cb[i].d=sd2.d;rc();}
-  else if(s.classList.contains('s-mat')){cb[parseInt(s.getAttribute('data-i'))].m=s.value;rc();}
+  else if(s.classList.contains('s-mat-body')){cb[parseInt(s.getAttribute('data-i'))].m=s.value;rc();}
+  else if(s.classList.contains('s-mat-door')){cb[parseInt(s.getAttribute('data-i'))].dm=s.value;rc();}
   else if(s.classList.contains('s-unit')){cb[parseInt(s.getAttribute('data-i'))].u=s.value;}
 });
 // 事件委托：配件选择
@@ -415,9 +458,17 @@ id('hr').addEventListener('change',function(e){
   }
 });
 
-function sdToggle(el){var w=el.parentElement,d=w.querySelector(".sd-drop"),l=d.querySelector(".sd-list"),s=d.querySelector(".sd-search");if(!d.classList.toggle("open"))return;var r=el.getBoundingClientRect();d.style.top=(r.bottom+4)+"px";d.style.left=r.left+"px";d.style.width=Math.max(r.width,200)+"px";var opts=[];if(el.classList.contains("s-mat"))opts=CS;else if(el.classList.contains("s-hwname"))opts=TD.hw.map(function(x){return x.n});l.innerHTML=opts.map(function(o){return'<div class="sd-item" onclick="sdSelect(this)">'+o+'</div>'}).join("");s.value="";s.focus();sdFilter(s);function cl(ev){if(!w.contains(ev.target)&&!d.contains(ev.target)){d.classList.remove("open");document.removeEventListener("click",cl)}}setTimeout(function(){document.addEventListener("click",cl)},10)}
-function sdFilter(el){var l=el.closest(".sd-wrap").querySelector(".sd-list"),v=el.value.toLowerCase();l.querySelectorAll(".sd-item").forEach(function(e){e.style.display=e.textContent.toLowerCase().includes(v)?"":"none"})}
-function sdSelect(el){var w=el.closest(".sd-wrap"),t=w.querySelector(".sd-trigger"),d=w.querySelector(".sd-drop");t.value=el.textContent;t.style.color="";d.classList.remove("open");var ev=new Event("change",{bubbles:true});t.dispatchEvent(ev)}
+function sdToggle(el){var w=el.parentElement,d=w.querySelector(".sd-drop"),l=d.querySelector(".sd-list"),s=d.querySelector(".sd-search");if(!d.classList.toggle("open"))return;var r=el.getBoundingClientRect();d.style.top=(r.bottom+4)+"px";d.style.left=r.left+"px";d.style.width=Math.max(r.width,el.classList.contains("s-mat-door")?280:200)+"px";
+if(el.classList.contains("s-mat-door")){
+  l.innerHTML='<div class="sd-table-hd"><span>柜门系列</span><span>见光板价</span></div>'+CS.map(function(o){var panel=(CP[o]||{}).panel||0;return'<div class="sd-item sd-item-row" data-val="'+o+'" onclick="sdSelect(this)"><span>'+o+'</span><span>¥'+panel+'/㎡</span></div>'}).join("");
+}else if(el.classList.contains("s-mat-body")){
+  l.innerHTML=CS.map(function(o){return'<div class="sd-item" data-val="'+o+'" onclick="sdSelect(this)">'+o+'</div>'}).join("");
+}else if(el.classList.contains("s-hwname")){
+  l.innerHTML=TD.hw.map(function(x){return'<div class="sd-item" data-val="'+x.n+'" onclick="sdSelect(this)">'+x.n+'</div>'}).join("");
+}else{l.innerHTML="";}
+s.value="";s.focus();sdFilter(s);function cl(ev){if(!w.contains(ev.target)&&!d.contains(ev.target)){d.classList.remove("open");document.removeEventListener("click",cl)}}setTimeout(function(){document.addEventListener("click",cl)},10)}
+function sdFilter(el){var l=el.closest(".sd-wrap").querySelector(".sd-list"),v=el.value.toLowerCase();l.querySelectorAll(".sd-item").forEach(function(e){var t=(e.getAttribute("data-val")||e.textContent).toLowerCase();e.style.display=t.includes(v)?"":"none"})}
+function sdSelect(el){var w=el.closest(".sd-wrap"),t=w.querySelector(".sd-trigger"),d=w.querySelector(".sd-drop");t.value=el.getAttribute("data-val")||el.textContent.trim();t.style.color="";d.classList.remove("open");var ev=new Event("change",{bubbles:true});t.dispatchEvent(ev)}
 
 
 // 项目存取
@@ -459,7 +510,7 @@ function restoreProject(d) {
   if(d.customer){id('cust').value=d.customer.name||'';id('ph').value=d.customer.phone||'';id('addr').value=d.customer.address||''}
   if(d.order){id('ono').value=d.order.no||'';id('qd').value=d.order.date||'';id('sm').value=d.order.salesperson||'';id('sh').value=d.order.store||''}
   if(d.items){
-    if(d.items.cabinet&&cb){cb.length=0;d.items.cabinet.forEach(function(r){cb.push(r)})}
+    if(d.items.cabinet&&cb){cb.length=0;d.items.cabinet.forEach(function(r){if(!r.dm)r.dm=r.m;cb.push(r)})}
     if(d.items.countertop&&ct){ct.length=0;d.items.countertop.forEach(function(r){ct.push(r)})}
     if(d.items.panel&&pn){pn.length=0;d.items.panel.forEach(function(r){pn.push(r)})}
     if(d.items.trim&&tr){tr.length=0;d.items.trim.forEach(function(r){tr.push(r)})}
@@ -468,7 +519,20 @@ function restoreProject(d) {
     if(d.items.electric&&el){el.length=0;d.items.electric.forEach(function(r){el.push(r)})}
     if(d.items.extra&&ex){ex.length=0;d.items.extra.forEach(function(r){ex.push(r)})}
   }
-  render();
+  renderAll();
+}
+function renderAll(){rc();rct();rp();rtr();rh();rsk();re();rx();ag();}
+function importSelections(silent){
+  var sel=localStorage.getItem('thorSelections');
+  if(!sel){if(!silent)alert('没有选品数据，请先去选品页选择产品');return;}
+  try{
+    var data=JSON.parse(sel);
+    if(!data.length){if(!silent)alert('选品列表为空');return;}
+    var n=ThorShared.importToQuote(data,{cb:cb,ct:ct,hw:hw,sk:sk,el:el,ex:ex});
+    localStorage.removeItem('thorSelections');
+    renderAll();
+    if(!silent)alert('已导入 '+n+' 个产品');
+  }catch(e){if(!silent)alert('数据错误: '+e.message);}
 }
 function deleteProject() {
   var ps = JSON.parse(localStorage.getItem('thorP')||'[]');
@@ -486,9 +550,10 @@ function deleteProject() {
   var u = localStorage.getItem('thorUser');
   var ui = document.getElementById('userInfo');
   if(!ui)return;
-  if(u){try{var d=JSON.parse(u);ui.innerHTML='<span>'+d.name+'</span> &middot; <span>'+d.role+'</span> &middot; <a href="login.html" style="color:var(--accent);text-decoration:none;font-size:11px">切换</a>'}catch(e){ui.innerHTML='<a href="login.html" style="color:var(--accent)">登录</a>'}}
-  else{ui.innerHTML='<a href="login.html" style="color:var(--accent);text-decoration:none;font-size:11px">登录</a>'}
+  if(u){try{var d=JSON.parse(u);ui.innerHTML=d.name+' · '+d.role+' · <a href="login.html">切换</a>'}catch(e){ui.innerHTML='<a href="login.html">登录</a>'}}
+  else{ui.innerHTML='<a href="login.html">登录</a>'}
 })();
+if(localStorage.getItem('thorSelections')){importSelections(true);}
 </script>
 </body>
 </html>

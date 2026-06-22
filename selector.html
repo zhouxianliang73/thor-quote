@@ -5,39 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THOR 索而 · 选品系统</title>
 <link rel="stylesheet" href="_shared/design-tokens.css">
+<link rel="stylesheet" href="_shared/app-shell.css">
 <link rel="stylesheet" href="_shared/skins/marketing.css">
+<script src="data.js"></script>
+<script src="js/shared.js"></script>
 <style>
-/* ── 选品页专属 ── */
-:root {
-  --header-h: 56px;
-  --filter-h: 44px;
-  --search-h: 50px;
-}
-body{background:var(--bg)}
-.header-inner{max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:var(--header-h)}
-.filter-bar{background:var(--surface);border-bottom:1px solid var(--border);padding:6px 24px;position:sticky;top:var(--header-h);z-index:99}
-.filter-inner{max-width:1400px;margin:0 auto;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
-.sticky-search{background:var(--surface);border-bottom:1px solid var(--border);padding:8px 24px;position:sticky;top:calc(var(--header-h) + var(--filter-h));z-index:98}
-.search-inner{max-width:1400px;margin:0 auto;display:flex;gap:8px;align-items:center}
-.search-inner input{flex:1;padding:8px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;background:var(--surface-alt);color:var(--text);outline:none;min-width:160px}
-.search-inner input:focus{border-color:var(--accent)}
-.search-inner .count{font-size:12px;color:var(--text-muted);white-space:nowrap}
-
-/* ── 产品网格 ── */
-.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;padding:20px 24px;max-width:1400px;margin:0 auto}
-.product-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:all .2s}
-.product-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-3px)}
-.product-card .img-wrap{width:100%;aspect-ratio:1;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.product-card .img-wrap img{width:100%;height:100%;object-fit:cover}
-.product-card .img-wrap .placeholder{font-size:32px;color:var(--text-muted)}
-.product-card .badge{position:absolute;top:8px;left:8px;background:var(--accent);color:#fff;font-size:10px;padding:2px 8px;border-radius:100px;font-weight:600}
-.product-card .info{padding:10px 14px 12px}
-.product-card .code{font-size:11px;color:var(--text-muted)}
-.product-card .name{font-size:14px;font-weight:600;color:var(--text);margin:3px 0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.product-card .spec{font-size:12px;color:var(--text-sec)}
-.product-card .price{font-size:15px;font-weight:700;color:var(--accent);margin-top:4px}
-
-/* ── 详情浮层 ── */
+/* ── 选品页专属（详情浮层等） ── */
+:root { --filter-h: 44px; }
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
 .overlay.open{display:flex}
 .detail{background:var(--surface);border-radius:12px;max-width:800px;width:100%;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.2)}
@@ -77,16 +51,18 @@ body{background:var(--bg)}
 <body>
 
 <!-- Header -->
-<header class="header">
-  <div class="header-inner">
-    <div class="header-logo">
-      <div class="mark">TH</div>
-      <h1>THOR 选品系统</h1>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <span class="theme-badge" id="catLabel">柜体</span>
-      <button class="cart-btn" onclick="backToQuote()" title="返回报价单">←</button>
-    </div>
+<header class="app-topbar">
+  <div class="app-topbar-inner">
+    <a class="app-brand" href="index.html">
+      <div class="app-brand-mark">TH</div>
+      <div class="app-brand-text"><strong>THOR 选品</strong><span id="catLabel">柜体</span></div>
+    </a>
+    <nav class="app-nav">
+      <a href="index.html">报价单</a>
+      <a href="selector.html" class="active">选品</a>
+      <a href="dashboard.html">看板</a>
+    </nav>
+    <button class="cart-btn" onclick="backToQuote()" title="返回报价单">← 报价</button>
   </div>
 </header>
 
@@ -130,9 +106,10 @@ body{background:var(--bg)}
 </div>
 
 <script>
-// ── 数据（从 THOR 报价系统数据模拟） ──
+// ── 产品数据（从 THOR_DATA 生成） ──
 var CATEGORIES = [
   { id:'cabinet', name:'柜体', icon:'🗄️' },
+  { id:'door', name:'柜门', icon:'🚪' },
   { id:'countertop', name:'台面', icon:'🔲' },
   { id:'hardware', name:'功能配件', icon:'🔩' },
   { id:'sink', name:'水槽/龙头', icon:'🚰' },
@@ -140,68 +117,12 @@ var CATEGORIES = [
   { id:'extra', name:'增加项目', icon:'📋' }
 ];
 
-// 模拟产品数据（后续从 ProductHub 读取）
-var ALL_PRODUCTS = [];
+var ALL_PRODUCTS = ThorShared.buildSelectorProducts(THOR_DATA);
 var currentCat = 'cabinet';
 var currentDetail = null;
 var detailImages = [];
 var detailImgIdx = 0;
 var selectedProducts = [];
-
-// 生成柜体产品数据
-(function(){
-  var types = ['洗手盘地柜','地柜','灶台吊柜','吊柜','高柜','上翻门吊柜'];
-  var series = ['大千云纹','大悦韵纹','大影臻纹','大彩绚丽','大观金属','铂金系列'];
-  var stdDims = {'洗手盘地柜':'800×700×570','地柜':'800×700×570','灶台吊柜':'800×700×370','吊柜':'800×700×370','高柜':'600×2100×570','上翻门吊柜':'800×700×370'};
-  var idx = 0;
-  series.forEach(function(s){
-    types.forEach(function(t){
-      idx++;
-      ALL_PRODUCTS.push({
-        id: 'DD-CB-' + String(idx).padStart(3,'0'),
-        category: 'cabinet',
-        name: s + ' · ' + t,
-        series: s,
-        type: t,
-        dim: stdDims[t],
-        price: 5000 + Math.floor(Math.random() * 3000),
-        material: '304不锈钢雨滴板',
-        color: '木纹/纯色可选',
-        desc: s + '系列' + t + '，' + stdDims[t],
-        images: ['03-Converted/01-images/cabinet/series'+(idx)+'.jpeg'],
-        scenes: []
-      });
-    });
-  });
-  // 配件
-  var hw = ['百隆107°集成阻尼全盖铰链','百隆107°集成阻尼半盖铰链','反弹器','L型免拉手','嵌入式灯条600','抽屉感应灯800'];
-  hw.forEach(function(n,i){
-    ALL_PRODUCTS.push({
-      id: 'DD-HW-' + String(i+1).padStart(3,'0'),
-      category: 'hardware',
-      name: n,
-      dim: '标准',
-      price: [77,82,14,59,104,432][i],
-      material: '不锈钢/铝合金',
-      images: ['03-Converted/01-images/hardware/image'+(i+1)+'.jpeg'],
-      scenes: []
-    });
-  });
-  // 台面
-  var ct = ['琉晶-丝纹GY01','琉晶-绘纹GY02','晶灵-蚀刻GY03','晶灵-雾砂GY04'];
-  ct.forEach(function(n,i){
-    ALL_PRODUCTS.push({
-      id: 'DD-CT-' + String(i+1).padStart(3,'0'),
-      category: 'countertop',
-      name: n,
-      dim: '600×12mm（可定制）',
-      price: [1655,1585,2765,3405][i],
-      material: '不锈钢复合双层',
-      images: [],
-      scenes: []
-    });
-  });
-})();
 
 function init() {
   renderNav();
@@ -218,7 +139,8 @@ function renderNav() {
 
 function switchCat(cat) {
   currentCat = cat;
-  document.getElementById('catLabel').textContent = CATEGORIES.find(function(c){return c.id===cat}).name;
+  var catName = CATEGORIES.find(function(c){return c.id===cat}).name;
+  document.getElementById('catLabel').textContent = catName;
   document.getElementById('searchInput').value = '';
   renderNav();
   renderGrid();
@@ -271,7 +193,7 @@ function showDetail(id) {
     '<dt>材料</dt><dd>' + (p.material||'—') + '</dd>' +
     '<dt>颜色</dt><dd>' + (p.color||'—') + '</dd>' +
     '<dt>系列</dt><dd>' + (p.series||'—') + '</dd>' +
-    '<dt>单价</dt><dd style="font-size:18px;font-weight:700;color:var(--accent)">¥' + p.price.toFixed(0) + '</dd>';
+    '<dt>单价</dt><dd style="font-size:18px;font-weight:700;color:var(--accent)">¥' + p.price.toFixed(0) + (p.category === 'door' ? '/㎡' : '') + '</dd>';
   
   // Images
   detailImages = p.images && p.images.length ? p.images : [];

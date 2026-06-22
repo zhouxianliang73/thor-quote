@@ -1,0 +1,247 @@
+/* ═══════════════════════════════════
+   THOR · App Shell（PC / Pad / 手机）
+   ═══════════════════════════════════ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  font-family: var(--font-sans);
+  background: var(--bg-app);
+  color: var(--n-900);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 应用壳 ── */
+.app-shell {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 16px 24px;
+}
+
+@media (min-width: 640px) {
+  .app-main { padding: 20px 24px 32px; }
+}
+
+@media (min-width: 1024px) {
+  .app-main { padding: 28px 32px 48px; }
+}
+
+/* ── 顶栏 ── */
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  height: var(--topbar-h);
+  background: oklch(100% 0 0 / 0.82);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+}
+
+.app-topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  height: 100%;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+@media (min-width: 640px) {
+  .app-topbar-inner { padding: 0 24px; }
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  min-width: 0;
+}
+
+.app-brand-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--accent), oklch(45% 0.12 250));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.app-brand-text {
+  min-width: 0;
+}
+
+.app-brand-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-brand-text span {
+  display: block;
+  font-size: 10px;
+  color: var(--n-400);
+  letter-spacing: 0.5px;
+}
+
+/* ── 导航 ── */
+.app-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.app-nav a {
+  padding: 6px 12px;
+  border-radius: var(--r-full);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--n-500);
+  text-decoration: none;
+  transition: all var(--dur-fast) var(--ease);
+  white-space: nowrap;
+}
+
+.app-nav a:hover {
+  color: var(--accent);
+  background: var(--accent-lt);
+}
+
+.app-nav a.active {
+  color: #fff;
+  background: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.app-user {
+  font-size: 11px;
+  color: var(--n-400);
+  padding: 4px 10px;
+  background: var(--n-50);
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  white-space: nowrap;
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.app-user a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* 手机：导航收进横向滚动 */
+@media (max-width: 639px) {
+  .app-topbar-inner {
+    flex-wrap: nowrap;
+  }
+  .app-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    max-width: 55vw;
+  }
+  .app-nav::-webkit-scrollbar { display: none; }
+  .app-nav a { padding: 5px 10px; font-size: 11px; }
+  .app-brand-text span { display: none; }
+  .app-user { display: none; }
+}
+
+@media (min-width: 640px) {
+  .app-user { max-width: none; }
+}
+
+/* ── 页面标题区 ── */
+.page-hero {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 8px 0 4px;
+}
+
+.page-hero .eyebrow {
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.page-hero h1 {
+  font-size: clamp(20px, 4vw, 26px);
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--n-900);
+  margin: 0;
+}
+
+.page-hero p {
+  font-size: 12px;
+  color: var(--n-400);
+  margin-top: 6px;
+}
+
+/* ── 浮动合计条（手机） ── */
+.quote-total-bar {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .quote-total-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    bottom: calc(64px + env(safe-area-inset-bottom, 0px));
+    left: 12px;
+    right: 12px;
+    z-index: 250;
+    padding: 10px 16px;
+    background: var(--n-900);
+    color: #fff;
+    border-radius: var(--r-lg);
+    box-shadow: var(--shadow-lg);
+  }
+  .quote-total-bar .label {
+    font-size: 11px;
+    opacity: 0.75;
+  }
+  .quote-total-bar .amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: oklch(85% 0.12 85);
+  }
+}

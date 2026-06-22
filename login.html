@@ -5,31 +5,156 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>THOR · 登录</title>
 <link rel="stylesheet" href="_shared/design-tokens.css">
-<link rel="stylesheet" href="_shared/skins/production.css">
+<link rel="stylesheet" href="_shared/app-shell.css">
 <script src="api.js"></script>
 <style>
-body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--n-100);padding:20px}
-.login{background:#fff;padding:40px;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.08);max-width:380px;width:100%;text-align:center}
-.login h1{font-size:22px;font-weight:700;color:var(--n-900);margin-bottom:4px}
-.login .sub{font-size:12px;color:var(--n-400);margin-bottom:24px}
-.login .field{margin-bottom:14px;text-align:left}
-.login .field label{font-size:11px;color:var(--n-500);display:block;margin-bottom:4px}
-.login .field input{width:100%;padding:10px 12px;border:1px solid var(--n-200);border-radius:6px;font-size:14px;outline:none}
-.login .field input:focus{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-lt)}
-.login .role-select{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.login .role-select button{padding:10px;border:2px solid var(--n-200);border-radius:8px;background:#fff;cursor:pointer;font-size:12px;transition:all .12s;text-align:center}
-.login .role-select button:hover{border-color:var(--accent-lt)}
-.login .role-select button.active{border-color:var(--accent);background:var(--accent-lt);font-weight:600}
-.login .btn-login{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer}
-.login .btn-login:hover{opacity:.9}
-.login .roles-desc{margin-top:20px;padding:14px;background:var(--n-50);border-radius:8px;text-align:left;font-size:11px;line-height:1.7;color:var(--n-500)}
-.login .roles-desc strong{color:var(--n-800);display:block;margin-bottom:2px}
+body {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-app);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 20% 0%, oklch(52% 0.13 195 / 0.12), transparent),
+    radial-gradient(ellipse 60% 50% at 90% 100%, oklch(45% 0.12 250 / 0.08), transparent);
+}
+.login-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+}
+.login {
+  background: var(--surface);
+  padding: clamp(28px, 5vw, 40px);
+  border-radius: var(--r-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  max-width: 400px;
+  width: 100%;
+}
+.login-brand {
+  text-align: center;
+  margin-bottom: 28px;
+}
+.login-brand .mark {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: var(--r-md);
+  background: linear-gradient(135deg, var(--accent), oklch(45% 0.12 250));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 14px;
+  box-shadow: 0 4px 16px var(--accent-glow);
+}
+.login-brand h1 { font-size: 22px; font-weight: 800; color: var(--n-900); margin: 0; }
+.login-brand p { font-size: 12px; color: var(--n-400); margin-top: 4px; }
+.field { margin-bottom: 14px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--n-500); display: block; margin-bottom: 6px; letter-spacing: 0.3px; }
+.field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  font-size: 14px;
+  outline: none;
+  background: var(--surface-2);
+  transition: all var(--dur-fast);
+}
+.field input:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-lt);
+}
+.role-label { font-size: 11px; color: var(--n-400); margin-bottom: 10px; font-weight: 600; }
+.role-select { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.role-select button {
+  padding: 10px 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--n-500);
+  transition: all var(--dur-fast);
+}
+.role-select button:hover { border-color: var(--accent); color: var(--accent); }
+.role-select button.active {
+  border-color: var(--accent);
+  background: var(--accent-lt);
+  color: var(--accent-hover);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-full);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px var(--accent-glow);
+  transition: all var(--dur-fast);
+}
+.btn-login:hover { background: var(--accent-hover); }
+.btn-login:disabled { opacity: 0.6; cursor: wait; }
+.roles-desc {
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--r-md);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  line-height: 1.75;
+  color: var(--n-500);
+}
+.roles-desc strong { color: var(--n-800); display: block; margin-top: 6px; }
+.roles-desc strong:first-child { margin-top: 0; }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 16px auto 0;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--n-500);
+  text-decoration: none;
+  border-radius: var(--r-full);
+}
+.back-link:hover { color: var(--accent); background: var(--accent-lt); }
 </style>
 </head>
 <body>
+<div class="app-shell">
+<header class="app-topbar">
+  <div class="app-topbar-inner">
+    <a class="app-brand" href="index.html">
+      <div class="app-brand-mark">TH</div>
+      <div class="app-brand-text"><strong>THOR 索而</strong><span>登录</span></div>
+    </a>
+    <nav class="app-nav">
+      <a href="index.html">报价单</a>
+      <a href="selector.html">选品</a>
+      <a href="dashboard.html">看板</a>
+      <a href="login.html" class="active">登录</a>
+    </nav>
+  </div>
+</header>
+<div class="login-wrap">
 <div class="login">
-  <h1>THOR</h1>
-  <div class="sub">索而智能家居 · 报价系统</div>
+  <div class="login-brand">
+    <div class="mark">TH</div>
+    <h1>欢迎回来</h1>
+    <p>索而智能家居 · 报价系统</p>
+  </div>
   <div class="field">
     <label>账号</label>
     <input id="loginUser" placeholder="管理员账号" value="admin">
@@ -38,12 +163,12 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;bac
     <label>密码</label>
     <input type="password" id="loginPass" placeholder="密码" value="123456">
   </div>
-  <div style="font-size:11px;color:var(--n-400);margin-bottom:12px">选择权限等级（演示）</div>
+  <div class="role-label">选择权限等级（演示）</div>
   <div class="role-select" id="roleSelect">
     <button class="active" data-role="L1" onclick="selectRole(this)">L1 销售</button>
     <button data-role="L2" onclick="selectRole(this)">L2 主管</button>
     <button data-role="L3" onclick="selectRole(this)">L3 老板</button>
-    <button data-role="L4" onclick="selectRole(this)">L4 超级管理员</button>
+    <button data-role="L4" onclick="selectRole(this)">L4 超管</button>
   </div>
   <button class="btn-login" onclick="login()">登 录</button>
   <div class="roles-desc">
@@ -52,6 +177,9 @@ body{display:flex;align-items:center;justify-content:center;min-height:100vh;bac
     <strong>L3 老板</strong> 管理产品库 · 定价策略 · 用户管理
     <strong>L4 超级管理员</strong> 系统配置 · 日志 · 数据导出
   </div>
+  <a class="back-link" href="index.html">← 跳过登录，直接进入报价单</a>
+</div>
+</div>
 </div>
 <script>
 function selectRole(el) {
