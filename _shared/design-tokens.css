@@ -71,5 +71,28 @@
   --bp-lg: 1280px;
 
   /* ── 顶栏高度 ── */
-  --topbar-h: 56px;
+  --topbar-h: 64px;
+
+  /* ── 文字比例（参考 deep design DDDS） ── */
+  --fs-display: clamp(20px, 2.5vw, 22px);
+  --fs-h1:      clamp(20px, 2.5vw, 22px);
+  --fs-h2:      16px;
+  --fs-h3:      15px;
+  --fs-body:    15px;
+  --fs-body-sm: 14px;
+  --fs-secondary: 13px;
+  --fs-label:   12px;
+  --fs-caption: 11px;
+  --fs-micro:   10px;
+
+  --lh-tight: 1.35;
+  --lh-body:  1.6;
+  --lh-loose: 1.75;
+
+  /* ── DD 容器阴影 & 圆角 ── */
+  --shadow-card:  0 12px 32px oklch(20% 0.02 250 / 0.10), 0 4px 12px oklch(20% 0.02 250 / 0.04);
+  --shadow-hover: 0 20px 48px oklch(20% 0.02 250 / 0.16), 0 8px 20px oklch(20% 0.02 250 / 0.06);
+  --radius-dd-md: 16px;
+  --radius-dd-sm: 10px;
+  --content-max: 1200px;
 }

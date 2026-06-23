@@ -27,9 +27,10 @@ body {
 .login {
   background: var(--surface);
   padding: clamp(28px, 5vw, 40px);
-  border-radius: var(--r-xl);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border);
+  border-radius: var(--radius-dd-md);
+  box-shadow: var(--shadow-card);
+  border: 1px solid oklch(100% 0 0 / 0.6);
+  border-top: 2px solid oklch(100% 0 0 / 0.9);
   max-width: 400px;
   width: 100%;
 }
@@ -48,19 +49,19 @@ body {
   align-items: center;
   justify-content: center;
   font-weight: 800;
-  font-size: 14px;
+  font-size: var(--fs-body-sm);
   box-shadow: 0 4px 16px var(--accent-glow);
 }
-.login-brand h1 { font-size: 22px; font-weight: 800; color: var(--n-900); margin: 0; }
-.login-brand p { font-size: 12px; color: var(--n-400); margin-top: 4px; }
+.login-brand h1 { font-size: var(--fs-h1); font-weight: 800; color: var(--n-900); margin: 0; line-height: var(--lh-tight); }
+.login-brand p { font-size: var(--fs-label); color: var(--n-400); margin-top: 4px; }
 .field { margin-bottom: 14px; }
-.field label { font-size: 11px; font-weight: 700; color: var(--n-500); display: block; margin-bottom: 6px; letter-spacing: 0.3px; }
+.field label { font-size: var(--fs-caption); font-weight: 700; color: var(--n-500); display: block; margin-bottom: 6px; letter-spacing: 0.3px; }
 .field input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--r-md);
-  font-size: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-dd-sm);
+  font-size: var(--fs-body-sm);
   outline: none;
   background: var(--surface-2);
   transition: all var(--dur-fast);
@@ -70,15 +71,15 @@ body {
   background: var(--surface);
   box-shadow: 0 0 0 3px var(--accent-lt);
 }
-.role-label { font-size: 11px; color: var(--n-400); margin-bottom: 10px; font-weight: 600; }
+.role-label { font-size: var(--fs-caption); color: var(--n-400); margin-bottom: 10px; font-weight: 600; }
 .role-select { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 20px; }
 .role-select button {
   padding: 10px 8px;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-dd-sm);
   background: var(--surface);
   cursor: pointer;
-  font-size: 12px;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--n-500);
   transition: all var(--dur-fast);
@@ -97,7 +98,7 @@ body {
   color: #fff;
   border: none;
   border-radius: var(--r-full);
-  font-size: 15px;
+  font-size: var(--fs-body);
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 16px var(--accent-glow);
@@ -111,8 +112,8 @@ body {
   background: var(--surface-2);
   border-radius: var(--r-md);
   border: 1px solid var(--border);
-  font-size: 11px;
-  line-height: 1.75;
+  font-size: var(--fs-caption);
+  line-height: var(--lh-loose);
   color: var(--n-500);
 }
 .roles-desc strong { color: var(--n-800); display: block; margin-top: 6px; }
@@ -123,7 +124,7 @@ body {
   gap: 6px;
   margin: 16px auto 0;
   padding: 8px 16px;
-  font-size: 12px;
+  font-size: var(--fs-label);
   font-weight: 600;
   color: var(--n-500);
   text-decoration: none;

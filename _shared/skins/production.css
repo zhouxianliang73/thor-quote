@@ -4,13 +4,13 @@
    ═══════════════════════════════════ */
 
 :root {
-  --fs-base: clamp(12px, 1.5vw, 13px);
-  --fs-sm:   clamp(11px, 1.4vw, 12px);
-  --fs-xs:   11px;
-  --fs-lg:   15px;
-  --fs-xl:   18px;
-  --fs-h1:   clamp(20px, 3vw, 24px);
-  --lh-base: 1.55;
+  --fs-base: var(--fs-body-sm);
+  --fs-sm:   var(--fs-secondary);
+  --fs-xs:   var(--fs-label);
+  --fs-lg:   var(--fs-h2);
+  --fs-xl:   var(--fs-h1);
+  --fs-h1:   var(--fs-h1);
+  --lh-base: var(--lh-body);
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -20,11 +20,17 @@
 /* ── 编辑器卡片 ── */
 .editor {
   background: var(--surface);
-  border-radius: var(--r-lg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
-  padding: clamp(16px, 3vw, 32px);
+  border-radius: var(--radius-dd-md);
+  border: 1px solid oklch(100% 0 0 / 0.6);
+  border-top: 2px solid oklch(100% 0 0 / 0.9);
+  box-shadow: var(--shadow-card);
+  padding: clamp(16px, 3vw, 28px);
   overflow: hidden;
+  transition: box-shadow var(--dur-normal) var(--ease);
+}
+
+.editor:hover {
+  box-shadow: var(--shadow-hover);
 }
 
 .subtitle { display: none; }
@@ -114,9 +120,10 @@ h1 { /* 由 page-hero 接管 */ }
 .cat {
   margin-bottom: 12px;
   border: 1px solid var(--border);
-  border-radius: var(--r-md);
+  border-radius: var(--radius-dd-sm);
   overflow: hidden;
   background: var(--surface);
+  box-shadow: var(--shadow-xs);
   transition: box-shadow var(--dur-fast);
 }
 
@@ -329,7 +336,7 @@ h1 { /* 由 page-hero 接管 */ }
 .sr-f .lb { font-size: var(--fs-lg); font-weight: 700; color: var(--n-900); }
 
 #gt {
-  font-size: clamp(22px, 4vw, 28px);
+  font-size: var(--fs-display);
   font-weight: 800;
   color: var(--price);
   font-variant-numeric: tabular-nums;
@@ -476,7 +483,7 @@ h1 { /* 由 page-hero 接管 */ }
   .tw td:has(.ic)::before { display: none; }
 
   .sum { padding: 14px; margin: 12px 0; }
-  #gt { font-size: 22px; }
+  #gt { font-size: var(--fs-h1); }
 
   /* 底部固定操作栏 */
   .act {

@@ -1,0 +1,352 @@
+/* ═══════════════════════════════════
+   THOR · DD 通用组件（容器 / 筛选 / 收藏）
+   参考 deep design DDDS
+   ═══════════════════════════════════ */
+
+/* ── 页面容器 ── */
+.dd-app {
+  width: 100%;
+  max-width: var(--content-max);
+  margin: 0 auto;
+}
+
+/* ── DD 卡片 ── */
+.dd-card {
+  background: var(--surface);
+  border-radius: var(--radius-dd-md);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-card);
+  border: 1px solid oklch(100% 0 0 / 0.6);
+  border-top: 2px solid oklch(100% 0 0 / 0.9);
+  transition: box-shadow var(--dur-normal) var(--ease), transform var(--dur-normal) var(--ease);
+}
+
+.dd-card:hover {
+  box-shadow: var(--shadow-hover);
+}
+
+.dd-card-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  font-weight: 600;
+  font-size: var(--fs-h2);
+  color: var(--n-900);
+  line-height: var(--lh-tight);
+}
+
+.dd-card-hd .more {
+  font-size: var(--fs-secondary);
+  font-weight: 400;
+  color: var(--n-500);
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  padding: 0;
+  transition: color var(--dur-fast);
+}
+
+.dd-card-hd .more:hover { color: var(--accent); }
+
+/* ── 折叠筛选行 ── */
+.dd-filter {
+  position: relative;
+  padding: 10px 14px;
+}
+
+.dd-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  min-height: 40px;
+}
+
+.dd-filter-label {
+  flex-shrink: 0;
+  font-size: var(--fs-secondary);
+  font-weight: 600;
+  color: var(--n-500);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.dd-filter-tags {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow: hidden;
+  align-items: center;
+}
+
+.dd-filter-tag {
+  background: var(--accent-lt);
+  color: var(--accent);
+  padding: 3px 12px;
+  border-radius: var(--r-full);
+  font-size: var(--fs-label);
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dd-filter-empty {
+  font-size: var(--fs-label);
+  color: var(--n-400);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd-filter-panel {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+  right: 0;
+  z-index: 90;
+  background: var(--surface);
+  border-radius: var(--radius-dd-md);
+  box-shadow: var(--shadow-lg);
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-top: 2px solid oklch(100% 0 0 / 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(6px);
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s, transform 0.22s ease;
+}
+
+.dd-filter:hover .dd-filter-panel,
+.dd-filter.is-open .dd-filter-panel {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.dd-filter::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 10px;
+  pointer-events: none;
+}
+
+.dd-filter:hover::after { pointer-events: auto; }
+
+.dd-filter-search-btn {
+  flex-shrink: 0;
+  min-height: 36px;
+  padding: 6px 14px;
+  border: none;
+  border-radius: var(--radius-dd-sm);
+  background: var(--accent);
+  color: #fff;
+  font-size: var(--fs-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  transition: background var(--dur-fast);
+}
+
+.dd-filter-search-btn:hover { background: var(--accent-hover); }
+
+/* ── 筛选 pills ── */
+.dd-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.dd-pill {
+  padding: 6px 14px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: var(--n-50);
+  font-size: var(--fs-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  color: var(--n-600);
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.dd-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-lt);
+}
+
+.dd-pill.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+/* ── 搜索框 ── */
+.dd-search {
+  width: 100%;
+  padding: 9px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-dd-sm);
+  font-size: var(--fs-secondary);
+  background: var(--n-50);
+  outline: none;
+  font-family: inherit;
+  color: var(--n-900);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+
+.dd-search:focus {
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 4px var(--accent-lt);
+}
+
+.dd-search::placeholder { color: var(--n-400); }
+
+/* ── 结果标题行 ── */
+.dd-results-hd {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+  padding: 0 2px;
+}
+
+.dd-results-hd h2 {
+  font-size: var(--fs-h2);
+  font-weight: 600;
+  color: var(--n-900);
+  margin: 0;
+}
+
+.dd-results-count {
+  font-size: var(--fs-secondary);
+  color: var(--n-500);
+}
+
+/* ── 已选 / 收藏条 ── */
+.dd-selection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.dd-selection-grid.collapsed { display: none; }
+
+.dd-selection-item {
+  background: var(--n-50);
+  border-radius: var(--radius-dd-sm);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  transition: all var(--dur-normal);
+  position: relative;
+}
+
+.dd-selection-item:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.dd-selection-item .sel-thumb {
+  height: 88px;
+  background: var(--n-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+}
+
+.dd-selection-item .sel-info {
+  padding: 8px 10px;
+}
+
+.dd-selection-item .sel-name {
+  font-size: var(--fs-secondary);
+  font-weight: 600;
+  color: var(--n-900);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dd-selection-item .sel-price {
+  font-size: var(--fs-label);
+  color: var(--accent);
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.dd-selection-item .sel-remove {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border: none;
+  border-radius: 50%;
+  background: oklch(100% 0 0 / 0.85);
+  color: var(--n-500);
+  cursor: pointer;
+  font-size: var(--fs-caption);
+  line-height: 1;
+  box-shadow: var(--shadow-xs);
+}
+
+.dd-selection-item .sel-remove:hover {
+  color: var(--red);
+  background: var(--red-bg);
+}
+
+.dd-selection-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-body-sm);
+  color: var(--n-500);
+}
+
+.dd-selection-summary strong {
+  color: var(--n-900);
+  font-size: var(--fs-h2);
+}
+
+.dd-selection-summary .total {
+  color: var(--price);
+  font-weight: 800;
+}
+
+.dd-selection-empty {
+  font-size: var(--fs-secondary);
+  color: var(--n-400);
+  padding: 8px 0;
+}
+
+@media (max-width: 768px) {
+  .dd-filter-panel { position: static; opacity: 1; visibility: visible; transform: none; pointer-events: auto; display: none; box-shadow: none; border: none; padding: 12px 0 0; }
+  .dd-filter.is-open .dd-filter-panel { display: block; }
+  .dd-filter:hover .dd-filter-panel { display: none; }
+  .dd-filter.is-open:hover .dd-filter-panel { display: block; }
+  .dd-filter::after { display: none; }
+}

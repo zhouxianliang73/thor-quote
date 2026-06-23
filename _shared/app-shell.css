@@ -13,6 +13,8 @@ body {
   margin: 0;
   min-height: 100dvh;
   font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
   background: var(--bg-app);
   color: var(--n-900);
   -webkit-font-smoothing: antialiased;
@@ -28,7 +30,7 @@ body {
 .app-main {
   flex: 1;
   width: 100%;
-  max-width: 1200px;
+  max-width: var(--content-max);
   margin: 0 auto;
   padding: 16px 16px 24px;
 }
@@ -55,7 +57,7 @@ body {
 }
 
 .app-topbar-inner {
-  max-width: 1200px;
+  max-width: var(--content-max);
   margin: 0 auto;
   height: 100%;
   padding: 0 16px;
@@ -100,7 +102,7 @@ body {
 
 .app-brand-text strong {
   display: block;
-  font-size: 14px;
+  font-size: var(--fs-body-sm);
   font-weight: 700;
   letter-spacing: 0.3px;
   white-space: nowrap;
@@ -110,9 +112,9 @@ body {
 
 .app-brand-text span {
   display: block;
-  font-size: 10px;
+  font-size: var(--fs-caption);
   color: var(--n-400);
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
 }
 
 /* ── 导航 ── */
@@ -125,7 +127,7 @@ body {
 .app-nav a {
   padding: 6px 12px;
   border-radius: var(--r-full);
-  font-size: 12px;
+  font-size: var(--fs-secondary);
   font-weight: 600;
   color: var(--n-500);
   text-decoration: none;
@@ -145,7 +147,7 @@ body {
 }
 
 .app-user {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   color: var(--n-400);
   padding: 4px 10px;
   background: var(--n-50);
@@ -175,7 +177,7 @@ body {
     max-width: 55vw;
   }
   .app-nav::-webkit-scrollbar { display: none; }
-  .app-nav a { padding: 5px 10px; font-size: 11px; }
+  .app-nav a { padding: 5px 10px; font-size: var(--fs-label); }
   .app-brand-text span { display: none; }
   .app-user { display: none; }
 }
@@ -192,7 +194,7 @@ body {
 }
 
 .page-hero .eyebrow {
-  font-size: 11px;
+  font-size: var(--fs-caption);
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--accent);
@@ -201,15 +203,16 @@ body {
 }
 
 .page-hero h1 {
-  font-size: clamp(20px, 4vw, 26px);
+  font-size: var(--fs-h1);
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   color: var(--n-900);
   margin: 0;
+  line-height: var(--lh-tight);
 }
 
 .page-hero p {
-  font-size: 12px;
+  font-size: var(--fs-secondary);
   color: var(--n-400);
   margin-top: 6px;
 }
@@ -236,11 +239,11 @@ body {
     box-shadow: var(--shadow-lg);
   }
   .quote-total-bar .label {
-    font-size: 11px;
+    font-size: var(--fs-caption);
     opacity: 0.75;
   }
   .quote-total-bar .amount {
-    font-size: 20px;
+    font-size: var(--fs-h1);
     font-weight: 700;
     color: oklch(85% 0.12 85);
   }

@@ -6,51 +6,13 @@
 <title>THOR 索而 · 选品系统</title>
 <link rel="stylesheet" href="_shared/design-tokens.css">
 <link rel="stylesheet" href="_shared/app-shell.css">
+<link rel="stylesheet" href="_shared/dd-components.css">
 <link rel="stylesheet" href="_shared/skins/marketing.css">
 <script src="data.js"></script>
 <script src="js/shared.js"></script>
-<style>
-/* ── 选品页专属（详情浮层等） ── */
-:root { --filter-h: 44px; }
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-start;justify-content:center;padding:30px 16px;overflow-y:auto}
-.overlay.open{display:flex}
-.detail{background:var(--surface);border-radius:12px;max-width:800px;width:100%;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.2)}
-.detail .img-main{width:100%;aspect-ratio:16/10;background:var(--surface-alt);display:flex;align-items:center;justify-content:center;position:relative}
-.detail .img-main img{max-width:100%;max-height:100%;object-fit:contain}
-.detail .img-main .nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.8);border:none;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;color:var(--text)}
-.detail .img-main .nav.prev{left:12px}
-.detail .img-main .nav.next{right:12px}
-.detail .img-main .close{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.4);color:#fff;border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px}
-.detail .body{padding:24px}
-.detail .body h2{font-size:22px;font-weight:700;margin-bottom:4px}
-.detail .body .code{font-size:13px;color:var(--text-muted);margin-bottom:12px}
-.detail .body .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:16px 0;padding:16px;background:var(--surface-alt);border-radius:8px}
-.detail .body .meta dt{font-size:12px;color:var(--text-muted)}
-.detail .body .meta dd{font-size:14px;color:var(--text);font-weight:500}
-.detail .body .scene-title{font-size:15px;font-weight:600;margin:16px 0 8px}
-.detail .body .scene-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.detail .body .scene-grid img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:var(--surface-alt)}
-.detail .add-btn{width:100%;padding:14px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:20px;transition:opacity .15s}
-.detail .add-btn:hover{opacity:.9}
-
-/* ── 空状态 ── */
-.empty{text-align:center;padding:80px 24px;color:var(--text-muted)}
-.empty .icon{font-size:48px;margin-bottom:12px}
-.empty p{font-size:14px}
-
-/* ── 响应式 ── */
-@media(max-width:768px){
-  .product-grid{grid-template-columns:repeat(2,1fr);gap:10px;padding:12px}
-  .filter-bar{padding:6px 12px}
-  .sticky-search{padding:8px 12px}
-  .detail .body .meta{grid-template-columns:1fr}
-  .detail .body .scene-grid{grid-template-columns:1fr 1fr}
-}
-</style>
 </head>
 <body>
-
-<!-- Header -->
+<div class="app-shell">
 <header class="app-topbar">
   <div class="app-topbar-inner">
     <a class="app-brand" href="index.html">
@@ -62,31 +24,55 @@
       <a href="selector.html" class="active">选品</a>
       <a href="dashboard.html">看板</a>
     </nav>
-    <button class="cart-btn" onclick="backToQuote()" title="返回报价单">← 报价</button>
+    <button class="shop-back-btn" onclick="backToQuote()" title="返回报价单">← 返回报价</button>
   </div>
 </header>
 
-<!-- Filter Bar -->
-<div class="filter-bar" id="filterBar">
-  <div class="filter-inner" id="catNav">
-    <!-- categories populated by JS -->
+<main class="app-main shop-main dd-app">
+
+  <!-- 已选清单（参考 DD 收藏区） -->
+  <div class="dd-card" id="selectionCard">
+    <div class="dd-card-hd">
+      <span>已选清单</span>
+      <button type="button" class="more" id="selectionToggle" onclick="toggleSelection()">收起</button>
+    </div>
+    <div class="dd-selection-grid" id="selectionGrid"></div>
+    <div class="dd-selection-empty" id="selectionEmpty">尚未添加产品，点击卡片或详情页加入</div>
+    <div class="dd-selection-summary" id="selectionSummary" style="display:none">
+      <span>已选 <strong id="selectedCount">0</strong> 件</span>
+      <span>合计 <span class="total" id="selectedTotal">¥0</span></span>
+    </div>
   </div>
-</div>
 
-<!-- Search Bar -->
-<div class="sticky-search">
-  <div class="search-inner">
-    <input id="searchInput" placeholder="搜索产品名称、编号..." oninput="filterProducts()">
-    <span class="count" id="productCount">共 0 个产品</span>
+  <!-- 筛选行（参考 DD collapsible filter） -->
+  <div class="dd-card dd-filter" id="filterCard" onclick="if(window.innerWidth<=768&&!event.target.closest('.dd-pill,.dd-search,.dd-filter-search-btn'))toggleFilter()">
+    <div class="dd-filter-row">
+      <span class="dd-filter-label">筛选</span>
+      <div class="dd-filter-tags" id="activeFilterTag">
+        <span class="dd-filter-tag" id="activeCatTag">柜体</span>
+      </div>
+      <button type="button" class="dd-filter-search-btn" onclick="focusSearch(event)" aria-label="搜索">搜索</button>
+    </div>
+    <div class="dd-filter-panel">
+      <div class="dd-pills" id="catNav"></div>
+      <input class="dd-search" id="searchInput" placeholder="搜索产品名称、编号..." oninput="filterProducts()">
+    </div>
   </div>
+
+  <!-- 选品结果 -->
+  <div class="dd-results-hd">
+    <h2>选品结果</h2>
+    <span class="dd-results-count" id="productCount">共 0 个产品</span>
+  </div>
+
+  <div class="dd-card" style="padding:16px">
+    <div class="product-grid" id="productGrid"></div>
+  </div>
+
+</main>
 </div>
 
-<!-- Product Grid -->
-<div class="product-grid" id="productGrid">
-  <!-- products populated by JS -->
-</div>
-
-<!-- Detail Overlay -->
+<!-- 详情浮层 -->
 <div class="overlay" id="detailOverlay" onclick="if(event.target===this)closeDetail()">
   <div class="detail" id="detailCard">
     <div class="img-main" id="detailImg">
@@ -106,7 +92,6 @@
 </div>
 
 <script>
-// ── 产品数据（从 THOR_DATA 生成） ──
 var CATEGORIES = [
   { id:'cabinet', name:'柜体', icon:'🗄️' },
   { id:'door', name:'柜门', icon:'🚪' },
@@ -123,27 +108,33 @@ var currentDetail = null;
 var detailImages = [];
 var detailImgIdx = 0;
 var selectedProducts = [];
+var selectionCollapsed = false;
 
 function init() {
   renderNav();
   renderGrid();
+  renderSelection();
 }
 
 function renderNav() {
   var html = '';
   CATEGORIES.forEach(function(c){
-    html += '<button class="filter-pill' + (c.id === currentCat ? ' active' : '') + '" onclick="switchCat(\'' + c.id + '\')">' + c.icon + ' ' + c.name + '</button>';
+    html += '<button type="button" class="dd-pill' + (c.id === currentCat ? ' active' : '') + '" onclick="switchCat(\'' + c.id + '\')">' + c.icon + ' ' + c.name + '</button>';
   });
   document.getElementById('catNav').innerHTML = html;
+  var catName = CATEGORIES.find(function(c){ return c.id === currentCat; }).name;
+  document.getElementById('catLabel').textContent = catName;
+  document.getElementById('activeCatTag').textContent = catName;
 }
 
 function switchCat(cat) {
   currentCat = cat;
-  var catName = CATEGORIES.find(function(c){return c.id===cat}).name;
-  document.getElementById('catLabel').textContent = catName;
   document.getElementById('searchInput').value = '';
   renderNav();
   renderGrid();
+  if (window.innerWidth <= 768) {
+    document.getElementById('filterCard').classList.remove('is-open');
+  }
 }
 
 function filterProducts() {
@@ -163,47 +154,103 @@ function renderGrid() {
   var list = getProducts();
   document.getElementById('productCount').textContent = '共 ' + list.length + ' 个产品';
   if (list.length === 0) {
-    document.getElementById('productGrid').innerHTML = '<div class="empty"><div class="icon">🔍</div><p>没有找到匹配的产品</p></div>';
+    document.getElementById('productGrid').innerHTML = '<div class="empty"><div class="icon">🔍</div><p>没有找到匹配的产品</p><p>试试切换品类或修改搜索词</p></div>';
     return;
   }
   var html = '';
   list.forEach(function(p){
-    var img = p.images && p.images[0] ? '<img src="' + p.images[0] + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="placeholder" style="display:none">📷</div>' : '<div class="placeholder">📷</div>';
+    var img = p.images && p.images[0]
+      ? '<img src="' + p.images[0] + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"><div class="placeholder" style="display:none">📷</div>'
+      : '<div class="placeholder">📷</div>';
+    var priceSuffix = p.category === 'door' ? '/㎡' : '';
     html += '<div class="product-card" onclick="showDetail(\'' + p.id + '\')">' +
       '<div class="img-wrap">' + img + '</div>' +
       '<div class="info">' +
       '<div class="code">' + p.id + '</div>' +
       '<div class="name">' + p.name + '</div>' +
       '<div class="spec">' + p.dim + '</div>' +
-      '<div class="price">¥' + p.price.toFixed(0) + '</div>' +
+      '<div class="price">¥' + p.price.toFixed(0) + priceSuffix + '</div>' +
       '</div></div>';
   });
   document.getElementById('productGrid').innerHTML = html;
 }
 
+function renderSelection() {
+  var grid = document.getElementById('selectionGrid');
+  var empty = document.getElementById('selectionEmpty');
+  var summary = document.getElementById('selectionSummary');
+  var total = 0;
+
+  if (selectedProducts.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = '';
+    summary.style.display = 'none';
+    grid.classList.add('collapsed');
+    return;
+  }
+
+  empty.style.display = 'none';
+  summary.style.display = '';
+  grid.classList.toggle('collapsed', selectionCollapsed);
+
+  var html = '';
+  selectedProducts.forEach(function(p, i){
+    total += p.price || 0;
+    html += '<div class="dd-selection-item" onclick="showDetail(\'' + p.id + '\')">' +
+      '<button type="button" class="sel-remove" onclick="removeSelection(' + i + ', event)" aria-label="移除">✕</button>' +
+      '<div class="sel-thumb">📦</div>' +
+      '<div class="sel-info">' +
+      '<div class="sel-name">' + p.name + '</div>' +
+      '<div class="sel-price">¥' + p.price.toFixed(0) + (p.category === 'door' ? '/㎡' : '') + '</div>' +
+      '</div></div>';
+  });
+
+  grid.innerHTML = html;
+  document.getElementById('selectedCount').textContent = selectedProducts.length;
+  document.getElementById('selectedTotal').textContent = '¥' + total.toFixed(0);
+}
+
+function removeSelection(index, ev) {
+  if (ev) ev.stopPropagation();
+  selectedProducts.splice(index, 1);
+  renderSelection();
+}
+
+function toggleSelection() {
+  selectionCollapsed = !selectionCollapsed;
+  document.getElementById('selectionGrid').classList.toggle('collapsed', selectionCollapsed);
+  document.getElementById('selectionToggle').textContent = selectionCollapsed ? '展开' : '收起';
+}
+
+function toggleFilter() {
+  document.getElementById('filterCard').classList.toggle('is-open');
+}
+
+function focusSearch(ev) {
+  if (ev) ev.stopPropagation();
+  var card = document.getElementById('filterCard');
+  card.classList.add('is-open');
+  var input = document.getElementById('searchInput');
+  input.focus();
+  input.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
 function showDetail(id) {
-  var p = ALL_PRODUCTS.find(function(x){return x.id===id});
+  var p = ALL_PRODUCTS.find(function(x){ return x.id === id; });
   if (!p) return;
   currentDetail = p;
   document.getElementById('detailName').textContent = p.name;
   document.getElementById('detailCode').textContent = p.id + ' | ' + p.dim;
-  
-  // Meta info
-  document.getElementById('detailMeta').innerHTML = 
-    '<dt>材料</dt><dd>' + (p.material||'—') + '</dd>' +
-    '<dt>颜色</dt><dd>' + (p.color||'—') + '</dd>' +
-    '<dt>系列</dt><dd>' + (p.series||'—') + '</dd>' +
-    '<dt>单价</dt><dd style="font-size:18px;font-weight:700;color:var(--accent)">¥' + p.price.toFixed(0) + (p.category === 'door' ? '/㎡' : '') + '</dd>';
-  
-  // Images
+  document.getElementById('detailMeta').innerHTML =
+    '<dt>材料</dt><dd>' + (p.material || '—') + '</dd>' +
+    '<dt>颜色</dt><dd>' + (p.color || '—') + '</dd>' +
+    '<dt>系列</dt><dd>' + (p.series || '—') + '</dd>' +
+    '<dt>单价</dt><dd style="font-size:var(--fs-h2);font-weight:700;color:var(--accent)">¥' + p.price.toFixed(0) + (p.category === 'door' ? '/㎡' : '') + '</dd>';
   detailImages = p.images && p.images.length ? p.images : [];
   detailImgIdx = 0;
   updateDetailImage();
-  
-  // Scenes
-  document.getElementById('detailScenes').innerHTML = p.scenes && p.scenes.length ? 
-    '<div class="scene-title">📸 使用场景</div><div class="scene-grid">' + p.scenes.map(function(s){return '<img src="'+s+'" onerror="this.style.display=\'none\'">'}).join('') + '</div>' : '';
-  
+  document.getElementById('detailScenes').innerHTML = p.scenes && p.scenes.length ?
+    '<div class="scene-title">使用场景</div><div class="scene-grid">' + p.scenes.map(function(s){ return '<img src="' + s + '" onerror="this.style.display=\'none\'">'; }).join('') + '</div>' : '';
   document.getElementById('detailOverlay').classList.add('open');
 }
 
@@ -230,13 +277,13 @@ function closeDetail() {
 function addToQuote() {
   if (!currentDetail) return;
   selectedProducts.push(currentDetail);
+  renderSelection();
   var btn = document.querySelector('.add-btn');
   btn.textContent = '✅ 已加入 (' + selectedProducts.length + ')';
-  setTimeout(function(){btn.textContent = '＋ 加入报价单';}, 1500);
+  setTimeout(function(){ btn.textContent = '＋ 加入报价单'; }, 1500);
 }
 
 function backToQuote() {
-  // 返回报价单页面，携带选品数据
   if (selectedProducts.length > 0) {
     localStorage.setItem('thorSelections', JSON.stringify(selectedProducts));
   }
