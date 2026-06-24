@@ -43,7 +43,7 @@ thor-quote/
 │   └── generate_data.py  # 从 Excel 生成 data.js
 ├── 01-Raw-Materials/
 │   └── 01-价格表/      # ★ 输入源文件（xlsx）
-├── _shared/            # 设计系统（CSS tokens + skins）
+├── shared/             # 设计系统（CSS tokens + skins）
 ├── 02-Database/
 │   └── thor-pricing.json5  # 定价数据（自动生成）
 ├── 00-Inbox/           # 规划文档
