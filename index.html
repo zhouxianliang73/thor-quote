@@ -273,6 +273,9 @@ var DEF_M=ThorShared.DEFAULT_CAB_MAT;
 var cabCoef=ThorShared.cabNsCoef;
 var ctWCoef=ThorShared.ctWidthCoef;
 var ctEffLen=ThorShared.ctEffLengthMm;
+var cabBillAmt=ThorShared.cabBillAmount;
+var panelBillAmt=ThorShared.panelBillAmount;
+var panelArea=ThorShared.panelAreaSqm;
 var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
 p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
@@ -284,7 +287,7 @@ x:'<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#
 function ic(k){return'<div class="ic">'+(SVG[k]||SVG.x)+'</div>'}
 var cb=[{n:'洗手盘地柜',c:'',w:800,h:680,d:720,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'}];
 var ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
-var pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
+var pn=[{n:'',c:'',w:800,h:2400,d:20,m:DEF_M,r:1,q:1,u:'㎡'}];
 var tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
 var hw=[{n:'百隆107°集成阻尼全盖铰链',id:'h1',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:77}];sk=[{n:'手工单槽',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:500},{n:'抽拉龙头',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:350}];
 var el=[{n:'嵌入式蒸烤一体机',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:3000}];
@@ -325,6 +328,8 @@ function sd(t){return STD[t]||{w:800,h:680,d:720}}
 function nv(v,s){return Math.abs(v-s)>5}
 function fmtCoef(c){return c===1?'<span style="color:var(--n400)">1.0</span>':'<span style="color:var(--red)">'+c.toFixed(1)+'</span>'}
 function ctBill(r,auto){var p=effP(r,auto);return(r.q||1)*p*(ctEffLen(r.w)/1000)*ctWCoef(r.d)}
+function cabBill(r,auto,stdH){return cabBillAmt(r.w,r.h,stdH,effP(r,auto),r.q)}
+function pnBill(r,auto){return panelBillAmt(r.w,r.h,effP(r,auto),r.q)}
 
 // ★ mkm模板：尺寸拆为宽/高/深三个td
 function mkm(data,cfg){
@@ -370,7 +375,7 @@ function matCell(i){return '<td dl="材料" class="al-m"><div class="mat-rows"><
 // ★ 柜体（内联渲染+事件委托）
 function rc(){
 id('cr').innerHTML=cb.map(function(r,i){
-  var p=gp(r.m||DEF_M,r.n),sd2=sd(r.n),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),coef=cabCoef(r.h,sd2.h),ep=effP(r,p),st=r.q*ep*coef;
+  var p=gp(r.m||DEF_M,r.n),sd2=sd(r.n),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),coef=cabCoef(r.h,sd2.h),ep=effP(r,p),st=cabBill(r,p,sd2.h);
   return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('c')+'</td>'
     +'<td dl="名称"><select class="s-name" data-i="'+i+'">'+CT.map(function(t){return'<option>'+t+'</option>'}).join('')+'</select></td>'
     +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="cb['+i+'].c=this.value"></td>'
@@ -403,10 +408,10 @@ function rp(){id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value">',
 mat:matDrop('s-mat-pn',i),
 unit:'<select onchange="pn['+i+'].u=this.value"><option'+(r.u==='㎡'?'selected':'')+'>㎡</option><option'+(r.u==='个'?'selected':'')+'>个</option></select>'}},
-dim:function(r,i){return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:48px" onchange="pn['+i+'].r=parseFloat(this.value)||1;rp()">'}},
-price:function(r){var m=r.m||'大千云纹';return CP[m]?CP[m].panel:0;},
-total:function(r){var m=r.m||'大千云纹',auto=CP[m]?CP[m].panel:0;return r.q*effP(r,auto)*(r.r||1);}});syncMatVals('pr','s-mat-pn',pn,'m');try{cal()}catch(e){log(e)}ag();}
-function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:'大千云纹',r:1,q:1,u:'㎡'});rp();}
+dim:function(r,i){var sqm=panelArea(r.w,r.h);return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:'<span style="color:var(--n400)">'+sqm.toFixed(2)+'㎡</span>'}},
+price:function(r){var m=r.m||DEF_M;return CP[m]?CP[m].panel:0;},
+total:function(r){var m=r.m||DEF_M,auto=CP[m]?CP[m].panel:0;return pnBill(r,auto);}});syncMatVals('pr','s-mat-pn',pn,'m');try{cal()}catch(e){log(e)}ag();}
+function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:DEF_M,r:1,q:1,u:'㎡'});rp();}
 
 function rtr(){id('trr').innerHTML=mkm(tr,{a:'tr',f:'rtr',icon:'m',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="tr['+i+'].n=this.value">',
@@ -459,9 +464,9 @@ unit:function(r,i){return'<select onchange="ex['+i+'].u=this.value"><option'+(r.
 function ax(){ex.push({n:'新增项目',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:0});rx();}
 
 function cal(){
-  var vs=[function(){return cb.reduce(function(s,r){var m=r.m||DEF_M,auto=gp(m,r.n),p=effP(r,auto),s2=sd(r.n),coef=cabCoef(r.h,s2.h);return s+r.q*p*coef;},0)}(),
+  var vs=[function(){return cb.reduce(function(s,r){var m=r.m||DEF_M,auto=gp(m,r.n),s2=sd(r.n);return s+cabBill(r,auto,s2.h);},0)}(),
     function(){return ct.reduce(function(s,r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return s+ctBill(r,auto);},0)}(),
-    function(){return pn.reduce(function(s,r){var m=r.m||'大千云纹',auto=CP[m]?CP[m].panel:0;return s+r.q*effP(r,auto)*(r.r||1);},0)}(),
+    function(){return pn.reduce(function(s,r){var m=r.m||DEF_M,auto=CP[m]?CP[m].panel:0;return s+pnBill(r,auto);},0)}(),
     function(){return tr.reduce(function(s,r){return s+(r.q||0)*effP(r,r.p||0)*(r.r||1);},0)}(),
     function(){return hw.reduce(function(s,r){return s+(r.q||0)*effP(r,r.p||0);},0)}(),
     function(){return sk.reduce(function(s,r){return s+r.q*effP(r,r.p||0);},0)}(),

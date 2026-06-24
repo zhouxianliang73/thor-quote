@@ -309,6 +309,23 @@
     return Math.max(lenMm || 0, 1000);
   }
 
+  /** 柜体金额 = 宽(m) × 非标系数 × 单价 × 数量 */
+  function cabBillAmount(wMm, hMm, stdH, unitPrice, qty) {
+    var w = (wMm || 800) / 1000;
+    var coef = cabNsCoef(hMm, stdH);
+    return (qty || 1) * w * coef * (unitPrice || 0);
+  }
+
+  /** 见光板金额 = 宽×高/1000000(㎡) × 单价 × 数量 */
+  function panelBillAmount(wMm, hMm, unitPrice, qty) {
+    var area = (wMm || 0) * (hMm || 0) / 1000000;
+    return (qty || 1) * area * (unitPrice || 0);
+  }
+
+  function panelAreaSqm(wMm, hMm) {
+    return (wMm || 0) * (hMm || 0) / 1000000;
+  }
+
   function isDefaultCountertop(arr) {
     return arr.length === 1 && arr[0].n === '台面' && arr[0].m === '琉晶-丝纹GY01' && !arr[0].c;
   }
@@ -326,6 +343,9 @@
     cabNsCoef: cabNsCoef,
     ctWidthCoef: ctWidthCoef,
     ctEffLengthMm: ctEffLengthMm,
+    cabBillAmount: cabBillAmount,
+    panelBillAmount: panelBillAmount,
+    panelAreaSqm: panelAreaSqm,
     DEFAULT_CAB_MAT: DEFAULT_CAB_MAT,
     STD_DIMS: STD_DIMS
   };
