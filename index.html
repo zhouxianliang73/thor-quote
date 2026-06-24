@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="shared/app-shell.css">
 <link rel="stylesheet" href="shared/dd-components.css">
 <link rel="stylesheet" href="shared/skins/production.css">
-<script src="data.js?v=312"></script>
-<script src="js/shared.js?v=312"></script>
+<script src="data.js?v=313"></script>
+<script src="js/shared.js?v=313"></script>
 <script src="api.js"></script>
 <style>
 /* THOR 报价单专属 */
@@ -276,7 +276,7 @@ var DEF_M=ThorShared.DEFAULT_CAB_MAT;
 var cabCoef=ThorShared.cabNsCoef;
 var ctWCoef=ThorShared.ctWidthCoef;
 var ctEffLen=ThorShared.ctEffLengthMm;
-var BUILD_VER='312';
+var BUILD_VER='313';
 var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
 p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
@@ -288,7 +288,7 @@ x:'<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#
 function ic(k){return'<div class="ic">'+(SVG[k]||SVG.x)+'</div>'}
 var cb=[{n:'洗手盘地柜',c:'',w:800,h:680,d:720,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'}];
 var ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
-var pn=[{n:'',c:'',w:800,h:2400,d:20,m:DEF_M,r:1,q:1,u:'㎡'}];
+var pn=[{n:'',c:'',w:800,h:2400,d:20,m:DEF_M,q:0,u:'㎡'}];
 var tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
 var hw=[{n:'百隆107°集成阻尼全盖铰链',id:'h1',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:77}];sk=[{n:'手工单槽',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:500},{n:'抽拉龙头',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:350}];
 var el=[{n:'嵌入式蒸烤一体机',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:3000}];
@@ -337,10 +337,11 @@ var Billing={
   pnSys:function(r){var m=r.m||DEF_M;return CP[m]?CP[m].panel:0;},
   cabCoef:function(r){return cabCoef(r.h,sd(r.n).h);},
   pnArea:function(r){return Number(r.w||0)*Number(r.h||0)/1000000;},
+  pnQty:function(r){return this.pnArea(r);},
   cabAmt:function(r){var sd2=sd(r.n),w=Number(r.w||sd2.w)/1000,coef=this.cabCoef(r),p=this.unit(r,this.cabSys(r));return w*coef*p;},
-  pnAmt:function(r){return this.pnArea(r)*this.unit(r,this.pnSys(r));},
+  pnAmt:function(r){return this.pnQty(r)*this.unit(r,this.pnSys(r));},
   normCab:function(r){if(!r.m)r.m=DEF_M;if(!r.pManual)delete r.p;},
-  normPn:function(r){if(!r.m)r.m=DEF_M;delete r.r;if(!r.pManual)delete r.p;}
+  normPn:function(r){if(!r.m)r.m=DEF_M;delete r.r;r.u='㎡';r.q=this.pnQty(r);if(!r.pManual)delete r.p;}
 };
 function normAllRows(){cb.forEach(Billing.normCab,Billing);pn.forEach(Billing.normPn,Billing);}
 
@@ -356,8 +357,8 @@ function mkm(data,cfg){
       +'<td dl="深"><input class="num'+(dm.nd?' non':(!r.d||r.d===dm.sd)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.d||dm.sd)+'" style="width:56px" placeholder="'+dm.sd+'" title="深" onchange="'+cfg.a+'['+i+'].d=parseInt(this.value)||'+dm.sd+';'+cfg.f+'()"></td>'
       +'<td dl="材料" class="al-m">'+s.mat+'</td>'
       +'<td dl="非标系数" class="al-r" style="font-weight:600">'+dm.rh+'</td>'
-      +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="'+cfg.a+'['+i+'].q=parseFloat(this.value)||0;'+cfg.f+'()"></td>'
-      +'<td dl="单位">'+s.unit+'</td>'
+      +'<td dl="数量">'+(cfg.qtyHtml?cfg.qtyHtml(r,i):('<input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="'+cfg.a+'['+i+'].q=parseFloat(this.value)||0;'+cfg.f+'()">'))+'</td>'
+      +'<td dl="单位">'+(cfg.unitFixed||s.unit)+'</td>'
       +priDrop(r,cfg.a,i,cfg.price(r,i),cfg.f)
       +'<td dl="金额" style="text-align:right;font-weight:600">¥'+(cfg.total(r,i)).toFixed(0)+'</td>'
       +'<td dl=""><button class="row-del" onclick="'+cfg.a+'.splice('+i+',1);'+cfg.f+'()">✕</button></td></tr>';
@@ -422,11 +423,13 @@ function rp(){pn.forEach(Billing.normPn,Billing);
 id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value">',
 mat:matDrop('s-mat-pn',i),
-unit:'<select onchange="pn['+i+'].u=this.value"><option'+(r.u==='㎡'?'selected':'')+'>㎡</option><option'+(r.u==='个'?'selected':'')+'>个</option></select>'}},
-dim:function(r,i){var sqm=Billing.pnArea(r);return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:'<span style="color:var(--n400)">'+sqm.toFixed(2)+'㎡</span>'}},
+unit:''}},
+unitFixed:'㎡',
+qtyHtml:function(r,i){var q=Billing.pnQty(r);r.q=q;return '<span style="font-variant-numeric:tabular-nums;color:var(--text-default)">'+q.toFixed(3)+'</span>';},
+dim:function(r,i){return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:fmtCoef(1)}},
 price:function(r){return Billing.pnSys(r);},
 total:function(r){return Billing.pnAmt(r);}});syncMatVals('pr','s-mat-pn',pn,'m');try{cal()}catch(e){log(e)}ag();}
-function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:DEF_M,r:1,q:1,u:'㎡'});rp();}
+function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:DEF_M,q:0,u:'㎡'});rp();}
 
 function rtr(){id('trr').innerHTML=mkm(tr,{a:'tr',f:'rtr',icon:'m',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="tr['+i+'].n=this.value">',
@@ -513,7 +516,7 @@ function ag(){document.querySelectorAll('.ghost').forEach(function(e){e.remove()
 function rst(){if(!confirm('确定要重置?'))return;
   cb=[{n:'洗手盘地柜',c:'',w:800,h:680,d:720,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'}];
   ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
-  pn=[{n:'',c:'',w:800,h:2400,d:20,m:DEF_M,r:1,q:1,u:'㎡'}];
+  pn=[{n:'',c:'',w:800,h:2400,d:20,m:DEF_M,q:0,u:'㎡'}];
   tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
   hw=[{n:'百隆107°集成阻尼全盖铰链',id:'h1',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:77}];sk=[{n:'手工单槽',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:500},{n:'抽拉龙头',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:350}];
   el=[{n:'嵌入式蒸烤一体机',c:'',w:0,h:0,d:0,para:'',q:1,u:'台',p:3000}];ex=[{n:'灶炉开槽费',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:100}];
