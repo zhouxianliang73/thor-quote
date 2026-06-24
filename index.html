@@ -11,8 +11,8 @@
 <link rel="stylesheet" href="shared/app-shell.css">
 <link rel="stylesheet" href="shared/dd-components.css">
 <link rel="stylesheet" href="shared/skins/production.css">
-<script src="data.js?v=313"></script>
-<script src="js/shared.js?v=313"></script>
+<script src="data.js?v=314"></script>
+<script src="js/shared.js?v=314"></script>
 <script src="api.js"></script>
 <style>
 /* THOR 报价单专属 */
@@ -276,7 +276,7 @@ var DEF_M=ThorShared.DEFAULT_CAB_MAT;
 var cabCoef=ThorShared.cabNsCoef;
 var ctWCoef=ThorShared.ctWidthCoef;
 var ctEffLen=ThorShared.ctEffLengthMm;
-var BUILD_VER='313';
+var BUILD_VER='314';
 var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
 p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
@@ -419,16 +419,29 @@ price:function(r){var m=r.m||'琉晶-丝纹GY01';return(CTP[m]||{})[r.tk||'12mm'
 total:function(r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return ctBill(r,auto);}});syncMatVals('tr','s-mat-ct',ct,'m');try{cal()}catch(e){log(e)}ag();}
 function act(){ct.push({n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'});rct();}
 
-function rp(){pn.forEach(Billing.normPn,Billing);
-id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
-sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value">',
-mat:matDrop('s-mat-pn',i),
-unit:''}},
-unitFixed:'㎡',
-qtyHtml:function(r,i){var q=Billing.pnQty(r);r.q=q;return '<span style="font-variant-numeric:tabular-nums;color:var(--text-default)">'+q.toFixed(3)+'</span>';},
-dim:function(r,i){return{sw:800,sh:2400,sd:20,nw:false,nh:false,nd:false,rh:fmtCoef(1)}},
-price:function(r){return Billing.pnSys(r);},
-total:function(r){return Billing.pnAmt(r);}});syncMatVals('pr','s-mat-pn',pn,'m');try{cal()}catch(e){log(e)}ag();}
+function rp(){
+  pn.forEach(Billing.normPn,Billing);
+  id('pr').innerHTML=pn.map(function(r,i){
+    var q=Billing.pnQty(r),am=Billing.pnAmt(r),sys=Billing.pnSys(r);
+    var sw=800,sh=2400,sd=20;
+    return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('p')+'</td>'
+      +'<td dl="名称"><input value="'+(r.n||'')+'" placeholder="名称" onchange="pn['+i+'].n=this.value"></td>'
+      +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="pn['+i+'].c=this.value"></td>'
+      +'<td dl="宽"><input class="num'+((!r.w||r.w===sw)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.w||sw)+'" style="width:56px" placeholder="'+sw+'" title="宽" onchange="pn['+i+'].w=parseInt(this.value)||'+sw+';rp()"></td>'
+      +'<td dl="高"><input class="num'+((!r.h||r.h===sh)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.h||sh)+'" style="width:56px" placeholder="'+sh+'" title="高" onchange="pn['+i+'].h=parseInt(this.value)||'+sh+';rp()"></td>'
+      +'<td dl="深"><input class="num'+((!r.d||r.d===sd)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.d||sd)+'" style="width:56px" placeholder="'+sd+'" title="深" onchange="pn['+i+'].d=parseInt(this.value)||'+sd+';rp()"></td>'
+      +'<td dl="材料" class="al-m">'+matDrop('s-mat-pn',i)+'</td>'
+      +'<td dl="非标系数" class="al-r" style="font-weight:600">'+fmtCoef(1)+'</td>'
+      +'<td dl="数量"><span style="font-variant-numeric:tabular-nums">'+q.toFixed(3)+'</span></td>'
+      +'<td dl="单位"><span>㎡</span></td>'
+      +priDrop(r,'pn',i,sys,'rp')
+      +'<td dl="金额" style="text-align:right;font-weight:600">¥'+am.toFixed(0)+'</td>'
+      +'<td dl=""><button class="row-del" onclick="pn.splice('+i+',1);rp()">✕</button></td></tr>';
+  }).join('');
+  syncMatVals('pr','s-mat-pn',pn,'m');
+  try{cal()}catch(e){log(e)}
+  ag();
+}
 function ap(){pn.push({n:'',c:'',w:800,h:2400,d:20,m:DEF_M,q:0,u:'㎡'});rp();}
 
 function rtr(){id('trr').innerHTML=mkm(tr,{a:'tr',f:'rtr',icon:'m',
