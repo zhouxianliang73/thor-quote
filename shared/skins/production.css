@@ -519,7 +519,7 @@ h1 { /* 由 page-hero 接管 */ }
 
 /* ── 打印 ── */
 @media print {
-  .app-topbar, .quote-total-bar, .act, .row-del { display: none !important; }
+  .app-topbar, .quote-total-bar, .act, .row-del, .sd-drop { display: none !important; }
   body { background: #fff; }
   .app-main { padding: 0; max-width: none; }
   .editor { box-shadow: none; border: none; padding: 0; }
