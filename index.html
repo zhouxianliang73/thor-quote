@@ -269,6 +269,10 @@ var TD=ThorShared.buildTD(THOR_DATA);
 var CS=TD.cabinet.s,CT=TD.cabinet.t,CP=TD.cabinet.p;
 var CTS=TD.countertop.s,CTP=TD.countertop.p;
 var STD=ThorShared.STD_DIMS;
+var DEF_M=ThorShared.DEFAULT_CAB_MAT;
+var cabCoef=ThorShared.cabNsCoef;
+var ctWCoef=ThorShared.ctWidthCoef;
+var ctEffLen=ThorShared.ctEffLengthMm;
 var SVG={c:'<svg viewBox="0 0 36 36"><rect x="4" y="5" width="28" height="26" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="5" x2="18" y2="31" stroke="#ccc" stroke-width="1"/><line x1="7" y1="18" x2="16" y2="18" stroke="#ccc" stroke-width="1"/><line x1="20" y1="18" x2="29" y2="18" stroke="#ccc" stroke-width="1"/><rect x="7" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/><rect x="25" y="11" width="4" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 t:'<svg viewBox="0 0 36 36"><rect x="3" y="16" width="30" height="6" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><rect x="3" y="22" width="30" height="4" fill="none" stroke="#bbb" stroke-width="1"/><line x1="5" y1="26" x2="5" y2="33" stroke="#ddd" stroke-width="1"/><line x1="31" y1="26" x2="31" y2="33" stroke="#ddd" stroke-width="1"/></svg>',
 p:'<svg viewBox="0 0 36 36"><rect x="5" y="4" width="26" height="28" rx="1" fill="none" stroke="#888" stroke-width="1.3"/><line x1="5" y1="13" x2="31" y2="13" stroke="#ddd" stroke-width="1"/><line x1="5" y1="22" x2="31" y2="22" stroke="#ddd" stroke-width="1"/></svg>',
@@ -278,7 +282,7 @@ sk:'<svg viewBox="0 0 36 36"><rect x="5" y="10" width="26" height="20" rx="3" fi
 e:'<svg viewBox="0 0 36 36"><rect x="5" y="5" width="26" height="26" rx="3" fill="none" stroke="#888" stroke-width="1.3"/><rect x="9" y="9" width="18" height="16" rx="2" fill="none" stroke="#bbb" stroke-width="1"/><circle cx="18" cy="21" r="1.8" fill="#ccc"/><rect x="14" y="11" width="8" height="5" rx="1" fill="none" stroke="#aaa" stroke-width="1"/></svg>',
 x:'<svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="13" fill="none" stroke="#888" stroke-width="1.3"/><line x1="18" y1="11" x2="18" y2="25" stroke="#aaa" stroke-width="1.5"/><line x1="11" y1="18" x2="25" y2="18" stroke="#aaa" stroke-width="1.5"/></svg>'};
 function ic(k){return'<div class="ic">'+(SVG[k]||SVG.x)+'</div>'}
-var cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'}];
+var cb=[{n:'洗手盘地柜',c:'',w:800,h:680,d:720,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'}];
 var ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
 var pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
 var tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
@@ -317,8 +321,10 @@ function priceCustomApply(inp){
   window[arrName][i].p=val;window[arrName][i].pManual=true;w.querySelector('.sd-drop').classList.remove('open');window[fn]();
 }
 function syncMatVals(tbodyId,cls,arr,field){var tb=id(tbodyId);arr.forEach(function(r,i){var el=tb.querySelector('.'+cls+'[data-i="'+i+'"]');if(el){el.value=r[field]||'';el.style.color=r[field]?'':'#bbb'}})}
-function sd(t){return STD[t]||{w:800,h:700,d:570}}
+function sd(t){return STD[t]||{w:800,h:680,d:720}}
 function nv(v,s){return Math.abs(v-s)>5}
+function fmtCoef(c){return c===1?'<span style="color:var(--n400)">1.0</span>':'<span style="color:var(--red)">'+c.toFixed(1)+'</span>'}
+function ctBill(r,auto){var p=effP(r,auto);return(r.q||1)*p*(ctEffLen(r.w)/1000)*ctWCoef(r.d)}
 
 // ★ mkm模板：尺寸拆为宽/高/深三个td
 function mkm(data,cfg){
@@ -364,15 +370,15 @@ function matCell(i){return '<td dl="材料" class="al-m"><div class="mat-rows"><
 // ★ 柜体（内联渲染+事件委托）
 function rc(){
 id('cr').innerHTML=cb.map(function(r,i){
-  var p=gp(r.m||'大千云纹',r.n),sd2=sd(r.n),nw=nv(r.w,sd2.w),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),ns=nw||nh||nd,ep=effP(r,p),st=r.q*ep*(ns?1.2:1);
+  var p=gp(r.m||DEF_M,r.n),sd2=sd(r.n),nh=nv(r.h,sd2.h),nd=nv(r.d,sd2.d),coef=cabCoef(r.h,sd2.h),ep=effP(r,p),st=r.q*ep*coef;
   return '<tr><td dl="#">'+(i+1)+'</td><td dl="图">'+ic('c')+'</td>'
     +'<td dl="名称"><select class="s-name" data-i="'+i+'">'+CT.map(function(t){return'<option>'+t+'</option>'}).join('')+'</select></td>'
     +'<td dl="THOR编码"><input value="'+(r.c||'')+'" placeholder="编码" onchange="cb['+i+'].c=this.value"></td>'
-    +'<td dl="宽"><input class="num'+(nw?' non':(!r.w||r.w===sd2.w)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.w||sd2.w)+'" style="width:56px" placeholder="'+sd2.w+'" title="宽" onchange="cb['+i+'].w=parseInt(this.value)||'+sd2.w+';rc()"></td>'
+    +'<td dl="宽"><input class="num'+((!r.w||r.w===sd2.w)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.w||sd2.w)+'" style="width:56px" placeholder="自定" title="长(自定)" onchange="cb['+i+'].w=parseInt(this.value)||'+sd2.w+';rc()"></td>'
     +'<td dl="高"><input class="num'+(nh?' non':(!r.h||r.h===sd2.h)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.h||sd2.h)+'" style="width:56px" placeholder="'+sd2.h+'" title="高" onchange="cb['+i+'].h=parseInt(this.value)||'+sd2.h+';rc()"></td>'
     +'<td dl="深"><input class="num'+(nd?' non':(!r.d||r.d===sd2.d)?' hp':'')+'" type="number" min="10" step="10" value="'+(r.d||sd2.d)+'" style="width:56px" placeholder="'+sd2.d+'" title="深" onchange="cb['+i+'].d=parseInt(this.value)||'+sd2.d+';rc()"></td>'
     +matCell(i)
-    +'<td dl="非标系数" class="al-r" style="font-weight:600">'+(ns?'<span style="color:var(--red)">1.2</span>':'<span style="color:var(--n400)">1.0</span>')+'</td>'
+    +'<td dl="非标系数" class="al-r" style="font-weight:600">'+fmtCoef(coef)+'</td>'
     +'<td dl="数量"><input class="num'+((!r.q||r.q===1)?' hp':'')+'" type="number" min="0.1" step="0.1" value="'+r.q+'" onchange="cb['+i+'].q=parseFloat(this.value)||0;rc()"></td>'
     +'<td dl="单位"><select class="s-unit" data-i="'+i+'"><option>个</option><option>米</option><option>套</option></select></td>'
     +priDrop(r,'cb',i,p,'rc')
@@ -381,16 +387,16 @@ id('cr').innerHTML=cb.map(function(r,i){
 }).join('');
 var tb=id('cr');cb.forEach(function(r,i){var sn=tb.querySelector('.s-name[data-i="'+i+'"]');if(sn)sn.value=r.n;var smb=tb.querySelector('.s-mat-body[data-i="'+i+'"]');if(smb){smb.value=r.m||'';smb.style.color=r.m?'':'#bbb'}var smd=tb.querySelector('.s-mat-door[data-i="'+i+'"]');if(smd){smd.value=r.dm||'';smd.style.color=r.dm?'':'#bbb'}var su=tb.querySelector('.s-unit[data-i="'+i+'"]');if(su)su.value=r.u;});
 try{cal()}catch(e){log(e)}ag();}
-function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'});rc();}
+function acb(){var s=sd('洗手盘地柜');cb.push({n:'洗手盘地柜',c:'',w:s.w,h:s.h,d:s.d,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'});rc();}
 
 function rct(){ct.forEach(function(r){if(!r.u)r.u='米';});
 id('tr').innerHTML=mkm(ct,{a:'ct',f:'rct',icon:'t',
 sel:function(r,i){return{name:'<input value="'+(r.n||'')+'" placeholder="名称" onchange="ct['+i+'].n=this.value">',
 mat:matDrop('s-mat-ct',i),
 unit:'<select onchange="ct['+i+'].u=this.value"><option'+(r.u==='米'||!r.u?'selected':'')+'>米</option><option'+(r.u==='个'?'selected':'')+'>个</option><option'+(r.u==='套'?'selected':'')+'>套</option></select>'}},
-dim:function(r,i){return{sw:3000,sh:5,sd:600,nw:false,nh:false,nd:false,rh:'<input class="num hp" type="number" min="0.5" max="3" step="0.05" value="'+(r.r||1)+'" style="width:48px" onchange="ct['+i+'].r=parseFloat(this.value)||1;rct()">'}},
+dim:function(r,i){var coef=ctWCoef(r.d),eff=ctEffLen(r.w),len=r.w||0;return{sw:3000,sh:5,sd:600,nw:len>0&&len<1000,nh:false,nd:coef!==1,rh:fmtCoef(coef)+(len>0&&len<1000?' <span style="font-size:10px;color:var(--n400)">(长'+eff+')</span>':'')}},
 price:function(r){var m=r.m||'琉晶-丝纹GY01';return(CTP[m]||{})[r.tk||'12mm']||0;},
-total:function(r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return r.q*effP(r,auto)*(r.r||1);}});syncMatVals('tr','s-mat-ct',ct,'m');try{cal()}catch(e){log(e)}ag();}
+total:function(r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return ctBill(r,auto);}});syncMatVals('tr','s-mat-ct',ct,'m');try{cal()}catch(e){log(e)}ag();}
 function act(){ct.push({n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'});rct();}
 
 function rp(){id('pr').innerHTML=mkm(pn,{a:'pn',f:'rp',icon:'p',
@@ -453,8 +459,8 @@ unit:function(r,i){return'<select onchange="ex['+i+'].u=this.value"><option'+(r.
 function ax(){ex.push({n:'新增项目',c:'',w:0,h:0,d:0,para:'',q:1,u:'个',p:0});rx();}
 
 function cal(){
-  var vs=[function(){return cb.reduce(function(s,r){var m=r.m||'大千云纹',auto=gp(m,r.n),p=effP(r,auto),s2=sd(r.n),ns=nv(r.w,s2.w)||nv(r.h,s2.h)||nv(r.d,s2.d);return s+r.q*p*(ns?1.2:1);},0)}(),
-    function(){return ct.reduce(function(s,r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return s+r.q*effP(r,auto)*(r.r||1);},0)}(),
+  var vs=[function(){return cb.reduce(function(s,r){var m=r.m||DEF_M,auto=gp(m,r.n),p=effP(r,auto),s2=sd(r.n),coef=cabCoef(r.h,s2.h);return s+r.q*p*coef;},0)}(),
+    function(){return ct.reduce(function(s,r){var m=r.m||'琉晶-丝纹GY01',auto=(CTP[m]||{})[r.tk||'12mm']||0;return s+ctBill(r,auto);},0)}(),
     function(){return pn.reduce(function(s,r){var m=r.m||'大千云纹',auto=CP[m]?CP[m].panel:0;return s+r.q*effP(r,auto)*(r.r||1);},0)}(),
     function(){return tr.reduce(function(s,r){return s+(r.q||0)*effP(r,r.p||0)*(r.r||1);},0)}(),
     function(){return hw.reduce(function(s,r){return s+(r.q||0)*effP(r,r.p||0);},0)}(),
@@ -485,7 +491,7 @@ function ag(){document.querySelectorAll('.ghost').forEach(function(e){e.remove()
   ['cr',14,acb],['tr',14,act],['pr',14,ap],['trr',14,atr],['hr',13,ah],['sr',13,ask],['er',13,ae],['xr',13,ax]
 ].forEach(function(a){var tb=id(a[0]),r=document.createElement('tr');r.className='ghost';r.onclick=a[2];var h='<td class="plus">+</td>';for(var i=1;i<a[1];i++)h+='<td></td>';r.innerHTML=h;tb.appendChild(r)})}
 function rst(){if(!confirm('确定要重置?'))return;
-  cb=[{n:'洗手盘地柜',c:'',w:800,h:700,d:570,m:'大千云纹',dm:'大千云纹',r:1,q:1,u:'米'}];
+  cb=[{n:'洗手盘地柜',c:'',w:800,h:680,d:720,m:DEF_M,dm:DEF_M,r:1,q:1,u:'米'}];
   ct=[{n:'台面',c:'',w:3000,h:5,d:600,m:'琉晶-丝纹GY01',tk:'12mm',r:1,q:1,u:'米'}];
   pn=[{n:'',c:'',w:800,h:700,d:20,m:'大千云纹',r:1,q:1,u:'㎡'}];
   tr=[{n:'地脚线',c:'',w:800,h:60,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0},{n:'顶封板',c:'',w:800,h:100,d:20,m:'与柜体一致',r:1,q:1,u:'米',p:0}];
@@ -501,7 +507,7 @@ id('eb').addEventListener('change',function(e){
 });
 id('cr').addEventListener('change',function(e){
   var s=e.target;
-  if(s.classList.contains('s-name')){var i=parseInt(s.getAttribute('data-i')),sd2=sd(s.value);cb[i].n=s.value;cb[i].w=sd2.w;cb[i].h=sd2.h;cb[i].d=sd2.d;cb[i].pManual=false;rc();}
+  if(s.classList.contains('s-name')){var i=parseInt(s.getAttribute('data-i')),sd2=sd(s.value);cb[i].n=s.value;cb[i].h=sd2.h;cb[i].d=sd2.d;cb[i].pManual=false;rc();}
   else if(s.classList.contains('s-mat-body')){cb[parseInt(s.getAttribute('data-i'))].m=s.value;cb[parseInt(s.getAttribute('data-i'))].pManual=false;rc();}
   else if(s.classList.contains('s-mat-door')){cb[parseInt(s.getAttribute('data-i'))].dm=s.value;cb[parseInt(s.getAttribute('data-i'))].pManual=false;rc();}
   else if(s.classList.contains('s-unit')){cb[parseInt(s.getAttribute('data-i'))].u=s.value;}

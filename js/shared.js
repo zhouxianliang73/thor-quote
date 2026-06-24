@@ -8,8 +8,8 @@
   var DEFAULT_CAB_MAT = '小雨滴';
 
   var STD_DIMS = {
-    '洗手盘地柜': { w: 800, h: 680, d: 570 },
-    '地柜': { w: 800, h: 680, d: 570 },
+    '洗手盘地柜': { w: 800, h: 680, d: 720 },
+    '地柜': { w: 800, h: 680, d: 720 },
     '灶台吊柜': { w: 800, h: 700, d: 370 },
     '吊柜': { w: 800, h: 700, d: 370 },
     '高柜': { w: 600, h: 2100, d: 570 },
@@ -53,7 +53,7 @@
     data.cabinet.series.forEach(function (series) {
       data.cabinet.types.forEach(function (type) {
         idx++;
-        var dims = STD_DIMS[type] || { w: 800, h: 680, d: 570 };
+        var dims = STD_DIMS[type] || { w: 800, h: 680, d: 720 };
         products.push({
           id: 'THOR-CB-' + String(idx).padStart(3, '0'),
           category: 'cabinet',
@@ -191,7 +191,7 @@
             c: p.id,
             w: p.w || 800,
             h: p.h || 680,
-            d: p.d || 570,
+            d: p.d || 720,
             m: p.series,
             dm: p.series,
             r: 1,
@@ -294,6 +294,21 @@
     return Math.round((h / stdH) * 10) / 10;
   }
 
+  /** 台面宽度非标系数 */
+  function ctWidthCoef(widthMm) {
+    var w = widthMm || 600;
+    if (w <= 600) return 1;
+    if (w <= 650) return 1.3;
+    if (w <= 900) return 1.5;
+    if (w <= 1050) return 2;
+    return 2;
+  }
+
+  /** 台面计价长度：不足 1000mm 按 1000mm */
+  function ctEffLengthMm(lenMm) {
+    return Math.max(lenMm || 0, 1000);
+  }
+
   function isDefaultCountertop(arr) {
     return arr.length === 1 && arr[0].n === '台面' && arr[0].m === '琉晶-丝纹GY01' && !arr[0].c;
   }
@@ -309,6 +324,8 @@
     cabinetPrice: cabinetPrice,
     hwImagePath: hwImagePath,
     cabNsCoef: cabNsCoef,
+    ctWidthCoef: ctWidthCoef,
+    ctEffLengthMm: ctEffLengthMm,
     DEFAULT_CAB_MAT: DEFAULT_CAB_MAT,
     STD_DIMS: STD_DIMS
   };
