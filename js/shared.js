@@ -5,9 +5,11 @@
 
   var ICON_MAP = { hinge: 'h', drawer: 'd', basket: 'b', handle: 'l', light: 'g', switch: 'w', wire: 'w' };
 
+  var DEFAULT_CAB_MAT = '小雨滴';
+
   var STD_DIMS = {
-    '洗手盘地柜': { w: 800, h: 700, d: 570 },
-    '地柜': { w: 800, h: 700, d: 570 },
+    '洗手盘地柜': { w: 800, h: 680, d: 570 },
+    '地柜': { w: 800, h: 680, d: 570 },
     '灶台吊柜': { w: 800, h: 700, d: 370 },
     '吊柜': { w: 800, h: 700, d: 370 },
     '高柜': { w: 600, h: 2100, d: 570 },
@@ -51,7 +53,7 @@
     data.cabinet.series.forEach(function (series) {
       data.cabinet.types.forEach(function (type) {
         idx++;
-        var dims = STD_DIMS[type] || { w: 800, h: 700, d: 570 };
+        var dims = STD_DIMS[type] || { w: 800, h: 680, d: 570 };
         products.push({
           id: 'THOR-CB-' + String(idx).padStart(3, '0'),
           category: 'cabinet',
@@ -188,7 +190,7 @@
             n: p.type,
             c: p.id,
             w: p.w || 800,
-            h: p.h || 700,
+            h: p.h || 680,
             d: p.d || 570,
             m: p.series,
             dm: p.series,
@@ -282,7 +284,14 @@
   }
 
   function isDefaultCabinet(arr) {
-    return arr.length === 1 && arr[0].n === '洗手盘地柜' && arr[0].m === '大千云纹' && !arr[0].c;
+    return arr.length === 1 && arr[0].n === '洗手盘地柜' && arr[0].m === DEFAULT_CAB_MAT && !arr[0].c;
+  }
+
+  /** 柜体非标系数 = 实际高度 / 默认高度，四舍五入一位小数 */
+  function cabNsCoef(actualH, stdH) {
+    if (!stdH) return 1;
+    var h = actualH || stdH;
+    return Math.round((h / stdH) * 10) / 10;
   }
 
   function isDefaultCountertop(arr) {
@@ -299,6 +308,8 @@
     importToQuote: importToQuote,
     cabinetPrice: cabinetPrice,
     hwImagePath: hwImagePath,
+    cabNsCoef: cabNsCoef,
+    DEFAULT_CAB_MAT: DEFAULT_CAB_MAT,
     STD_DIMS: STD_DIMS
   };
 })(window);
